@@ -124,33 +124,4 @@ router.post("/contract", middleware.verifyJWT, (req, res) => {
         });
 });
 
-
-router.put("/pet", middleware.verifyJWT, (req, res) => {
-    // Find pet by id and update it. {new: true} returns the updated pet
-    Pet.findOneAndUpdate({ _id: req.body.petId }, req.body.pet, { new: true }).then(pet => {
-        res.status(200).json(pet);
-    }).catch(err => {
-        res.status(500).json({ error: 'Failed to update pet' });
-    });
-});
-
-router.delete("/pet", middleware.verifyJWT, (req, res) => {
-    User.findOne({ _id: req.user._id }).then(user => {
-        // Remove pet from user's pets array
-        user.pets.splice(user.pets.indexOf(req.body.petId), 1);
-        user.save().then(user => {
-            // Remove pet from database
-            Pet.findOneAndDelete({ _id: req.body.petId }).then(pet => {
-                res.status(200).json(pet);
-            }).catch(err => {
-                res.status(500).json({ error: 'Failed to delete pet' });
-            });
-        }).catch(err => {
-            res.status(500).json({ error: 'Failed to remove pet from user' });
-        });
-    }).catch(err => {
-        res.status(500).json({ error: 'Failed to find user' });
-    });
-});
-
 module.exports = router;

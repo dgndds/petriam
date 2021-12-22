@@ -46,6 +46,11 @@ const model = mongoose.Schema({
         type: Boolean,
         default: true // TODO: True for development, false for production
     },
+    contracts: {
+        type: Array,
+        ref: 'Contract',
+        default: []
+    }
 });
 
 module.exports = new mongoose.model("User", model);
