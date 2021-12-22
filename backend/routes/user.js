@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require("../models/UserModel");
 const Pet = require('../models/PetModel');
+const Contract = require('../models/ContractModel');
 
 const middleware = require('../middlewares');
 
@@ -60,6 +61,69 @@ router.post("/pet", middleware.verifyJWT, (req, res) => {
             res.status(404).json({ error: 'User is not valid' });
         });
 });
+
+router.put("/pet", middleware.verifyJWT, (req, res) => {
+    // Find pet by id and update it. {new: true} returns the updated pet
+    Pet.findOneAndUpdate({ _id: req.body.petId }, req.body.pet, { new: true }).then(pet => {
+        res.status(200).json(pet);
+    }).catch(err => {
+        res.status(500).json({ error: 'Failed to update pet' });
+    });
+});
+
+router.delete("/pet", middleware.verifyJWT, (req, res) => {
+    User.findOne({ _id: req.user._id }).then(user => {
+        // Remove pet from user's pets array
+        user.pets.splice(user.pets.indexOf(req.body.petId), 1);
+        user.save().then(user => {
+            // Remove pet from database
+            Pet.findOneAndDelete({ _id: req.body.petId }).then(pet => {
+                res.status(200).json(pet);
+            }).catch(err => {
+                res.status(500).json({ error: 'Failed to delete pet' });
+            });
+        }).catch(err => {
+            res.status(500).json({ error: 'Failed to remove pet from user' });
+        });
+    }).catch(err => {
+        res.status(500).json({ error: 'Failed to find user' });
+    });
+});
+
+//* Contract endpoints -------------------------------------------------------------------------
+router.get("/contract", middleware.verifyJWT, (req, res) => {
+    Contract.find({ ownerId: req.user._id }).then( contract => {
+        res.status(200).json(contract);
+    }).catch(err => {
+        res.status(500).json({ error: 'Contracts could not be found' });
+    });
+});
+
+router.post("/contract", middleware.verifyJWT, (req, res) => {
+    User.findOne({ _id: req.user._id })
+        .then( user => {
+            Contract.insert(req.body.contract).then(contract => {
+                user.contracts.push(contract._id);
+                User.findOne({ _id: req.body.contract.hostId})
+                .then( host => {
+                    user.save().then(user => {
+                        host.save().then(host => {
+                            res.status(200).json(contract);
+                        }).catch(err => {
+                            res.status(500).json({error: "Failed to add contract to host"});
+                        });
+                    }).catch(err => {
+                        res.status(500).json({error: "Failed to add contract to user"});
+                    });
+                }).catch(err => {
+                    res.status(500).json({error: "Failed to create pets"});
+                });
+            }).catch(error => {
+                res.status(404).json({ error: 'User is not valid' });
+            });
+        });
+});
+
 
 router.put("/pet", middleware.verifyJWT, (req, res) => {
     // Find pet by id and update it. {new: true} returns the updated pet
