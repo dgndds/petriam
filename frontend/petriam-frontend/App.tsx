@@ -1,21 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Login from './src/screens/login/login'
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Petriam Mobile App!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Login />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    backgroundColor: '#F2F2F2',
   },
 });
