@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Button, Pressable } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import SubmitButton from '../../components/general/submitButton'
 
 export default function Login() {

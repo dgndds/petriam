@@ -21,5 +21,6 @@ const styles = StyleSheet.create({
       },
       submitText:{
         alignSelf: 'center',
+        color: 'white'
       },
 });
