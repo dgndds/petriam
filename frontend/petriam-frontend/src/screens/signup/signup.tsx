@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import SubmitButton from '../../components/general/submitButton'
 import { Icon } from 'react-native-elements'
+import LabelInput from '../../components/labelInput/labelInput';
 
 export default function SignUp() {
     return (
@@ -22,22 +23,10 @@ export default function SignUp() {
                 <Text style={styles.registerText}>Register</Text>
             </View>
             <View style={styles.form}>
-                <Text style={styles.formText}>Username</Text>
-                <TextInput style={styles.box}>
-                
-                </TextInput>
-                <Text style={styles.formText}>Email</Text>
-                <TextInput style={styles.box}>
-                
-                </TextInput>
-                <Text style={styles.formText}>Password</Text>
-                <TextInput style={styles.box}>
-                
-                </TextInput>
-                <Text style={styles.formText}>Password Again</Text>
-                <TextInput style={styles.box}>
-                
-                </TextInput>
+                <LabelInput text="Username"/>
+                <LabelInput text="Email"/>
+                <LabelInput text="Password"/>
+                <LabelInput text="Password Again"/>
             </View>
             <View style={styles.submit}>
                 <SubmitButton text="SIGN UP"></SubmitButton>
