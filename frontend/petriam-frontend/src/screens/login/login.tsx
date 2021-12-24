@@ -1,8 +1,23 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput,KeyboardAvoidingView,Platform } from 'react-native';
 import SubmitButton from '../../components/general/submitButton'
+import AppLoading from 'expo-app-loading';
+import {useFonts, PlayfairDisplay_700Bold,PlayfairDisplay_400Regular,PlayfairDisplay_800ExtraBold, PlayfairDisplay_700Bold_Italic, PlayfairDisplay_500Medium } from "@expo-google-fonts/playfair-display"
+
 
 export default function Login() {
+    let [fontsLoaded,err] = useFonts({
+      PlayfairDisplay_700Bold,
+      PlayfairDisplay_400Regular,
+      PlayfairDisplay_800ExtraBold,
+      PlayfairDisplay_700Bold_Italic,
+      PlayfairDisplay_500Medium
+    })
+
+    if(!fontsLoaded){
+      return <AppLoading/>
+    }
+    
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.logoContainer}>
@@ -12,16 +27,16 @@ export default function Login() {
           />
         </View>
         <View style={styles.welcome}>
-          <Text>
+          <Text style={styles.mainTitle}>
             HELLO
           </Text>
-          <Text>
+          <Text style={styles.subTitle}>
             welcome back!
           </Text>
           <View
             style={styles.line}
           />
-          <Text>
+          <Text style={styles.loginTitle}>
             LOGIN
           </Text>
         </View>
@@ -71,10 +86,25 @@ export default function Login() {
     welcome: {
       flex: 2,
       justifyContent: 'center',
-      paddingHorizontal: 10
+      paddingHorizontal: 10,
+    },
+    mainTitle:{
+      fontFamily: "PlayfairDisplay_800ExtraBold",
+      fontSize: 75,
+      color: "#707070"
+    },
+    subTitle:{
+      fontFamily: "PlayfairDisplay_700Bold_Italic",
+      fontSize: 25,
+      color: "#707070"
+    },
+    loginTitle:{
+      fontFamily: "PlayfairDisplay_700Bold",
+      fontSize: 25,
+      color: "#707070"
     },
     line: {
-      borderBottomColor: 'black',
+      borderBottomColor: '#707070',
       borderBottomWidth: 1,
     },
     form: {
@@ -94,17 +124,25 @@ export default function Login() {
       alignSelf: 'flex-end',
       marginRight: 12,
       marginTop: 10,
-      textDecorationLine: 'underline'
+      textDecorationLine: 'underline',
+      fontFamily:"PlayfairDisplay_500Medium",
+      color:"#707070",
+      fontSize:10,
     },
     submitButton: {
       flex: 2,
       alignItems: 'center'
     },
     or: {
-      marginVertical: 20
+      marginVertical: 20,
+      fontFamily: "PlayfairDisplay_400Regular",
+      fontSize:10
     },
     signup: {
-      textDecorationLine: 'underline'
+      textDecorationLine: 'underline',
+      fontFamily: "PlayfairDisplay_700Bold",
+      fontSize:15,
+      color:"black"
     },
     footer: {
       flex: 1,
@@ -112,7 +150,10 @@ export default function Login() {
     },
     footerText: {
       alignSelf: 'center',
-      marginBottom: 10
+      marginBottom: 10,
+      fontFamily: "PlayfairDisplay_700Bold",
+      fontSize:10,
+      color:"#707070"
     }
   });
   
