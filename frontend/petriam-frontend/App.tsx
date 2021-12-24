@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Main from './src/screens/main/main';
+import Login from './src/screens/login/login'
+import SignUp from './src/screens/signup/signup';
+import InboxScreen from './src/screens/inbox/inboxScreen';
 
 export default function App() {
   return (
-    <Main />
+    <InboxScreen />
   );
 }
 

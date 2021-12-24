@@ -16,11 +16,13 @@ const styles = StyleSheet.create({
         height: 43,
         backgroundColor: '#D99E6A',
         alignSelf: 'center',
-        justifyContent: 'center',
+        alignItems:'center',
         marginTop: 20
       },
       submitText:{
-        alignSelf: 'center',
-        color: 'white'
+        // alignSelf: 'center',
+        color: 'white',
+        fontFamily:"PlayfairDisplay_800ExtraBold",
+        fontSize:25
       },
 });
