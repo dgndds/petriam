@@ -16,7 +16,7 @@ router.get("/", middleware.verifyJWT, (req, res) => {
 });
 
 router.put("/", middleware.verifyJWT, (req, res) => {
-    User.findOneAndUpdate({ _id: req.user._id }, req.body, { new: true }).then(user => {
+    User.findOneAndUpdate({ _id: req.user._id }, req.body.user, { new: true }).then(user => {
         res.status(200).json(user);
     }).catch(err => {
         res.status(500).json({error: "User not found"});
