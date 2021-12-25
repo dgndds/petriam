@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require("../models/UserModel");
+const Host = require("../models/HostModel");
 const Pet = require('../models/PetModel');
 
 const middleware = require('../middlewares');
@@ -31,7 +32,7 @@ router.delete("/", middleware.verifyJWT, (req, res) => {
 });
 
 
-//* Pet endpoints -------------------------------------------------------------------------
+//* User pet endpoints -------------------------------------------------------------------------
 router.get("/pet", middleware.verifyJWT, (req, res) => {
     Pet.find({ ownerId: req.user._id }).then( pets => {
         res.status(200).json(pets);
@@ -86,6 +87,65 @@ router.delete("/pet", middleware.verifyJWT, (req, res) => {
         });
     }).catch(err => {
         res.status(500).json({ error: 'Failed to find user' });
+    });
+});
+
+//* User host endpoints -------------------------------------------------------------------
+
+router.get("/host", middleware.verifyJWT, (req, res) => {
+    Host.findOne({ userId: req.user._id }).then(host => {
+        res.status(200).json(host);
+    }).catch(err => {
+        res.status(500).json({ error: 'Host could not be found' });
+    });
+});
+
+router.post("/host", middleware.verifyJWT, (req, res) => {
+    req.body.host.userId = req.user._id
+    User.findOne({ _id: req.user._id })
+        .then( user => {
+            if(user.hostId) {
+                console.log("User already has a host");
+                res.status(500).json({ error: 'User already has a host' });
+                return;
+            }
+            Host.create(req.body.host).then(host => {
+                user.hostId = host._id;
+                user.save().then(user => {
+                    res.status(200).json(host);
+                }).catch(err => {
+                    res.status(500).json({error: "Failed to add host to user"});
+                });
+            }).catch(err => {
+                res.status(500).json({error: "Failed to create host"});
+            });
+        }).catch(error => {
+            res.status(404).json({ error: 'User is not valid' });
+        });
+});
+
+router.put("/host", middleware.verifyJWT, (req, res) => {
+    Host.findOneAndUpdate({ userId: req.user._id }, req.body.host, { new: true }).then(host => {
+        res.status(200).json(host);
+    }).catch(err => {
+        res.status(500).json({ error: 'Host could not be found' });
+    });
+});
+
+router.delete("/host", middleware.verifyJWT, (req, res) => {
+    Host.findOneAndDelete({ userId: req.user._id }).then(host => {
+        User.findOne({ _id: req.user._id }).then(user => {
+            user.hostId = null;
+            user.save().then(user => {
+                res.status(200).json(host);
+            }).catch(err => {
+                res.status(500).json({error: "Failed to remove host from user"});
+            });
+        }).catch(err => {
+            res.status(500).json({error: "Failed to find user"});
+        });
+    }).catch(err => {
+        res.status(500).json({ error: 'Host could not be found' });
     });
 });
 
