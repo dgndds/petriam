@@ -1,6 +1,18 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const defaultAvatar64 = fs.readFileSync('./static/default-avatar.png', {encoding: 'base64'}); // File read base path is root of the project, so we dont need "../"
+const defaultAvatar64 = fs.readFileSync('./static/default-avatar.png', { encoding: 'base64' }); // File read base path is root of the project, so we dont need "../"
+
+const pointSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ['Point'],
+        required: true
+    },
+    coordinates: {
+        type: [Number],
+        required: true
+    }
+});
 
 const model = mongoose.Schema({
     name: {
@@ -25,8 +37,11 @@ const model = mongoose.Schema({
         default: ''
     },
     location: {
-        type: Array,
-        default: [-1.0, -1.0],
+        type: pointSchema,
+        default: {
+            type: 'Point',
+            coordinates: [0, 0]
+        }
     },
     profileImage: {
         type: Buffer,
@@ -50,7 +65,12 @@ const model = mongoose.Schema({
         type: Array,
         ref: 'Contract',
         default: []
-    }
+    },
+    hostId: {
+        type: mongoose.ObjectId,
+        ref: 'Host',
+        default: null
+    },
 });
 
 module.exports = new mongoose.model("User", model);

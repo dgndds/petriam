@@ -1,0 +1,6 @@
+module Pods_petriamfrontend {
+  umbrella header "Pods-petriamfrontend-umbrella.h"
+
+  export *
+  module * { export * }
+}
