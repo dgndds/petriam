@@ -1,30 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput } from 'react-native';
 import SubmitButton from '../../components/general/submitButton'
 import { Icon } from 'react-native-elements'
 import LabelInput from '../../components/labelInput/labelInput';
 import AppLoading from 'expo-app-loading';
-import {useFonts, PlayfairDisplay_700Bold,PlayfairDisplay_400Regular,PlayfairDisplay_800ExtraBold } from "@expo-google-fonts/playfair-display"
+import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_400Regular, PlayfairDisplay_800ExtraBold } from "@expo-google-fonts/playfair-display"
+import { signUpNewUser } from '../../api/RestApiFunctions';
 
-export default function SignUp() {
-    let [fontsLoaded,err] = useFonts({
+export default function SignUp({ navigation }) {
+    //For Fonts
+    let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
         PlayfairDisplay_400Regular,
         PlayfairDisplay_800ExtraBold
     })
 
-    if(!fontsLoaded){
-        return <AppLoading/>
+    //Variables For Signing Up
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordAgain, setPasswordAgain] = useState('');
+
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
+
+    const submitFunction = () => {
+        if (username && email && (password == passwordAgain)) {
+            console.log(username, email, password);
+            signUpNewUser(username, email, password);
+        }
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.logoContainer}>
-                <Icon 
+                <Icon
                     name='chevron-left'
                     style={styles.back}
                     size={50}
-                    color= '#707070'
+                    color='#707070'
+                    onPress={() => navigation.goBack()}
                 />
                 <Image
                     style={styles.logo}
@@ -35,13 +51,36 @@ export default function SignUp() {
                 <Text style={styles.registerText}>Register</Text>
             </View>
             <View style={styles.form}>
-                <LabelInput text="Username"/>
-                <LabelInput text="Email"/>
-                <LabelInput text="Password"/>
-                <LabelInput text="Password Again"/>
+                <View>
+                    <Text style={styles.formText}>Your Name</Text>
+                    <TextInput style={styles.box} value={username} onChangeText={setUsername}>
+
+                    </TextInput>
+                </View>
+                <View>
+                    <Text style={styles.formText}>Email</Text>
+                    <TextInput style={styles.box} value={email} onChangeText={setEmail}>
+
+                    </TextInput>
+                </View>
+                <View>
+                    <Text style={styles.formText}>Password</Text>
+                    <TextInput style={styles.box} value={password} onChangeText={setPassword} secureTextEntry={true}>
+
+                    </TextInput>
+                </View>
+                <View>
+                    <Text style={styles.formText}>Password Again</Text>
+                    <TextInput style={styles.box} value={passwordAgain} onChangeText={setPasswordAgain} secureTextEntry={true}>
+
+                    </TextInput>
+                </View>
+                <Text style={styles.incorrectPass}>
+                    { (password != passwordAgain) && (passwordAgain != "") ? "*Passwords do not match!" : ""}
+                </Text>
             </View>
             <View style={styles.submit}>
-                <SubmitButton text="SIGN UP"></SubmitButton>
+                <SubmitButton text="SIGN UP" submitFunction={submitFunction}></SubmitButton>
             </View>
         </SafeAreaView>
     )
@@ -69,19 +108,19 @@ const styles = StyleSheet.create({
     },
     registerText: {
         marginLeft: 15,
-        fontSize:40,
+        fontSize: 40,
         fontFamily: "PlayfairDisplay_700Bold",
-        color:"#707070"
+        color: "#707070"
     },
-    form:{
+    form: {
         flex: 5
     },
-    formText:{
+    formText: {
         marginLeft: 20,
         marginTop: 20,
-        fontSize:15,
+        fontSize: 15,
         fontFamily: "PlayfairDisplay_400Regular",
-        color:"#707070"
+        color: "#707070"
     },
     box: {
         backgroundColor: 'white',
@@ -93,5 +132,10 @@ const styles = StyleSheet.create({
     },
     submit: {
         flex: 2,
+    },
+    incorrectPass: { 
+        color: 'red',
+        marginLeft: 20,
+        marginTop: 5 
     }
 });

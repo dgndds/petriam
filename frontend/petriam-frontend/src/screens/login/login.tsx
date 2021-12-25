@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput,KeyboardAvoidingView,Platform } from 'react-native';
 import SubmitButton from '../../components/general/submitButton'
 import AppLoading from 'expo-app-loading';
 import {useFonts, PlayfairDisplay_700Bold,PlayfairDisplay_400Regular,PlayfairDisplay_800ExtraBold, PlayfairDisplay_700Bold_Italic, PlayfairDisplay_500Medium } from "@expo-google-fonts/playfair-display"
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { loginUser } from '../../api/RestApiFunctions';
 
-
-export default function Login() {
+export default function Login({ navigation }) {
     let [fontsLoaded,err] = useFonts({
       PlayfairDisplay_700Bold,
       PlayfairDisplay_400Regular,
@@ -14,8 +16,21 @@ export default function Login() {
       PlayfairDisplay_500Medium
     })
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState();
+
     if(!fontsLoaded){
       return <AppLoading/>
+    }
+
+    const goToSignUp = () => {
+      navigation.push("SignUp");
+    }
+
+    const tryToLogin = () => {
+      if(email && password){
+        loginUser(email, password);
+      }
     }
     
     return (
@@ -41,14 +56,14 @@ export default function Login() {
           </Text>
         </View>
         <View style={styles.form}>
-          <TextInput style={styles.box}>
+          <TextInput style={styles.box} placeholder='Type Your Username'>
             
           </TextInput>
-          <TextInput style={styles.box}>
+          <TextInput style={styles.box} placeholder='Type Your Password'>
             
           </TextInput>
           <Text style={styles.forgot}>
-            Forgot Your Password?
+            Forgot Your Password? 
             </Text>
         </View>
         <View style={styles.submitButton}>
@@ -56,7 +71,7 @@ export default function Login() {
           <Text style={styles.or}>
             or
           </Text>
-          <Text style={styles.signup}>
+          <Text style={styles.signup} onPress={goToSignUp}>
             Sign up to Petriam
           </Text>
         </View>

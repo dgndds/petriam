@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
 
-export default function LabelInput(props) {
+export default function LbelInput(props) {
     return (
         <View>
             <Text style={styles.formText}>{props.text}</Text>
-            <TextInput style={styles.box}>
+            <TextInput style={styles.box} >
                 
             </TextInput>
         </View>

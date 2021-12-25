@@ -3,7 +3,7 @@ import { Text, Pressable, StyleSheet } from 'react-native';
 
 export default function Login(props) {
     return (
-        <Pressable style={styles.submit}>
+        <Pressable style={styles.submit} onPress={props.submitFunction}>
             <Text style={styles.submitText}>{props.text}</Text>
         </Pressable>
     )

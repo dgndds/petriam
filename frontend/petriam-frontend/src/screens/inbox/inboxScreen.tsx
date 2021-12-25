@@ -82,7 +82,7 @@ export default function InboxScreen(){
         return <AppLoading/>
     }
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style = {styles.topBar}>
                 <Icon 
                     name='chevron-left'
@@ -99,7 +99,7 @@ export default function InboxScreen(){
             keyExtractor={item => item.id}
             ></FlatList>
             <Navi></Navi>
-        </SafeAreaView>
+        </View>
     )
 }
 

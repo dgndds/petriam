@@ -1,13 +1,12 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Image } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import NavigationBar from '../../components/navigationBar/navigationBar';
-import SearchBox from '../../components/searchBox/searchBox';
+import MapView, { Marker, PROVIDER_GOOGLE, MAP_TYPES } from "react-native-maps";
+import Navi from '../../components/general/navi';
 
 
 export default function Main() {
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -26,11 +25,12 @@ export default function Main() {
                 >
                     <Image
                         style={styles.hostMarker}
-                        source={require('../../../assets/icons/cat.png')}
+                        source={require('../../../assets/icons/pet.png')}
                     />
                 </Marker>
             </MapView>
-        </SafeAreaView>
+            <Navi />
+        </View>
     )
 };
 

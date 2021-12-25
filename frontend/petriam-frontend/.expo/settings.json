@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": null,
   "https": false,
-  "devClient": true,
-  "scheme": "com.petriam.petriam"
+  "scheme": null,
+  "devClient": false
 }
