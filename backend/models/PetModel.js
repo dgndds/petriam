@@ -11,7 +11,7 @@ const model = mongoose.Schema({
         required: true
     },
     ownerId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.ObjectId,
         ref: 'User',
         required: true
     }
