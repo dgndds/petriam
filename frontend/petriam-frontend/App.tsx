@@ -7,7 +7,7 @@ import InboxScreen from './src/screens/inbox/inboxScreen';
 
 export default function App() {
   return (
-    <InboxScreen />
+    <SignUp />
   );
 }
 
