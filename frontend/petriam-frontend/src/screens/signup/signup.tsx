@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Pressable } from 'react-native';
 import SubmitButton from '../../components/general/submitButton'
 import { Icon } from 'react-native-elements'
 import LabelInput from '../../components/labelInput/labelInput';
@@ -20,16 +20,29 @@ export default function SignUp({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
+    const [canBeReturned, setCanBeReturned] = useState(false);
 
     if (!fontsLoaded) {
         return <AppLoading />
     }
 
-    const submitFunction = () => {
+    const submitFunction = async () => {
+        let result: boolean = false;
+
         if (username && email && (password == passwordAgain)) {
             console.log(username, email, password);
-            signUpNewUser(username, email, password);
+            result = await signUpNewUser(username, email, password);
         }
+        
+        if(result){
+            setCanBeReturned(result);
+            await new Promise(f => setTimeout(f, 3000));
+            navigation.goBack();
+        }
+    }
+
+    const returnLogin = () => {
+        navigation.goBack();
     }
 
     return (
@@ -76,11 +89,23 @@ export default function SignUp({ navigation }) {
                     </TextInput>
                 </View>
                 <Text style={styles.incorrectPass}>
-                    { (password != passwordAgain) && (passwordAgain != "") ? "*Passwords do not match!" : ""}
+                    {(password != passwordAgain) && (passwordAgain != "") ? "*Passwords do not match!" : ""}
                 </Text>
             </View>
             <View style={styles.submit}>
-                <SubmitButton text="SIGN UP" submitFunction={submitFunction}></SubmitButton>
+                {
+                    canBeReturned ?
+                        (
+                            <Pressable style={styles.submitButton} onPress={returnLogin}>
+                                <Text style={styles.submitText}>Saved, Let's Login!</Text>
+                            </Pressable>
+                        )
+                            :
+                        (
+                            <SubmitButton text="SIGN UP" submitFunction={submitFunction}></SubmitButton>
+                        )
+
+                }
             </View>
         </SafeAreaView>
     )
@@ -133,9 +158,24 @@ const styles = StyleSheet.create({
     submit: {
         flex: 2,
     },
-    incorrectPass: { 
+    incorrectPass: {
         color: 'red',
         marginLeft: 20,
-        marginTop: 5 
-    }
+        marginTop: 5
+    },
+    submitButton: {
+        borderRadius: 18,
+        width: 369,
+        height: 43,
+        backgroundColor: '#42ba96',
+        alignSelf: 'center',
+        alignItems:'center',
+        marginTop: 20
+      },
+      submitText:{
+        // alignSelf: 'center',
+        color: 'white',
+        fontFamily:"PlayfairDisplay_800ExtraBold",
+        fontSize:25
+      },
 });

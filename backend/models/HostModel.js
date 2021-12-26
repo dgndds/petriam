@@ -25,7 +25,7 @@ const model = mongoose.Schema({
     },
     criminalRecord: {
         type: String,
-        default: false
+        default: ''
     },
     address: {
         type: String,
