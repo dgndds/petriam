@@ -8,6 +8,7 @@ const hostRoute = require('./routes/hosts');
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static('static'));
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
 app.use('/api/hosts', hostRoute);

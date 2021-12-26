@@ -16,7 +16,7 @@ router.get("/", middleware.verifyJWT, (req, res) => {
 });
 
 router.get("/id", middleware.verifyJWT, (req, res) => {
-    Host.findOne({ _id: req.body.hostId }).then(host => {
+    Host.findOne({ _id: req.query.hostId }).then(host => {
         res.status(200).json(host);
     }).catch(err => {
         res.status(500).json({ error: "Host not found" });
@@ -26,16 +26,16 @@ router.get("/id", middleware.verifyJWT, (req, res) => {
 // TODO: Add other filters and return user with host
 router.get("/filter", middleware.verifyJWT, (req, res) => {
     //latitude, longitude, radius, price, type,
-    console.log(req.body);
+    console.log(req.query);
     User.aggregate([
         {
             $geoNear: {
                 near: {
                     type: "Point",
-                    coordinates: [req.body.longitude, req.body.latitude] // Be careful, longitude first!
+                    coordinates: [req.query.longitude, req.query.latitude] // Be careful, longitude first!
                 },
                 distanceField: "distance",
-                maxDistance: req.body.radius * 1000, // Convert km to meters
+                maxDistance: req.query.radius * 1000, // Convert km to meters
                 spherical: true
             }
         },
@@ -53,9 +53,9 @@ router.get("/filter", middleware.verifyJWT, (req, res) => {
         // {
         //     $match: {
         //         "host.price": {
-        //             $lte: req.body.price
+        //             $lte: req.query.price
         //         },
-        //         "host.type": req.body.type
+        //         "host.type": req.query.type
         //     }
         // }
     ]).then(users => {
