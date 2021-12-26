@@ -4,15 +4,14 @@ const mongoose = require("mongoose");
 const app = express();
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
-const contractRoute = require('./routes/contract');
 const hostRoute = require('./routes/hosts');
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
-app.use('/api/contract', contractRoute);
 app.use('/api/hosts', hostRoute);
+
 
 // TODO: MONGODB_URI exists for heroku. String exists for running app locally. String should be removed at production.
 const dbURI = process.env.MONGODB_URI || "mongodb+srv://dbadmin:dbadmin124@awsfrankfurtcluster0.olqv2.mongodb.net/PetriamDB?retryWrites=true&w=majority";

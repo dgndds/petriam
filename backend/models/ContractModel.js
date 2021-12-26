@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const model = mongoose.Schema({
     hostId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        type: mongoose.ObjectId,
+        ref: 'Host',
         required: true
     },
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.ObjectId,
         ref: 'User',
         required: true
     },
@@ -38,4 +38,4 @@ const model = mongoose.Schema({
     },
 });
 
-module.exports = new mongoose.model("Pet", model);
+module.exports = new mongoose.model("Contract", model);

@@ -71,6 +71,11 @@ const model = mongoose.Schema({
         ref: 'Host',
         default: null
     },
+    conversations: {
+        type: Array,
+        ref: 'Conversation',
+        default: []
+    },
 });
 
 module.exports = new mongoose.model("User", model);
