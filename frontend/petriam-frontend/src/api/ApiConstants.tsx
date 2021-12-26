@@ -5,3 +5,4 @@ export const BASE = "https://petriam.herokuapp.com/api/";
 export const USER_PATH = "user/";
 export const AUTH_SIGNUP_PATH = "auth/signup";
 export const AUTH_LOGIN_PATH = "auth/login";
+export const HOSTS_FILTER_PATH = "hosts/filter";
