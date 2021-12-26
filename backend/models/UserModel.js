@@ -41,7 +41,8 @@ const model = mongoose.Schema({
         default: {
             type: 'Point',
             coordinates: [0, 0]
-        }
+        },
+        index: '2dsphere'
     },
     profileImage: {
         type: Buffer,
