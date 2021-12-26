@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Image } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE, MAP_TYPES } from "react-native-maps";
+import { useSelector } from 'react-redux';
 import Navi from '../../components/general/navi';
 
 
 export default function Main() {
+
+    const state = useSelector(state => state);
+
+    console.log(state);
+    
     return (
         <View style={styles.container}>
             <MapView

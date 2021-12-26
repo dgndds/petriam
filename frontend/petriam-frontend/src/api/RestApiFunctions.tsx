@@ -12,39 +12,41 @@ const app = (baseUrl: string, extraUrl?: string) => {
     })
 } 
 
-export function signUpNewUser(username: string, email: string, password: string): void{
-    app(BASE, AUTH_SIGNUP_PATH)
+export async function signUpNewUser(username: string, email: string, password: string): Promise<boolean>{
+    let result: boolean = false;
+
+    await app(BASE, AUTH_SIGNUP_PATH)
         .post(BASE+AUTH_SIGNUP_PATH, {
             username: username,
             email: email,
             password: password
         })
         .then((response) => {
-            
+            result = true;
             console.log(response.data.token)
         })
         .catch(error => {
             console.log(error);
         })
+
+        return result;
 }
 
-export function loginUser(email: string, password: string): string{
+export async function loginUser(email: string, password: string): Promise<string>{
     let token = "";
 
-    app(BASE, AUTH_LOGIN_PATH)
+    await app(BASE, AUTH_LOGIN_PATH)
         .post(BASE+AUTH_LOGIN_PATH, {
             email: email,
             password: password
         })
         .then((response) => {
             token = response.data.token;
-            console.log(token);
-            return token;
         })
         .catch(error => {
             console.log(error);
-            return "-1";
+            token = "-1";
         })
-    
-        return token;
+
+    return token;
 }
