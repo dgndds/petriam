@@ -3,6 +3,9 @@ const router = express.Router();
 const User = require("../models/UserModel");
 const Host = require("../models/HostModel");
 const Pet = require('../models/PetModel');
+const Contract = require('../models/ContractModel');
+const Conversation = require('../models/ConversationModel');
+
 
 const middleware = require('../middlewares');
 
@@ -90,6 +93,40 @@ router.delete("/pet", middleware.verifyJWT, (req, res) => {
     });
 });
 
+//* Contract endpoints -------------------------------------------------------------------------
+router.get("/contract", middleware.verifyJWT, (req, res) => {
+    Contract.find({ ownerId: req.user._id }).then( contract => {
+        res.status(200).json(contract);
+    }).catch(err => {
+        res.status(500).json({ error: 'Contracts could not be found' });
+    });
+});
+
+router.post("/contract", middleware.verifyJWT, (req, res) => {
+    User.findOne({ _id: req.user._id })
+        .then( user => {
+            Contract.insert(req.body.contract).then(contract => {
+                user.contracts.push(contract._id);
+                User.findOne({ _id: req.body.contract.hostId})
+                .then( host => {
+                    user.save().then(user => {
+                        host.save().then(host => {
+                            res.status(200).json(contract);
+                        }).catch(err => {
+                            res.status(500).json({error: "Failed to add contract to host"});
+                        });
+                    }).catch(err => {
+                        res.status(500).json({error: "Failed to add contract to user"});
+                    });
+                }).catch(err => {
+                    res.status(500).json({error: "Host is not valid"});
+                });
+            }).catch(error => {
+                res.status(404).json({ error: 'User is not valid' });
+            });
+        });
+});
+
 //* User host endpoints -------------------------------------------------------------------
 
 router.get("/host", middleware.verifyJWT, (req, res) => {
@@ -149,4 +186,32 @@ router.delete("/host", middleware.verifyJWT, (req, res) => {
     });
 });
 
+//* Conversation endpoints -------------------------------------------------------------------------
+/*router.get("/conversation", middleware.verifyJWT, (req, res) => {
+    Conversation.find(users.includes(req.body.user._id)).then( conversation => {
+        res.status(200).json(conversation);
+    }).catch(err => {
+        res.status(500).json({ error: 'Messages could not be found' });
+    });
+});
+
+router.get("/message", middleware.verifyJWT, (req, res) => {
+    Conversation.findOne({ _id: req.body.conversationId }).then( conversation => {
+        res.status(200).json(conversation.messages);
+    }).catch(err => {
+        res.status(500).json({ error: 'Messages could not be found' });
+    });
+});
+
+router.post("/message", middleware.verifyJWT, (req, res) => {
+    var message = new Message();
+    message.senderId = req.body.user._id;
+    message.content = req.body.message;
+    Conversation.findOne({ _id: req.body.conversationId }).then( conversation => {
+        conversation.messages.push(message);
+        res.status(200).json(message);
+    }).catch(err => {
+        res.status(500).json({ error: 'Messages could not be sent' });
+    });
+});*/
 module.exports = router;

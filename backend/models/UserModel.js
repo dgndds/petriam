@@ -62,10 +62,20 @@ const model = mongoose.Schema({
         type: Boolean,
         default: true // TODO: True for development, false for production
     },
+    contracts: {
+        type: Array,
+        ref: 'Contract',
+        default: []
+    },
     hostId: {
         type: mongoose.ObjectId,
         ref: 'Host',
         default: null
+    },
+    conversations: {
+        type: Array,
+        ref: 'Conversation',
+        default: []
     },
 });
 
