@@ -93,8 +93,8 @@ router.put("/id", middleware.verifyJWT, (req, res) => {
 });
 
 router.delete("/", middleware.verifyJWT, (req, res) => {
-    Host.findOneAndDelete({ _id: req.body.hostId }).then(user => {
-        res.status(200).json(user);
+    Host.findOneAndDelete({ _id: req.body.hostId }).then(host => {
+        res.status(200).json({ success: "Host deleted" });
     }).catch(err => {
         res.status(500).json({ error: "User not found" });
     });
