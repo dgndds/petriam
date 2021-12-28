@@ -25,7 +25,7 @@ router.put("/", middleware.verifyJWT, (req, res) => {
 
 router.delete("/", middleware.verifyJWT, (req, res) => {
     User.findOneAndDelete({ _id: req.user._id }).then(user => {
-        res.status(200).json({"success": "User deleted"});
+        res.status(200).json({success: "User deleted"});
     }).catch(err => {
         res.status(500).json({error: "User not found"});
     });
