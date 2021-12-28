@@ -4,6 +4,7 @@ import MapView, { Marker, PROVIDER_GOOGLE, MAP_TYPES } from "react-native-maps";
 import { useSelector } from 'react-redux';
 import { getHostsFiltered } from '../../api/RestApiFunctions';
 import Navi from '../../components/general/navi';
+import SearchBox from '../../components/searchBox/searchBox';
 
 
 export default function Main() {
@@ -32,6 +33,7 @@ export default function Main() {
 
     return (
         <View style={styles.container}>
+            <View style={styles.searchContainer}><SearchBox style={styles.searchBar}></SearchBox></View>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -71,8 +73,20 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F2F2F2',
     },
+    searchContainer:{
+        height:45,
+        position:"absolute",
+        zIndex:10,
+        alignSelf:"center",
+        marginTop:30
+    },
+    searchBar:{
+        // alignItems:"flex-start",
+        // height:5
+    },
     map: {
-        flex: 1
+        flex: 1,
+        position:"relative"
     },
     hostMarker: {
         width: 35,
