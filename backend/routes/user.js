@@ -25,7 +25,7 @@ router.put("/", middleware.verifyJWT, (req, res) => {
 
 router.delete("/", middleware.verifyJWT, (req, res) => {
     User.findOneAndDelete({ _id: req.user._id }).then(user => {
-        res.status(200).json(user);
+        res.status(200).json({"success": "User deleted"});
     }).catch(err => {
         res.status(500).json({error: "User not found"});
     });
@@ -78,7 +78,7 @@ router.delete("/pet", middleware.verifyJWT, (req, res) => {
         user.save().then(user => {
             // Remove pet from database
             Pet.findOneAndDelete({ _id: req.body.petId }).then(pet => {
-                res.status(200).json(pet);
+                res.status(200).json({success: "Pet deleted"});
             }).catch(err => {
                 res.status(500).json({ error: 'Failed to delete pet' });
             });
@@ -137,7 +137,7 @@ router.delete("/host", middleware.verifyJWT, (req, res) => {
         User.findOne({ _id: req.user._id }).then(user => {
             user.hostId = null;
             user.save().then(user => {
-                res.status(200).json(host);
+                res.status(200).json({success: "Host deleted"});
             }).catch(err => {
                 res.status(500).json({error: "Failed to remove host from user"});
             });
