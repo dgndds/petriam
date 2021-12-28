@@ -27,6 +27,10 @@ router.get("/id", middleware.verifyJWT, (req, res) => {
 router.get("/filter", middleware.verifyJWT, (req, res) => {
     //latitude, longitude, radius, price, type,
     console.log(req.query);
+    
+    req.query.latitude = parseFloat(req.query.latitude);
+    req.query.longitude = parseFloat(req.query.longitude);
+    req.query.radius = parseFloat(req.query.radius);
     User.aggregate([
         {
             $geoNear: {
