@@ -3,28 +3,32 @@ import { SafeAreaView, StyleSheet, View, Text, Image, FlatList } from 'react-nat
 import SearchBox from '../../components/searchBox/searchBox';
 import SelectDropdown from 'react-native-select-dropdown'
 import { Icon } from 'react-native-elements';
+import Navi from '../../components/general/navi';
+import AppLoading from 'expo-app-loading';
+import {useFonts,Roboto_700Bold, Roboto_400Regular } from "@expo-google-fonts/roboto"
+import {PlayfairDisplay_400Regular,PlayfairDisplay_700Bold} from "@expo-google-fonts/playfair-display"
 
 export default function ListHost() {
 
     const petIcons = [
         (
             <Image
-                style={{ width: 30, height: 30 }}
+                style={{ width: 20, height: 20 }}
                 source={require('../../../assets/icons/dove.png')} />
         ),
         (
             <Image
-                style={{ width: 30, height: 30 }}
+                style={{ width: 20, height: 20 }}
                 source={require('../../../assets/icons/cat.png')} />
         ),
         (
             <Image
-                style={{ width: 30, height: 30 }}
+                style={{ width: 20, height: 20 }}
                 source={require('../../../assets/icons/turtle.png')} />
         ),
         (
             <Image
-                style={{ width: 30, height: 30, justifyContent: 'center' }}
+                style={{ width: 20, height: 20 }}
                 source={require('../../../assets/icons/pet.png')} />
         ),
     ]
@@ -37,32 +41,120 @@ export default function ListHost() {
 
     const chevronDownIcon = (
         <Icon
-            name='expand-more'
-            size={50}
-            color='#707070'
+            name='caret-down'
+            type="font-awesome-5"
+            size={20}
+            color='black'
         />
     );
 
     const resultsData = [
         {
+            id:1,
             name: "John Doe",
-            imgUrl: "../../../assets/icons/avatarWoman.png",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
             address: "Bilkent University Cankaya / Ankara",
             animal: "dog",
             price: 55
-        }
+        },
+        {
+            id:2,
+            name: "John Doe",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "cat",
+            price: 55
+        },
+        {
+            id:3,
+            name: "John Doe",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "dove",
+            price: 55
+        },
+        {
+            id:4,
+            name: "John Doe",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "turtle",
+            price: 55
+        },
+        {
+            id:5,
+            name: "John Doe",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "dog",
+            price: 55
+        },
+        {
+            id:6,
+            name: "John Doe",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "cat",
+            price: 55
+        },
+        {
+            id:7,
+            name: "John Doe",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "turtle",
+            price: 55
+        },
+        {
+            id:8,
+            name: "John Doe",
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "cat",
+            price: 55
+        },
     ]
 
+    let [fontsLoaded,err] = useFonts({
+        Roboto_700Bold,
+        Roboto_400Regular,
+        PlayfairDisplay_400Regular,
+        PlayfairDisplay_700Bold
+    })
 
+    if(!fontsLoaded){
+        return <AppLoading/>
+    }
+
+    function updatePetImage(animal:string){
+        switch(animal){
+            case "dog":{
+                return require('../../../assets/icons/pet.png')
+            }
+            case "cat":{
+                return require('../../../assets/icons/cat.png')
+            }
+            case "dove":{
+                return require('../../../assets/icons/dove.png')
+            }
+            case "turtle":{
+                return require('../../../assets/icons/turtle.png')
+            }
+            default:{
+                return require('../../../assets/icons/cat.png')
+            }
+        }
+        
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.filters}>
                 <SearchBox text="SEARCH HOSTS" />
                 <View style={styles.parameters}>
-                    <View style={styles.animal}>
+                    <View>
                         <SelectDropdown
-                            rowStyle={{ width: 100, paddingLeft: 24 }}
+                            rowStyle={{ width: 100 }}
                             data={petIcons}
                             onSelect={(selectedItem, index) => {
                                 console.log(selectedItem, index)
@@ -79,11 +171,11 @@ export default function ListHost() {
                             }}
                             renderDropdownIcon={() => chevronDownIcon}
                             dropdownIconPosition='right'
-                            buttonStyle={{ width: 100, justifyContent: 'center', alignSelf: 'center', borderRadius: 20 }}
+                            buttonStyle={{ width: 75, justifyContent: 'center', alignSelf: 'center', borderRadius: 10 , borderWidth:1,borderColor:"black"}}
                             defaultValue={petIcons[0]}
                         />
                     </View>
-                    <View style={styles.cities}>
+                    <View>
                         <SelectDropdown
                             data={cities}
                             onSelect={(selectedItem, index) => {
@@ -101,11 +193,12 @@ export default function ListHost() {
                             }}
                             renderDropdownIcon={() => chevronDownIcon}
                             dropdownIconPosition='right'
-                            buttonStyle={{ width: 140, borderRadius: 20 }}
+                            buttonStyle={{ width: 150, borderRadius: 10, borderWidth:1, borderColor:"black"}}
+                            buttonTextStyle={{fontFamily: "Roboto_400Regular", fontSize:25}}
                             defaultValue={cities[0]}
                         />
                     </View>
-                    <View style={styles.more}>
+                    <View>
                         <SelectDropdown
                             data={[]}
                             onSelect={(selectedItem, index) => {
@@ -122,7 +215,8 @@ export default function ListHost() {
                                 return item
                             }}
                             dropdownIconPosition='right'
-                            buttonStyle={{ width: 75, borderRadius: 20 }}
+                            buttonStyle={{ width: 100, borderRadius: 10, borderWidth:1,borderColor:"black" }}
+                            buttonTextStyle={{fontFamily: "Roboto_400Regular", fontSize:25}}
                             defaultButtonText="More"
                             disabled
                         />
@@ -131,7 +225,6 @@ export default function ListHost() {
             </View>
             <View style={styles.results}>
                 <FlatList
-                style={{marginTop: 100}}
                     data={resultsData}
                     renderItem={({ item }) => (
                         <View style={styles.result}>
@@ -141,26 +234,26 @@ export default function ListHost() {
                                     source={item.imgUrl} />
                             </View>
                             <View style={styles.info}>
-                                <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>{item.name}</Text>
-                                <Text style={{ marginLeft: 10 }}>{item.address}</Text>
+                                <Text style={{ fontFamily:"Roboto_700Bold", fontSize:20, marginLeft: 10 }}>{item.name}</Text>
+                                <Text style={{ fontFamily:"PlayfairDisplay_400Regular",fontSize:15,color:"#707070",marginLeft: 10 }}>{item.address}</Text>
                             </View>
                             <View style={styles.price}>
-                                <Text style={{ fontWeight: 'bold' }}>{item.price}<Text style={{ fontSize: 20 }}>₺</Text><Text>  <Text style={{ fontWeight: 'normal' }}>per night</Text></Text></Text>
+                                <Text style={{ fontFamily:"PlayfairDisplay_700Bold", fontSize:20 }}>{item.price}<Text style={{ fontSize: 20 }}>₺</Text><Text>  <Text style={{fontFamily:"PlayfairDisplay_400Regular", fontSize:10 }}>per night</Text></Text></Text>
 
                                 <View style={{ flexDirection: 'row', marginTop: 7 }}>
                                     <Image
                                         style={{ width: 22, height: 22 }}
-                                        source={require('../../../assets/icons/cat.png')} />
-                                    <Text style={{ marginLeft: 10 }}>{item.animal} Host</Text>
+                                        source={updatePetImage(item.animal) }
+                                    />
+                                    <Text style={{ fontFamily: "Roboto_400Regular", fontSize:15,marginLeft: 10 }}>{item.animal[0].toUpperCase() + item.animal.slice(1)} Host</Text>
                                 </View>
                             </View>
                         </View>
                     )}
+                    keyExtractor={(item)=>item.id}
                 />
             </View>
-            <View style={styles.navbar}>
-
-            </View>
+            <Navi></Navi>
         </SafeAreaView>
     )
 };
@@ -171,35 +264,24 @@ const styles = StyleSheet.create({
         backgroundColor: '#F2F2F2',
     },
     filters: {
-        flex: 1,
-        backgroundColor: 'red',
+        minHeight:120,
+        // backgroundColor: 'red',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     parameters: {
-        flex: 1,
-        flexDirection: 'row'
-    },
-    animal: {
-        flex: 1
-    },
-    cities: {
-        flex: 1,
-    },
-    more: {
-        flex: 1,
-        position: 'relative',
-        right: -33
+        flexDirection: 'row',
+        justifyContent:"space-around",
+        width:"100%",
     },
     results: {
-        flex: 3,
-        backgroundColor: 'green',
-        paddingHorizontal: 20
+        flex:1,
+        // backgroundColor: 'green',
     },
     result: {
         flex: 1,
         flexDirection: 'row',
-        height: 30
+        minHeight:100
     },
     profilePicture: {
         flex: 2,
@@ -207,11 +289,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     profilePictureImage: {
-        width: 50,
-        height: 50,
+        width: 75,
+        height: 75,
         overflow: 'hidden',
-        borderRadius: 50,
-        borderWidth: 3,
+        borderRadius: 75,
+        borderWidth: 1,
         borderColor: "black"
     },
     info: {
