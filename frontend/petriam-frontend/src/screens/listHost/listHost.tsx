@@ -8,7 +8,7 @@ import AppLoading from 'expo-app-loading';
 import {useFonts,Roboto_700Bold, Roboto_400Regular } from "@expo-google-fonts/roboto"
 import {PlayfairDisplay_400Regular,PlayfairDisplay_700Bold} from "@expo-google-fonts/playfair-display"
 
-export default function ListHost() {
+export default function ListHost({navigation}) {
 
     const petIcons = [
         (
@@ -148,7 +148,7 @@ export default function ListHost() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.filters}>
                 <SearchBox text="SEARCH HOSTS" />
                 <View style={styles.parameters}>
@@ -253,8 +253,8 @@ export default function ListHost() {
                     keyExtractor={(item)=>item.id}
                 />
             </View>
-            <Navi></Navi>
-        </SafeAreaView>
+            <Navi nextPage={() => navigation.pop()}></Navi>
+        </View>
     )
 };
 
@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'red',
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 40
     },
     parameters: {
         flexDirection: 'row',

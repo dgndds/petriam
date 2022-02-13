@@ -72,7 +72,7 @@ const DATA = [
     },
   ];
 
-export default function InboxScreen(){
+export default function InboxScreen({navigation}){
 
     let [fontsLoaded,err] = useFonts({
         Roboto_700Bold
@@ -89,16 +89,17 @@ export default function InboxScreen(){
                     style={styles.back}
                     size={50}
                     color= '#707070'
+                    onPress={() => navigation.pop()}
                 />
                 <Text style={styles.inboxText}>Inbox (5)</Text>
             </View>
 
             <FlatList 
             data={DATA} 
-            renderItem={(item)=>(<InputBoxItem item={item}></InputBoxItem>)} 
+            renderItem={(item)=>(<InputBoxItem item={item} nextPage={() => navigation.navigate("MessagePage")}></InputBoxItem>)} 
             keyExtractor={item => item.id}
             ></FlatList>
-            <Navi></Navi>
+            <Navi nextPage={() => navigation.pop()}></Navi>
         </View>
     )
 }
@@ -118,7 +119,8 @@ const styles = StyleSheet.create({
     topBar:{
         flexDirection:'row',
         backgroundColor:"orange",
-        alignItems:"center"
+        alignItems:"center",
+        marginTop: 40
     },
     back: {
         alignSelf: 'flex-start',

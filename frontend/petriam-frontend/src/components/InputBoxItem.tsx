@@ -15,7 +15,7 @@ export default function InputBoxItem(props){
     }
 
     return (
-        <Pressable style={styles.container}>
+        <Pressable style={styles.container} onPress={() => props.nextPage()}>
             <Image
             style={styles.profilePic}
             source={props.item.item.profilePic ? props.item.item.profilePic : require("../../assets/profilepicd.png") }></Image>

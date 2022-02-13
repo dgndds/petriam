@@ -70,10 +70,10 @@ export default function Login({ navigation }) {
         </Text>
       </View>
       <View style={styles.form}>
-        <TextInput style={styles.box} value={email} onChangeText={setEmail} placeholder='Type Your Username'>
+        <TextInput style={styles.box} value={email} onChangeText={setEmail} placeholder='Type Your Email'  autoCapitalize='none'>
 
         </TextInput>
-        <TextInput style={styles.box} value={password} onChangeText={setPassword} placeholder='Type Your Password'>
+        <TextInput style={styles.box} value={password} onChangeText={setPassword} placeholder='Type Your Password' secureTextEntry={true}>
 
         </TextInput>
         <Text style={styles.forgot}>

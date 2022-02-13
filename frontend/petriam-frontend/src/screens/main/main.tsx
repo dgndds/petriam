@@ -5,9 +5,11 @@ import { useSelector } from 'react-redux';
 import { getHostsFiltered } from '../../api/RestApiFunctions';
 import Navi from '../../components/general/navi';
 import SearchBox from '../../components/searchBox/searchBox';
+import { StackNavigator } from 'react-navigation';
 
 
-export default function Main() {
+
+export default function Main({navigation}) {
     const state = useSelector(state => state);
     const [hosts, setHosts] = useState([]);
 
@@ -26,6 +28,7 @@ export default function Main() {
     hosts.map(item => {
         console.log(parseFloat(item.location.coordinates[1]));
         console.log(parseFloat(item.location.coordinates[0]));
+        
     });
 
 
@@ -33,7 +36,7 @@ export default function Main() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.searchContainer}><SearchBox style={styles.searchBar}></SearchBox></View>
+            <View style={styles.searchContainer}><SearchBox style={styles.searchBar} nextPage={() => navigation.navigate("ListHost")}></SearchBox></View>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -63,7 +66,7 @@ export default function Main() {
                     })
                 }
             </MapView>
-            <Navi />
+            <Navi nextPage={() => navigation.navigate("InboxScreen")}/>
         </View>
     )
 };
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
         position:"absolute",
         zIndex:10,
         alignSelf:"center",
-        marginTop:30
+        marginTop:50
     },
     searchBar:{
         // alignItems:"flex-start",

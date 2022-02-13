@@ -57,7 +57,7 @@ const DATA = [
     }
   ];
 
-export default function MessagePage(){
+export default function MessagePage({navigation}){
     let [fontsLoaded,err] = useFonts({
         Roboto_700Bold,
         Roboto_300Light, 
@@ -77,6 +77,7 @@ export default function MessagePage(){
                         size={60}
                         color= '#000000'
                         iconStyle={{opacity:0.5}}
+                        onPress={() => navigation.pop()}
                 />
                 <Image 
                 style={styles.profilePic}

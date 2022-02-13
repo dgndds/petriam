@@ -72,7 +72,7 @@ export default function SignUp({ navigation }) {
                 </View>
                 <View>
                     <Text style={styles.formText}>Email</Text>
-                    <TextInput style={styles.box} value={email} onChangeText={setEmail}>
+                    <TextInput style={styles.box} value={email} onChangeText={setEmail} autoCapitalize='none'>
 
                     </TextInput>
                 </View>

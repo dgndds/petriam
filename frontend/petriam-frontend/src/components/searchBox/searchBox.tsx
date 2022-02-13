@@ -1,12 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TextInput } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, Image, TextInput, Pressable } from 'react-native';
 import { Icon } from 'react-native-elements'
+import { StackNavigator } from 'react-navigation';
 
 
-export default function SearchBox(props) {
+export default function SearchBox(props, {navigation}) {
     return (
         <View style={styles.search}>
-            <View style={styles.searchContainer}>
+            <Pressable style={styles.searchContainer} onPress={() => props.nextPage()}>
                 <View style={styles.searchIcon}>
                     <Image
                         style={styles.icon}
@@ -16,7 +17,7 @@ export default function SearchBox(props) {
                     placeholder={props.text}
                     style={styles.textInput}
                 />
-            </View>
+            </Pressable>
         </View>
     )
 };

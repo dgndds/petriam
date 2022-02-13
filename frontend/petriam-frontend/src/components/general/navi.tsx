@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, Pressable, StyleSheet,Image,View } from 'react-native';
+import { Text, Pressable, StyleSheet,View } from 'react-native';
 import { Icon } from 'react-native-elements'
 
-export default function Navi(){
+
+export default function Navi(props){
     return (
             
             <View style={styles.container}>
@@ -19,6 +20,7 @@ export default function Navi(){
                         size={25}
                         color= 'white'
                         solid={true}
+                        onPress={() => {props.nextPage()} }
                 />
                 <View style={styles.circle}>
                 <Icon
@@ -28,6 +30,7 @@ export default function Navi(){
                         size={60}
                         color= 'white'
                         solid={true}
+                        onPress={() => {props.nextPage()} }
                 />
                 </View>
                 <Icon

@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ListHost from './src/screens/listHost/listHost';
 import { Provider } from 'react-redux';
 import store from './src/redux/store/configureStore';
+import MessagePage from './src/screens/MessagePage/messagePage';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function App() {
           <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
           <Stack.Screen name="InboxScreen" component={InboxScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ListHost" component={ListHost} options={{ headerShown: false }} />
+          <Stack.Screen name="MessagePage" component={MessagePage} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
