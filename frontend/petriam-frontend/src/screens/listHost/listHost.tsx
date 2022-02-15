@@ -7,33 +7,98 @@ import Navi from '../../components/general/navi';
 import AppLoading from 'expo-app-loading';
 import {useFonts,Roboto_700Bold, Roboto_400Regular } from "@expo-google-fonts/roboto"
 import {PlayfairDisplay_400Regular,PlayfairDisplay_700Bold} from "@expo-google-fonts/playfair-display"
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { getHostsFiltered } from '../../api/RestApiFunctions';
+
+interface HostProperties {
+    id: string;
+    name: string;
+    imgUrl: number;
+    address: string;
+    animal: string;
+    price: number;
+  }
 
 export default function ListHost({navigation}) {
+    const [hosts, setHosts] = useState([]);
+    const state = useSelector(state => state);
+    //const [resultsData, setResultsData] = useState<HostProperties[]>([]);
+
+    useEffect(() => {
+        const getHosts = async () => {
+            let result = await getHostsFiltered(32, 39, 100000, state.token.token);
+            setHosts(Array.from(result));
+        }
+        getHosts();
+    }, []);
+    
+/*
+TODO: resultsData need to handled as a state
+    useEffect(() => {
+        var data = [];
+        hosts.map(item => {
+            let listedHost: HostProperties = {
+                id: item._id,
+                name: item.email.split(/@(.+)/)[0],
+                imgUrl: require("../../../assets/icons/avatarWoman.png"),
+                address: "Bilkent University Cankaya / Ankara",
+                animal: "dog",
+                price: item.host.price
+            };
+            setResultsData([...resultsData, listedHost]);
+        });
+
+    }, [resultsData]);
+*/
+    var resultsData = [];
+
+    hosts.map(item => {
+        let listedHost: HostProperties = {
+            id: item._id,
+            name: item.email.split(/@(.+)/)[0],
+            imgUrl: require("../../../assets/icons/avatarWoman.png"),
+            address: "Bilkent University Cankaya / Ankara",
+            animal: "dog",
+            price: item.host.price
+        };
+        resultsData.push(listedHost);
+    });
+    
+    console.log(resultsData);
 
     const petIcons = [
         (
+            <Text>Pet</Text>
+        ),
+        (
             <Image
                 style={{ width: 20, height: 20 }}
+                type="dove"
                 source={require('../../../assets/icons/dove.png')} />
         ),
         (
             <Image
                 style={{ width: 20, height: 20 }}
+                type="cat"
                 source={require('../../../assets/icons/cat.png')} />
         ),
         (
             <Image
                 style={{ width: 20, height: 20 }}
+                type="turtle"
                 source={require('../../../assets/icons/turtle.png')} />
         ),
         (
             <Image
                 style={{ width: 20, height: 20 }}
+                type="dog"
                 source={require('../../../assets/icons/pet.png')} />
         ),
     ]
 
     const cities = [
+        "City",
         "Ankara",
         "Istanbul",
         "Eskişehir"
@@ -47,73 +112,6 @@ export default function ListHost({navigation}) {
             color='black'
         />
     );
-
-    const resultsData = [
-        {
-            id:1,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "dog",
-            price: 55
-        },
-        {
-            id:2,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "cat",
-            price: 55
-        },
-        {
-            id:3,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "dove",
-            price: 55
-        },
-        {
-            id:4,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "turtle",
-            price: 55
-        },
-        {
-            id:5,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "dog",
-            price: 55
-        },
-        {
-            id:6,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "cat",
-            price: 55
-        },
-        {
-            id:7,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "turtle",
-            price: 55
-        },
-        {
-            id:8,
-            name: "John Doe",
-            imgUrl: require("../../../assets/icons/avatarWoman.png"),
-            address: "Bilkent University Cankaya / Ankara",
-            animal: "cat",
-            price: 55
-        },
-    ]
 
     let [fontsLoaded,err] = useFonts({
         Roboto_700Bold,
@@ -157,7 +155,8 @@ export default function ListHost({navigation}) {
                             rowStyle={{ width: 100 }}
                             data={petIcons}
                             onSelect={(selectedItem, index) => {
-                                console.log(selectedItem, index)
+                                console.log(selectedItem.props.type)
+                                //setResultsData(resultsData.filter(item => item.animal === selectedItem.props.type));
                             }}
                             buttonTextAfterSelection={(selectedItem, index) => {
                                 // text represented after item is selected
