@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/UserModel");
 const Host = require("../models/HostModel");
 const Pet = require('../models/PetModel');
+const Review = require('../models/ReviewModel');
 
 const middleware = require('../middlewares');
 
@@ -95,5 +96,33 @@ router.delete("/", middleware.verifyJWT, (req, res) => {
         res.status(500).json({ error: "User not found" });
     });
 });
+
+//* Host review endpoints -------------------------------------------------------------------------
+router.get("/review", middleware.verifyJWT, (req, res) => {
+    Review.find({ hostId: req.hostId }).then(reviews => {
+        res.status(200).json(reviews);
+    }).catch(err => {
+        res.status(500).json({ error: 'Review could not be found' });
+    });
+});
+
+router.post("/review", middleware.verifyJWT, (req, res) => {
+    Host.findOne({ _id: req.hostId })
+        .then( host => {
+            Review.insertMany(req.body.reviews).then(reviews => {
+                reviews.forEach(review => { host.reviews.push(review._id); });
+                host.save().then(host => {
+                    res.status(200).json(reviews);
+                }).catch(err => {
+                    res.status(500).json({error: "Failed to add reviews to host"});
+                });
+            }).catch(err => {
+                res.status(500).json({error: "Failed to create reviews"});
+            });
+        }).catch(error => {
+            res.status(404).json({ error: 'Host is not valid' });
+        });
+});
+
 
 module.exports = router;

@@ -4,8 +4,6 @@ const User = require("../models/UserModel");
 const Host = require("../models/HostModel");
 const Pet = require('../models/PetModel');
 const Contract = require('../models/ContractModel');
-const Conversation = require('../models/ConversationModel');
-
 
 const middleware = require('../middlewares');
 
@@ -186,32 +184,4 @@ router.delete("/host", middleware.verifyJWT, (req, res) => {
     });
 });
 
-//* Conversation endpoints -------------------------------------------------------------------------
-/*router.get("/conversation", middleware.verifyJWT, (req, res) => {
-    Conversation.find(users.includes(req.body.user._id)).then( conversation => {
-        res.status(200).json(conversation);
-    }).catch(err => {
-        res.status(500).json({ error: 'Messages could not be found' });
-    });
-});
-
-router.get("/message", middleware.verifyJWT, (req, res) => {
-    Conversation.findOne({ _id: req.body.conversationId }).then( conversation => {
-        res.status(200).json(conversation.messages);
-    }).catch(err => {
-        res.status(500).json({ error: 'Messages could not be found' });
-    });
-});
-
-router.post("/message", middleware.verifyJWT, (req, res) => {
-    var message = new Message();
-    message.senderId = req.body.user._id;
-    message.content = req.body.message;
-    Conversation.findOne({ _id: req.body.conversationId }).then( conversation => {
-        conversation.messages.push(message);
-        res.status(200).json(message);
-    }).catch(err => {
-        res.status(500).json({ error: 'Messages could not be sent' });
-    });
-});*/
 module.exports = router;
