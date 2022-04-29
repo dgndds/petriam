@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 
 const model = mongoose.Schema({
+    ownerId: {
+        type: mongoose.ObjectId,
+        ref: 'User',
+        required: true
+    },
     hostId: {
         type: mongoose.ObjectId,
         ref: 'Host',
-        required: true
-    },
-    userId: {
-        type: mongoose.ObjectId,
-        ref: 'User',
         required: true
     },
     startDate: {
@@ -19,7 +19,7 @@ const model = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    contractDate: {
+    arrangementDate: {
         type: Date,
         default: Date.now
     },
@@ -32,9 +32,10 @@ const model = mongoose.Schema({
         type: String,
         default: '0'
     },
+    // Sent, Accepted, Rejected, Cancelled, Abandoned
     status: {
         type: String,
-        default: ''
+        default: 'Sent'
     },
 });
 

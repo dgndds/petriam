@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const model = mongoose.Schema({
-    date: {
-        type: Date,
-        default: Date.now
+    hostId: {
+        type: mongoose.ObjectId,
+        ref: 'Host',
+        required: true
     },
     rating: {
         type: Number,
@@ -12,6 +13,10 @@ const model = mongoose.Schema({
     comment: {
         type: String,
         default: ''
+    },
+    date: {
+        type: Date,
+        default: Date.now
     }
 });
 

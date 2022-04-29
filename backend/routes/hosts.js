@@ -16,8 +16,8 @@ router.get("/", middleware.verifyJWT, (req, res) => {
     });
 });
 
-router.get("/id", middleware.verifyJWT, (req, res) => {
-    Host.findOne({ _id: req.body.hostId }).then(host => {
+router.get("/:hostId", middleware.verifyJWT, (req, res) => {
+    Host.findOne({ _id: req.params.hostId }).then(host => {
         res.status(200).json(host);
     }).catch(err => {
         res.status(500).json({ error: "Host not found" });
@@ -69,11 +69,16 @@ router.get("/filter", middleware.verifyJWT, (req, res) => {
 // TODO: Change this to insertMany
 router.post("/", middleware.verifyJWT, (req, res) => {
     User.findOne({ _id: req.body.userId }).then(user => {
-        Host.insert(req.body.host).then(host => {
+        const host = new Host(req.body.host);
+        host.save().then(host => {
             user.hostId = host._id;
-            res.status(200).json(host);
+            user.save().then(user => {
+                res.status(200).json(host);
+            }).catch(err => {
+                res.status(500).json({ error: "Failed to add host to user" });
+            });
         }).catch(err => {
-            res.status(500).json({ error: "Failed to create host" });
+            res.status(500).json({ error: "Failed to save host" });
         });
     }).catch(err => {
         res.status(500).json({ error: "User not found" });
@@ -81,48 +86,48 @@ router.post("/", middleware.verifyJWT, (req, res) => {
 });
 
 // TODO: Update user hostid if host id is changed
-router.put("/id", middleware.verifyJWT, (req, res) => {
-    Host.findOneAndUpdate({ _id: req.body.hostId }, req.body, { new: true }).then(host => {
+router.put("/:hostId", middleware.verifyJWT, (req, res) => {
+    Host.findOneAndUpdate({ _id: req.params.hostId }, req.body.host, { new: true }).then(host => {
         res.status(200).json(user);
     }).catch(err => {
         res.status(500).json({ error: "Host not found" });
     });
 });
 
-router.delete("/", middleware.verifyJWT, (req, res) => {
-    Host.findOneAndDelete({ _id: req.body.hostId }).then(user => {
+router.delete("/:hostId", middleware.verifyJWT, (req, res) => {
+    Host.findOneAndDelete({ _id: req.params.hostId }).then(user => {
         res.status(200).json(user);
     }).catch(err => {
         res.status(500).json({ error: "User not found" });
     });
 });
 
+
 //* Host review endpoints -------------------------------------------------------------------------
-router.get("/review", middleware.verifyJWT, (req, res) => {
-    Review.find({ hostId: req.hostId }).then(reviews => {
+
+router.get("/review/:hostId", middleware.verifyJWT, (req, res) => {
+    Review.find({ hostId: req.params.hostId }).then(reviews => {
         res.status(200).json(reviews);
     }).catch(err => {
         res.status(500).json({ error: 'Review could not be found' });
     });
 });
 
-router.post("/review", middleware.verifyJWT, (req, res) => {
-    Host.findOne({ _id: req.hostId })
-        .then( host => {
-            Review.insertMany(req.body.reviews).then(reviews => {
-                reviews.forEach(review => { host.reviews.push(review._id); });
-                host.save().then(host => {
-                    res.status(200).json(reviews);
-                }).catch(err => {
-                    res.status(500).json({error: "Failed to add reviews to host"});
-                });
-            }).catch(err => {
-                res.status(500).json({error: "Failed to create reviews"});
-            });
-        }).catch(error => {
-            res.status(404).json({ error: 'Host is not valid' });
+router.post("/review/:hostId", middleware.verifyJWT, (req, res) => {
+    if(req.body.review.rating < 1 || req.body.review.rating > 5) {
+        res.status(400).json({ error: 'Rating must be between 1 and 5' });
+        return;
+    }
+    const review = new Review(req.body.review);
+    review.save().then(review => {
+        Host.findOneAndUpdate({ _id: req.params.hostId }, { $push: { reviews: review._id } }, { new: true }).then(host => {
+            res.status(200).json(review);
+        }).catch(err => {
+            res.status(500).json({ error: 'Host could not be found' });
         });
+    }).catch(err => {
+        res.status(500).json({ error: 'Review could not be saved' });
+    });
 });
-
 
 module.exports = router;

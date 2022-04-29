@@ -12,7 +12,7 @@ router.get("/", middleware.verifyJWT, (req, res) => {
     User.findOne({ _id: req.user._id }).then(user => {
         res.status(200).json(user);
     }).catch(err => {
-        res.status(500).json({error: "User not found"});
+        res.status(500).json({ error: "User not found" });
     });
 });
 
@@ -20,7 +20,7 @@ router.put("/", middleware.verifyJWT, (req, res) => {
     User.findOneAndUpdate({ _id: req.user._id }, req.body.user, { new: true }).then(user => {
         res.status(200).json(user);
     }).catch(err => {
-        res.status(500).json({error: "User not found"});
+        res.status(500).json({ error: "User not found" });
     });
 });
 
@@ -28,14 +28,14 @@ router.delete("/", middleware.verifyJWT, (req, res) => {
     User.findOneAndDelete({ _id: req.user._id }).then(user => {
         res.status(200).json(user);
     }).catch(err => {
-        res.status(500).json({error: "User not found"});
+        res.status(500).json({ error: "User not found" });
     });
 });
 
 
 //* User pet endpoints -------------------------------------------------------------------------
 router.get("/pet", middleware.verifyJWT, (req, res) => {
-    Pet.find({ ownerId: req.user._id }).then( pets => {
+    Pet.find({ ownerId: req.user._id }).then(pets => {
         res.status(200).json(pets);
     }).catch(err => {
         res.status(500).json({ error: 'Pets could not be found' });
@@ -44,7 +44,7 @@ router.get("/pet", middleware.verifyJWT, (req, res) => {
 
 router.post("/pet", middleware.verifyJWT, (req, res) => {
     User.findOne({ _id: req.user._id })
-        .then( user => {
+        .then(user => {
             // Assign current user as owner of the pets
             req.body.pets.forEach(pet => { pet.ownerId = user._id; });
             Pet.insertMany(req.body.pets).then(pets => {
@@ -53,10 +53,10 @@ router.post("/pet", middleware.verifyJWT, (req, res) => {
                 user.save().then(user => {
                     res.status(200).json(pets);
                 }).catch(err => {
-                    res.status(500).json({error: "Failed to add pets to user"});
+                    res.status(500).json({ error: "Failed to add pets to user" });
                 });
             }).catch(err => {
-                res.status(500).json({error: "Failed to create pets"});
+                res.status(500).json({ error: "Failed to create pets" });
             });
         }).catch(error => {
             res.status(404).json({ error: 'User is not valid' });
@@ -93,7 +93,7 @@ router.delete("/pet", middleware.verifyJWT, (req, res) => {
 
 //* Contract endpoints -------------------------------------------------------------------------
 router.get("/contract", middleware.verifyJWT, (req, res) => {
-    Contract.find({ ownerId: req.user._id }).then( contract => {
+    Contract.find({ $or: [{ ownerId: req.user._id }, { hostId: req.user._id },] }).then(contract => {
         res.status(200).json(contract);
     }).catch(err => {
         res.status(500).json({ error: 'Contracts could not be found' });
@@ -101,26 +101,24 @@ router.get("/contract", middleware.verifyJWT, (req, res) => {
 });
 
 router.post("/contract", middleware.verifyJWT, (req, res) => {
+    if(req.body.contract.hostId === req.user._id) {
+        res.status(400).json({ error: 'You cannot create a contract with yourself' });
+        return;
+    }
+
     User.findOne({ _id: req.user._id })
-        .then( user => {
-            Contract.insert(req.body.contract).then(contract => {
+        .then(user => {
+            const contract = new Contract(req.body.contract);
+            contract.ownerId = user._id;
+            contract.save().then(contract => {
                 user.contracts.push(contract._id);
-                User.findOne({ _id: req.body.contract.hostId})
-                .then( host => {
-                    user.save().then(user => {
-                        host.save().then(host => {
-                            res.status(200).json(contract);
-                        }).catch(err => {
-                            res.status(500).json({error: "Failed to add contract to host"});
-                        });
-                    }).catch(err => {
-                        res.status(500).json({error: "Failed to add contract to user"});
-                    });
+                user.save().then(user => {
+                    res.status(200).json(contract);
                 }).catch(err => {
-                    res.status(500).json({error: "Host is not valid"});
+                    res.status(500).json({ error: 'Failed to add contract to user' });
                 });
-            }).catch(error => {
-                res.status(404).json({ error: 'User is not valid' });
+            }).catch(err => {
+                res.status(500).json({ error: 'Failed to create contract' });
             });
         });
 });
@@ -138,8 +136,8 @@ router.get("/host", middleware.verifyJWT, (req, res) => {
 router.post("/host", middleware.verifyJWT, (req, res) => {
     req.body.host.userId = req.user._id
     User.findOne({ _id: req.user._id })
-        .then( user => {
-            if(user.hostId) {
+        .then(user => {
+            if (user.hostId) {
                 console.log("User already has a host");
                 res.status(500).json({ error: 'User already has a host' });
                 return;
@@ -149,10 +147,10 @@ router.post("/host", middleware.verifyJWT, (req, res) => {
                 user.save().then(user => {
                     res.status(200).json(host);
                 }).catch(err => {
-                    res.status(500).json({error: "Failed to add host to user"});
+                    res.status(500).json({ error: "Failed to add host to user" });
                 });
             }).catch(err => {
-                res.status(500).json({error: "Failed to create host"});
+                res.status(500).json({ error: "Failed to create host" });
             });
         }).catch(error => {
             res.status(404).json({ error: 'User is not valid' });
@@ -174,10 +172,10 @@ router.delete("/host", middleware.verifyJWT, (req, res) => {
             user.save().then(user => {
                 res.status(200).json(host);
             }).catch(err => {
-                res.status(500).json({error: "Failed to remove host from user"});
+                res.status(500).json({ error: "Failed to remove host from user" });
             });
         }).catch(err => {
-            res.status(500).json({error: "Failed to find user"});
+            res.status(500).json({ error: "Failed to find user" });
         });
     }).catch(err => {
         res.status(500).json({ error: 'Host could not be found' });
