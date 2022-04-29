@@ -21,3 +21,22 @@ exports.verifyJWT = (req, res, next) => {
         })
     }
 }
+
+exports.socketVerifyJWT = (socket, data) => {
+    console.log(socket.handshake.auth);
+    const token = socket.handshake.auth["Authorization"].split(' ')[1];
+    console.log("token: " +  token);
+    if (!token) data = {error: "Please provide a token"};
+    else {
+        jwt.verify(token, exports.JWT_SECRET, (err, value) => {
+            if (err) data = {error: 'Failed to authenticate token'};
+            else {
+                if(!value.data.activated){
+                    data = {error: 'Account not activated'};
+                }
+                data = value.data;
+            }
+        })
+    }
+    console.log("will return null");
+}
