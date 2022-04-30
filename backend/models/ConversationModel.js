@@ -6,7 +6,7 @@ const model = mongoose.Schema({
         ref: 'User',
         required: true
     },
-    hostId: {
+    hostUserId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

@@ -204,7 +204,7 @@ router.delete("/host", middlewares.verifyJWT, (req, res) => {
 //* ------------------------------------------------------------------------------------------
 
 router.get("/conversation", middlewares.verifyJWT, (req, res) => {
-    Conversation.find({ownerId: req.user._id}).then(conversation => {
+    Conversation.find({ownerId: req.user._id}).then(conversations => {
         res.status(200).json(conversations);
     }).catch(err => {
         res.status(500).json({ error: 'Conversations could not be found' });
@@ -220,8 +220,8 @@ router.get("/conversation/:conversationId", middlewares.verifyJWT, (req, res) =>
 });
 
 //! I thought this was needed, but now I cannot find a case where it is needed.
-router.get("/conversation/:userId", middlewares.verifyJWT, (req, res) => {
-    Conversation.findOne({ ownerId: req.user._id, hostId: req.params.userId }).then(conversation => {
+router.get("/conversation/:hostUserId", middlewares.verifyJWT, (req, res) => {
+    Conversation.findOne({ ownerId: req.user._id, hostUserId: req.params.hostUserId }).then(conversation => {
         res.status(200).json(conversation);
     }).catch(err => {
         res.status(500).json({ error: 'Conversation could not be found' });
@@ -231,7 +231,7 @@ router.get("/conversation/:userId", middlewares.verifyJWT, (req, res) => {
 // TODO: Conversation validity should be checked.
 router.post("/conversation", middlewares.verifyJWT, (req, res) => {
     req.body.conversation.ownerId = req.user._id;
-    Conversation.findOne({ ownerId: req.user._id, hostId: req.body.conversation.hostId }).then(conversation => {
+    Conversation.findOne({ ownerId: req.user._id, hostUserId: req.body.conversation.hostUserId }).then(conversation => {
         // I do not know why but conversation is returned as null here even if it is not found.(It should go to catch block)
         // Check whether conversation is null and if it is, create a new conversation else return the existing one.
         if(conversation) {
@@ -258,7 +258,7 @@ router.post("/conversation", middlewares.verifyJWT, (req, res) => {
 //* ------------------------------------------------------------------------------------------
 
 router.get("/message/:conversationId", middlewares.verifyJWT, (req, res) => {
-    Conversation.findOne({ _id: req.params.conversationId, $or: [{ownerId: req.user._id}, {hostId: req.user._id}] }).then(conversation => {
+    Conversation.findOne({ _id: req.params.conversationId, $or: [{ownerId: req.user._id}, {hostUserId: req.user._id}] }).then(conversation => {
         Message.find({ conversationId: req.params.conversationId }).then(messages => {
             res.status(200).json(messages);
         }).catch(err => {
@@ -278,7 +278,7 @@ router.post("/message", middlewares.verifyJWT, (req, res) => {
 
     const io = req.app.get('socketio'); // Get the socket.io instance from the global scope.
 
-    Conversation.findOne({ $or: [{ ownerId: req.user._id, hostId: req.body.message.receiverId }, { ownerId: req.body.message.receiverId, hostId: req.user._id }] }).then(conversation => {
+    Conversation.findOne({ $or: [{ ownerId: req.user._id, hostUserId: req.body.message.receiverId }, { ownerId: req.body.message.receiverId, hostUserId: req.user._id }] }).then(conversation => {
         let _message = req.body.message;
         _message.senderId = req.user._id;
         _message.conversationId = conversation._id;
