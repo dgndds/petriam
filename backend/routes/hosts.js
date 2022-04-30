@@ -5,13 +5,13 @@ const Host = require("../models/HostModel");
 const Pet = require('../models/PetModel');
 const Review = require('../models/ReviewModel');
 
-const middleware = require('../middlewares');
+const middlewares = require('../middlewares');
 
 //* ------------------------------------------------------------------------------------------
 //* General host endpoints ---------------------------------------------------------------------------
 //* ------------------------------------------------------------------------------------------
 
-router.get("/", middleware.verifyJWT, (req, res) => {
+router.get("/", middlewares.verifyJWT, (req, res) => {
     Host.find({}).then(hosts => {
         res.status(200).json(hosts);
     }).catch(err => {
@@ -19,7 +19,7 @@ router.get("/", middleware.verifyJWT, (req, res) => {
     });
 });
 
-router.get("/:hostId", middleware.verifyJWT, (req, res) => {
+router.get("/:hostId", middlewares.verifyJWT, (req, res) => {
     Host.findOne({ _id: req.params.hostId }).then(host => {
         res.status(200).json(host);
     }).catch(err => {
@@ -28,7 +28,7 @@ router.get("/:hostId", middleware.verifyJWT, (req, res) => {
 });
 
 // TODO: Add other filters and return user with host
-router.get("/filter", middleware.verifyJWT, (req, res) => {
+router.get("/filter", middlewares.verifyJWT, (req, res) => {
     //latitude, longitude, radius, price, type,
     console.log(req.query);
     
@@ -74,7 +74,7 @@ router.get("/filter", middleware.verifyJWT, (req, res) => {
 });
 
 // TODO: Change this to insertMany
-router.post("/", middleware.verifyJWT, (req, res) => {
+router.post("/", middlewares.verifyJWT, (req, res) => {
     User.findOne({ _id: req.body.userId }).then(user => {
         const host = new Host(req.body.host);
         host.save().then(host => {
@@ -93,7 +93,7 @@ router.post("/", middleware.verifyJWT, (req, res) => {
 });
 
 // TODO: Update user hostid if host id is changed
-router.put("/:hostId", middleware.verifyJWT, (req, res) => {
+router.put("/:hostId", middlewares.verifyJWT, (req, res) => {
     Host.findOneAndUpdate({ _id: req.params.hostId }, req.body.host, { new: true }).then(host => {
         res.status(200).json(user);
     }).catch(err => {
@@ -101,7 +101,7 @@ router.put("/:hostId", middleware.verifyJWT, (req, res) => {
     });
 });
 
-router.delete("/:hostId", middleware.verifyJWT, (req, res) => {
+router.delete("/:hostId", middlewares.verifyJWT, (req, res) => {
     Host.findOneAndDelete({ _id: req.params.hostId }).then(user => {
         res.status(200).json(user);
     }).catch(err => {
@@ -112,7 +112,7 @@ router.delete("/:hostId", middleware.verifyJWT, (req, res) => {
 
 //* Host review endpoints -------------------------------------------------------------------------
 
-router.get("/review/:hostId", middleware.verifyJWT, (req, res) => {
+router.get("/review/:hostId", middlewares.verifyJWT, (req, res) => {
     Review.find({ hostId: req.params.hostId }).then(reviews => {
         res.status(200).json(reviews);
     }).catch(err => {
@@ -120,7 +120,7 @@ router.get("/review/:hostId", middleware.verifyJWT, (req, res) => {
     });
 });
 
-router.post("/review/:hostId", middleware.verifyJWT, (req, res) => {
+router.post("/review/:hostId", middlewares.verifyJWT, (req, res) => {
     if(req.body.review.rating < 1 || req.body.review.rating > 5) {
         res.status(400).json({ error: 'Rating must be between 1 and 5' });
         return;

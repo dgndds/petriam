@@ -105,7 +105,7 @@ router.delete("/pet", middlewares.verifyJWT, (req, res) => {
 //* Contract endpoints -----------------------------------------------------------------------
 //* ------------------------------------------------------------------------------------------
 
-router.get("/contract", middleware.verifyJWT, (req, res) => {
+router.get("/contract", middlewares.verifyJWT, (req, res) => {
     Contract.find({ $or: [{ ownerId: req.user._id }, { hostId: req.user._id },] }).then(contract => {
         res.status(200).json(contract);
     }).catch(err => {
@@ -113,7 +113,7 @@ router.get("/contract", middleware.verifyJWT, (req, res) => {
     });
 });
 
-router.post("/contract", middleware.verifyJWT, (req, res) => {
+router.post("/contract", middlewares.verifyJWT, (req, res) => {
     if(req.body.contract.hostId === req.user._id) {
         res.status(400).json({ error: 'You cannot create a contract with yourself' });
         return;
