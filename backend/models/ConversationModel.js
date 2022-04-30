@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const model = mongoose.Schema({
-    user1Id: {
+    ownerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    user2Id: {
+    hostId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

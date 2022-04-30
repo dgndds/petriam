@@ -208,20 +208,16 @@ router.delete("/host", middlewares.verifyJWT, (req, res) => {
 //* ------------------------------------------------------------------------------------------
 
 router.get("/conversation", middlewares.verifyJWT, (req, res) => {
-    Conversation.find({ userId: req.user._id }).then(conversations => {
+    Conversation.find({ownerId: req.user._id}).then(conversation => {
         res.status(200).json(conversations);
     }).catch(err => {
         res.status(500).json({ error: 'Conversations could not be found' });
     });
 });
 
-router.get("/conversation/:id", middlewares.verifyJWT, (req, res) => {
-    Conversation.findOne({ _id: req.params.id }).then(conversation => {
-        if(conversation && (conversation.user1Id === req.user._id || conversation.user2Id === req.user._id)) {
-            res.status(200).json(conversation);
-        } else {
-            res.status(401).json({ error: 'Conversation cannot be accessed' });
-        }
+router.get("/conversation/:conversationId", middlewares.verifyJWT, (req, res) => {
+    Conversation.findOne({ownerId: req.user._id, _id: req.params.conversationId }).then(conversation => {
+        res.status(200).json(conversation);
     }).catch(err => {
         res.status(500).json({ error: 'Conversation could not be found' });
     });
@@ -229,7 +225,7 @@ router.get("/conversation/:id", middlewares.verifyJWT, (req, res) => {
 
 //! I thought this was needed, but now I cannot find a case where it is needed.
 router.get("/conversation/:userId", middlewares.verifyJWT, (req, res) => {
-    Conversation.findOne({ $or: [{ user1Id: req.user._id, user2Id: req.params.userId }, { user1Id: req.params.userId, user2Id: req.user._id }] }).then(conversation => {
+    Conversation.findOne({ ownerId: req.user._id, hostId: req.params.userId }).then(conversation => {
         res.status(200).json(conversation);
     }).catch(err => {
         res.status(500).json({ error: 'Conversation could not be found' });
@@ -238,8 +234,8 @@ router.get("/conversation/:userId", middlewares.verifyJWT, (req, res) => {
 
 // TODO: Conversation validity should be checked.
 router.post("/conversation", middlewares.verifyJWT, (req, res) => {
-    const otherUserId = req.user._id === req.body.conversation.user1Id ? req.body.conversation.user2Id : req.user._id;
-    Conversation.findOne({ $or: [{ user1Id: req.user._id, user2Id: otherUserId }, { user1Id: otherUserId, user2Id: req.user._id }] }).then(conversation => {
+    req.body.conversation.ownerId = req.user._id;
+    Conversation.findOne({ ownerId: req.user._id, hostId: req.body.conversation.hostId }).then(conversation => {
         // I do not know why but conversation is returned as null here even if it is not found.(It should go to catch block)
         // Check whether conversation is null and if it is, create a new conversation else return the existing one.
         if(conversation) {
@@ -266,16 +262,12 @@ router.post("/conversation", middlewares.verifyJWT, (req, res) => {
 //* ------------------------------------------------------------------------------------------
 
 router.get("/message/:conversationId", middlewares.verifyJWT, (req, res) => {
-    Conversation.findOne({ _id: req.params.conversationId }).then(conversation => {
-        if(conversation && (conversation.user1Id === req.user._id || conversation.user2Id === req.user._id)) {
-            Message.find({ conversationId: req.params.conversationId }).then(messages => {
-                res.status(200).json(messages);
-            }).catch(err => {
-                res.status(500).json({ error: 'Messages could not be found' });
-            });
-        } else {
-            res.status(401).json({ error: 'Conversation can not be accessed' });
-        }
+    Conversation.findOne({ _id: req.params.conversationId, $or: [{ownerId: req.user._id}, {hostId: req.user._id}] }).then(conversation => {
+        Message.find({ conversationId: req.params.conversationId }).then(messages => {
+            res.status(200).json(messages);
+        }).catch(err => {
+            res.status(500).json({ error: 'Messages could not be found' });
+        });
     }).catch(err => {
         res.status(500).json({ error: 'Conversation could not be found' });
     });
@@ -290,7 +282,7 @@ router.post("/message", middlewares.verifyJWT, (req, res) => {
 
     const io = req.app.get('socketio'); // Get the socket.io instance from the global scope.
 
-    Conversation.findOne({ $or: [{ user1Id: req.user._id, user2Id: req.body.message.receiverId }, { user1Id: req.body.message.receiverId, user2Id: req.user._id }] }).then(conversation => {
+    Conversation.findOne({ $or: [{ ownerId: req.user._id, hostId: req.body.message.receiverId }, { ownerId: req.body.message.receiverId, hostId: req.user._id }] }).then(conversation => {
         let _message = req.body.message;
         _message.senderId = req.user._id;
         _message.conversationId = conversation._id;
