@@ -1,0 +1,23 @@
+const mongoose = require('mongoose');
+
+const model = mongoose.Schema({
+    hostId: {
+        type: mongoose.ObjectId,
+        ref: 'Host',
+        required: true
+    },
+    rating: {
+        type: Number,
+        default: 0
+    },
+    comment: {
+        type: String,
+        default: ''
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+module.exports = new mongoose.model("Review", model); 
