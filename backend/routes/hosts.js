@@ -6,7 +6,10 @@ const Pet = require('../models/PetModel');
 
 const middleware = require('../middlewares');
 
-//* Host endpoints ------------------------------------------------------------------------
+//* ------------------------------------------------------------------------------------------
+//* General host endpoints ---------------------------------------------------------------------------
+//* ------------------------------------------------------------------------------------------
+
 router.get("/", middleware.verifyJWT, (req, res) => {
     Host.find({}).then(hosts => {
         res.status(200).json(hosts);
@@ -84,8 +87,8 @@ router.post("/", middleware.verifyJWT, (req, res) => {
 });
 
 // TODO: Update user hostid if host id is changed
-router.put("/id", middleware.verifyJWT, (req, res) => {
-    Host.findOneAndUpdate({ _id: req.body.hostId }, req.body, { new: true }).then(host => {
+router.put("/:id", middleware.verifyJWT, (req, res) => {
+    Host.findOneAndUpdate({ _id: req.params.hostId }, req.body, { new: true }).then(host => {
         res.status(200).json(user);
     }).catch(err => {
         res.status(500).json({ error: "Host not found" });
