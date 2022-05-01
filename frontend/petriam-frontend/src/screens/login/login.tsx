@@ -43,7 +43,7 @@ export default function Login({ navigation }) {
 
     if(token){
       changeToken(token);
-      navigation.push("ProfilePage");
+      navigation.push("ContractsPage");
     }
   }
 
