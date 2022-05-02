@@ -115,7 +115,7 @@ export default function HostPage(){
                     </Pressable>
                 </View>
             </ScrollView>
-            <View ><Navi></Navi></View>
+            <View style={styles.navbar}><Navi></Navi></View>
         </SafeAreaView>
     )
 }
