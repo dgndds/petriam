@@ -1,14 +1,16 @@
 import React from 'react';
-import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView } from 'react-native';
-import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic} from "@expo-google-fonts/playfair-display"
+import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView, Pressable } from 'react-native';
+import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic,PlayfairDisplay_800ExtraBold} from "@expo-google-fonts/playfair-display"
 import {Roboto_700Bold } from "@expo-google-fonts/roboto"
-import { Icon } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
+import Navi from '../../components/general/navi';
 
 export default function HostPage(){
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
         PlayfairDisplay_700Bold_Italic,
+        PlayfairDisplay_800ExtraBold,
         Roboto_700Bold
       })
 
@@ -19,7 +21,7 @@ export default function HostPage(){
 
     return(
         <SafeAreaView style={styles.container}>
-            <ScrollView nestedScrollEnabled contentContainerStyle={{paddingBottom:90, paddingTop:5}}>
+            <ScrollView nestedScrollEnabled contentContainerStyle={{paddingBottom:100, paddingTop:5}}>
                 <View style={styles.headerContainer}>
                     <Image
                     style={styles.profilePic}
@@ -108,8 +110,12 @@ export default function HostPage(){
                             </View>
                         </View>
                     </View>
+                    <Pressable style={styles.submitButton}>
+                        <Text style={styles.submitButtonText}>Hire This Host</Text>
+                    </Pressable>
                 </View>
             </ScrollView>
+            <View ><Navi></Navi></View>
         </SafeAreaView>
     )
 }
@@ -233,4 +239,22 @@ const styles = StyleSheet.create({
         fontFamily:"Roboto_700Bold",
         fontSize:10
     },
+    submitButton:{
+        width:350,
+        height:50,
+        backgroundColor:"#D99E6A",
+        alignItems:"center",
+        borderRadius:50
+    },
+    submitButtonText:{
+        fontFamily:"PlayfairDisplay_700Bold",
+        fontSize:30,
+        color:"white",
+        textAlign:"center"
+    },
+    navbar:{
+        position:"absolute",
+        bottom:0,
+        width:"100%"
+    }
 })
