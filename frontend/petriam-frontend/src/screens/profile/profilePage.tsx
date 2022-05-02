@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView } from 'react-native';
-import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_400Regular, PlayfairDisplay_800ExtraBold, PlayfairDisplay_700Bold_Italic, PlayfairDisplay_500Medium } from "@expo-google-fonts/playfair-display"
+import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic} from "@expo-google-fonts/playfair-display"
 import {Roboto_700Bold } from "@expo-google-fonts/roboto"
 import { Icon } from 'react-native-elements';
 import PetContainer from "../../components/PetContainer/PetContainer"
@@ -9,10 +9,7 @@ import Navi from '../../components/general/navi';
 export default function ProfilePage(){
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
-        PlayfairDisplay_400Regular,
-        PlayfairDisplay_800ExtraBold,
         PlayfairDisplay_700Bold_Italic,
-        PlayfairDisplay_500Medium,
         Roboto_700Bold
       })
 
