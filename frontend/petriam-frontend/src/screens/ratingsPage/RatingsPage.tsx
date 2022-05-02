@@ -5,6 +5,7 @@ import {Roboto_700Bold } from "@expo-google-fonts/roboto"
 import { Icon } from 'react-native-elements';
 import Rating from '../../components/rating/Rating';
 import Navi from '../../components/general/navi';
+import AppLoading from 'expo-app-loading';
 
 export default function RatingsPage(){
     let [fontsLoaded, err] = useFonts({
@@ -12,6 +13,10 @@ export default function RatingsPage(){
         PlayfairDisplay_700Bold_Italic,
         Roboto_700Bold
       })
+
+      if (!fontsLoaded) {
+        return <AppLoading />;
+      }
 
     return(
         <SafeAreaView style={styles.container}>

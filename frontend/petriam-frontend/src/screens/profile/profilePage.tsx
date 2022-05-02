@@ -5,6 +5,7 @@ import {Roboto_700Bold } from "@expo-google-fonts/roboto"
 import { Icon } from 'react-native-elements';
 import PetContainer from "../../components/PetContainer/PetContainer"
 import Navi from '../../components/general/navi';
+import AppLoading from 'expo-app-loading';
 
 export default function ProfilePage(){
     let [fontsLoaded, err] = useFonts({
@@ -12,6 +13,10 @@ export default function ProfilePage(){
         PlayfairDisplay_700Bold_Italic,
         Roboto_700Bold
       })
+
+      if (!fontsLoaded) {
+        return <AppLoading />;
+      }
 
     return(
         <SafeAreaView style={styles.container}>
@@ -142,7 +147,8 @@ const styles = StyleSheet.create({
     verficText:{
         fontFamily:"PlayfairDisplay_700Bold_Italic",
         fontSize:10,
-        color:"#707070"
+        color:"#707070",
+        marginTop:5
     },
     detailsContainer:{
         alignItems:"center",

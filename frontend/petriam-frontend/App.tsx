@@ -7,6 +7,7 @@ import InboxScreen from './src/screens/inbox/inboxScreen';
 import ProfilePage from './src/screens/profile/profilePage';
 import RatingsPage from './src/screens/ratingsPage/RatingsPage';
 import Contracts from './src/screens/contracts/Contracts';
+import HostPage from './src/screens/hostPage/HostPage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ListHost from './src/screens/listHost/listHost';
@@ -30,6 +31,7 @@ export default function App() {
           <Stack.Screen name="ProfilePage" component={ProfilePage} options={{ headerShown: false }} />
           <Stack.Screen name="ContractsPage" component={Contracts} options={{ headerShown: false }} />
           <Stack.Screen name="RatingsPage" component={RatingsPage} options={{ headerShown: false }} />
+          <Stack.Screen name="HostPage" component={HostPage} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
