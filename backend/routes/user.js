@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const User = require("../models/UserModel");
-const Host = require("../models/HostModel");
+const User = require('../models/UserModel');
+const Host = require('../models/HostModel');
 const Pet = require('../models/PetModel');
+const Admin = require('../models/AdminModel');
 const Contract = require('../models/ContractModel');
 const Conversation = require('../models/ConversationModel');
 const Message = require('../models/MessageModel');
-
+const HostApplication = require('../models/HostApplicationModel');
 const middlewares = require('../middlewares');
 
 
@@ -37,6 +38,23 @@ router.delete("/", middlewares.verifyJWT, (req, res) => {
         res.status(500).json({ error: "User not found" });
     });
 });
+
+
+// Delete this endpoint
+// I used this endpoint to create an admin through user
+
+// router.post("/admin/become", middlewares.verifyJWT, (req, res) => {
+//     User.findOne({ _id: req.user._id }).then( user => {
+//         req.body.admin.userId = req.user._id;
+//         Admin.create(req.body.admin).then(admin => {
+//             res.status(200).json(admin);
+//         }).catch(err => {
+//             res.status(500).json({ error: "Failed to create admin!"});
+//         });
+//     }).catch(err => {
+//         res.status(500).json({ error: "Couldnt find user" });
+//     });
+// });
 
 
 //* ------------------------------------------------------------------------------------------
@@ -148,56 +166,124 @@ router.get("/host", middlewares.verifyJWT, (req, res) => {
     });
 });
 
-// TODO: Host should not be added by user. Host should be added by admin.
-router.post("/host", middlewares.verifyJWT, (req, res) => {
-    req.body.host.userId = req.user._id
+// // TODO: Host should not be added by user. Host should be added by admin.
+// router.post("/host", middlewares.verifyJWT, (req, res) => {
+//     req.body.host.userId = req.user._id
+//     User.findOne({ _id: req.user._id })
+//         .then( user => {
+//             if(user.hostId) {
+//                 res.status(500).json({ error: 'User already is a host' });
+//                 return;
+//             }
+//             Host.create(req.body.host).then(host => {
+//                 user.hostId = host._id;
+//                 user.save().then(user => {
+//                     res.status(200).json(host);
+//                 }).catch(err => {
+//                     res.status(500).json({ error: "Failed to add host to user" });
+//                 });
+//             }).catch(err => {
+//                 res.status(500).json({ error: "Failed to create host" });
+//             });
+//         }).catch(error => {
+//             res.status(404).json({ error: 'User is not valid' });
+//         });
+// });
+
+// router.put("/host", middlewares.verifyJWT, (req, res) => {
+//     Host.findOneAndUpdate({ userId: req.user._id }, req.body.host, { new: true }).then(host => {
+//         res.status(200).json(host);
+//     }).catch(err => {
+//         res.status(500).json({ error: 'Host could not be found' });
+//     });
+// });
+
+// // TODO: Host should not be deleted by user. Host should be deleted by admin.
+// router.delete("/host", middlewares.verifyJWT, (req, res) => {
+//     Host.findOneAndDelete({ userId: req.user._id }).then(host => {
+//         User.findOne({ _id: req.user._id }).then(user => {
+//             user.hostId = null;
+//             user.save().then(user => {
+//                 res.status(200).json({success: "Host deleted"});
+//             }).catch(err => {
+//                 res.status(500).json({ error: "Failed to remove host from user" });
+//             });
+//         }).catch(err => {
+//             res.status(500).json({ error: "Failed to find user" });
+//         });
+//     }).catch(err => {
+//         res.status(500).json({ error: 'Host could not be found' });
+//     });
+// });
+
+
+//* --------------------------------------------------------------------------------------------
+//* User's host application endpoints ----------------------------------------------------------
+//* --------------------------------------------------------------------------------------------
+
+router.get("/host/apply", middlewares.verifyJWT, (req, res) => {
+    HostApplication.findOne({ userId: req.user._id }).then(hostApplication => {
+        
+        if (hostApplication == null){
+            res.status(200).json('No Active host Application');
+            return;
+        }
+        res.status(200).json(hostApplication);
+    }).catch(err => {
+        res.status(500).json({ error: 'Host Application is not found' });
+    });
+});
+
+router.post("/host/apply", middlewares.verifyJWT, (req, res) => {
     User.findOne({ _id: req.user._id })
         .then( user => {
             if(user.hostId) {
                 res.status(500).json({ error: 'User already is a host' });
                 return;
             }
-            Host.create(req.body.host).then(host => {
-                user.hostId = host._id;
+            if(user.hostApplication != null){
+                res.status(500).json({ error: 'User already has an active application!' });
+                return;
+            }
+            req.body.hostApplication.userId = req.user._id;
+            HostApplication.create(req.body.hostApplication).then(hostApplication => {
+                user.hostApplication = hostApplication;
                 user.save().then(user => {
-                    res.status(200).json(host);
+                    res.status(200).json(hostApplication);
                 }).catch(err => {
-                    res.status(500).json({ error: "Failed to add host to user" });
+                    res.status(500).json({ error: "Failed to add host application to user" });
                 });
             }).catch(err => {
-                res.status(500).json({ error: "Failed to create host" });
+                res.status(500).json({ error: "Failed to create host application" });
             });
         }).catch(error => {
             res.status(404).json({ error: 'User is not valid' });
         });
 });
 
-router.put("/host", middlewares.verifyJWT, (req, res) => {
-    Host.findOneAndUpdate({ userId: req.user._id }, req.body.host, { new: true }).then(host => {
-        res.status(200).json(host);
-    }).catch(err => {
-        res.status(500).json({ error: 'Host could not be found' });
-    });
-});
+router.delete("/host/apply", middlewares.verifyJWT, (req, res) => {
+    User.findOne({ _id: req.user._id })
+        .then( user => {
+            if(!user.hostApplication) {
+                res.status(500).json({ error: 'User has no host application' });
+                return;
+            }
+            
+            HostApplication.findOneAndDelete({userId: req.user._id}).then( hostApplication =>{
+                user.hostApplication = null;
+                user.save().then(user => {
+                    res.status(200).json({success: 'Host Application deleted'});
+                }).catch(err => {
+                    res.status(500).json({ error: "Failed to remove host application from user" });
+                });
 
-// TODO: Host should not be deleted by user. Host should be deleted by admin.
-router.delete("/host", middlewares.verifyJWT, (req, res) => {
-    Host.findOneAndDelete({ userId: req.user._id }).then(host => {
-        User.findOne({ _id: req.user._id }).then(user => {
-            user.hostId = null;
-            user.save().then(user => {
-                res.status(200).json({success: "Host deleted"});
-            }).catch(err => {
-                res.status(500).json({ error: "Failed to remove host from user" });
+            }).catch(err =>{
+                res.status(500).json({ error: 'Host Application can not be deleted' });
             });
-        }).catch(err => {
-            res.status(500).json({ error: "Failed to find user" });
-        });
-    }).catch(err => {
-        res.status(500).json({ error: 'Host could not be found' });
+        }).catch(error => {
+            res.status(404).json({ error: 'User is not valid' });
     });
 });
-
 
 //* ------------------------------------------------------------------------------------------
 //* User conversation endpoints --------------------------------------------------------------

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
+const HostApplication = require('../models/HostApplicationModel');
+
 const defaultAvatar64 = fs.readFileSync('./static/default-avatar.png', { encoding: 'base64' }); // File read base path is root of the project, so we dont need "../"
 
 const pointSchema = new mongoose.Schema({
@@ -77,6 +79,11 @@ const model = mongoose.Schema({
         ref: 'Conversation',
         default: []
     },
+    hostApplication: {
+        type: mongoose.ObjectId,
+        ref: 'HostApplication',    
+        default: null
+    }
 });
 
 module.exports = new mongoose.model("User", model);
