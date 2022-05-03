@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView, Pressable } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic,PlayfairDisplay_800ExtraBold} from "@expo-google-fonts/playfair-display"
 import {Roboto_700Bold } from "@expo-google-fonts/roboto"
-import { Button, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 
@@ -96,7 +96,7 @@ export default function HostPage(){
                             <Text style={styles.priceTitle}>Price</Text>
                             <Text style={styles.priceLabel}><Text style={styles.price}>55</Text> TL</Text>
                             <Text style={styles.perdayTitle}>Per Day</Text>
-                            </View>
+                        </View>
                         <View>
                             <View style={styles.ratingContainer}>
                                 <View style={styles.starsContainer}>

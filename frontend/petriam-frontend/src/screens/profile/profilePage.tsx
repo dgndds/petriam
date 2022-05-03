@@ -112,6 +112,7 @@ export default function ProfilePage(){
 
 const styles = StyleSheet.create({
     container:{
+        flex:1,
         backgroundColor:"#F2F2F2",
         marginTop: Platform.OS === 'android' ? 25 : 0,
     },
