@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const defaultAvatar64 = fs.readFileSync('./static/default-avatar.png', { encoding: 'base64' }); // File read base path is root of the project, so we dont need "../"
+// const fs = require('fs');
+// const defaultAvatar64 = fs.readFileSync('./static/default-avatar.png', { encoding: 'base64' }); // File read base path is root of the project, so we dont need "../"
+
 
 const pointSchema = new mongoose.Schema({
     type: {
@@ -44,10 +45,9 @@ const model = mongoose.Schema({
         },
         index: '2dsphere'
     },
-    profileImage: {
-        type: Buffer,
-        contentType: String,
-        default: defaultAvatar64
+    profileImageURL: {
+        type: String,
+        default: "/default-avatar.png"
     },
     blockedUsers: {
         type: Array,

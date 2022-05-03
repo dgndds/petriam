@@ -204,15 +204,16 @@ router.delete("/host", middlewares.verifyJWT, (req, res) => {
 //* ------------------------------------------------------------------------------------------
 
 router.get("/conversation", middlewares.verifyJWT, (req, res) => {
-    Conversation.find({ownerId: req.user._id}).then(conversations => {
-        res.status(200).json(conversations);
+    console.log(req.user._id);
+    Conversation.findOne({ $or: [{ ownerId: req.user._id }, { hostUserId: req.user._id },] }).populate('ownerId').populate('hostUserId').populate("messages").then(conversation => {
+        res.status(200).json(conversation);
     }).catch(err => {
-        res.status(500).json({ error: 'Conversations could not be found' });
+        res.status(500).json({ error: 'Conversation could not be found' });
     });
 });
 
 router.get("/conversation/:conversationId", middlewares.verifyJWT, (req, res) => {
-    Conversation.findOne({ownerId: req.user._id, _id: req.params.conversationId }).then(conversation => {
+    Conversation.findOne({$or: [{ ownerId: req.user._id }, { hostId: req.user._id }], _id: req.params.conversationId }).populate('ownerId').populate('hostUserId').populate("messages").then(conversation => {
         res.status(200).json(conversation);
     }).catch(err => {
         res.status(500).json({ error: 'Conversation could not be found' });
