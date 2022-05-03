@@ -205,7 +205,7 @@ router.delete("/host", middlewares.verifyJWT, (req, res) => {
 
 router.get("/conversation", middlewares.verifyJWT, (req, res) => {
     console.log(req.user._id);
-    Conversation.findOne({ $or: [{ ownerId: req.user._id }, { hostUserId: req.user._id },] }).populate('ownerId').populate('hostUserId').populate("messages").then(conversation => {
+    Conversation.find({ $or: [{ ownerId: req.user._id }, { hostUserId: req.user._id },] }).populate('ownerId').populate('hostUserId').populate("messages").then(conversation => {
         res.status(200).json(conversation);
     }).catch(err => {
         res.status(500).json({ error: 'Conversation could not be found' });
