@@ -1,71 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, Pressable, StyleSheet,Image,View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from 'react-native-elements'
 import AppLoading from 'expo-app-loading';
 import {useFonts,Roboto_700Bold,Roboto_300Light, Roboto_400Regular } from "@expo-google-fonts/roboto"
 import { FlatList, TextInput } from 'react-native-gesture-handler';
+import { getMessages, sendMessage } from '../../api/RestApiFunctions';
+import { useSelector } from 'react-redux';
 
-const DATA = [
-    {
-        id: 1,
-        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mauris lectus, tincidunt vel ullamcorper quis",
-        time:"13:42",
-        sent: true
-    },
-    {
-        id: 2,
-        message: "Lorem ipsum dolor, tincidunt vel ullamcorper quis",
-        time:"13:44",
-        sent: false
-    },
-    {
-        id: 3,
-        message: "Praesent mauris lectus, tincidunt vel ullamcorper quis",
-        time:"13:45",
-        sent:true
-    },
-    {
-        id: 4,
-        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget sem at velit accumsan semper. Aliquam viverra velit tellus, vitae feugiat nunc euismod at. Donec vitae urna non justo cursus commodo a at quam. Nunc tempor lorem sit amet nisl dapibus feugiat. Donec ut diam vehicula, faucibus leo et, ultricies.",
-        time:"13:47",
-        sent:true
-    },
-    {
-        id: 5,
-        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae urna non justo cursus commodo a at quam. Nunc tempor lorem sit amet nisl dapibus feugiat. Donec ut diam vehicula, faucibus leo et, ultricies.",
-        time:"13:47",
-        sent:false
-    },
-    {
-        id: 6,
-        message: "Lorem ipsum dolor Praesent mauris lectus, tincidunt vel ullamcorper quis",
-        time:"13:48",
-        sent:false
-    },
-    {
-        id: 7,
-        message: "Lorem ipsum dolor Lorem ipsum dolor sit amet, consectetur adip feugiat nunc euismod at. Donec vitae urna non justo cursus commodo a at quam. Nunc tempor lorem sit amet nisl dapibus feugiat. Donec ut diam vehicula, faucibus leo et, ultricies.",
-        time:"13:50",
-        sent:true
-    },
-    {
-        id: 8,
-        message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mauris lectus, tincidunt vel ullamcorper quis",
-        time:"13:53",
-        sent:false
-    }
-  ];
+export default function MessagePage({route, navigation}){
+    const { conversationId, ownerId } = route.params;
+    const [messages, setMessages] = useState([]);
+    const [message, setMessage] = useState("");
+    const state = useSelector(state => state);
 
-export default function MessagePage({navigation}){
     let [fontsLoaded,err] = useFonts({
         Roboto_700Bold,
         Roboto_300Light, 
         Roboto_400Regular
     })
 
+    useEffect(async () => {
+        const filterResponse = (allMessages: Array<Object>) => {
+            let formattedMessages = allMessages.map((message, index) => {
+                return {
+                    id: index,
+                    message: message.content,
+                    time: message.createdAt.substr(11, 5),
+                    sent: ownerId === message.senderId
+                }
+            });
+            return formattedMessages;
+        }
+
+        setMessages(
+            filterResponse(await getMessages(conversationId, state.token.token))
+        );
+        console.log(messages.at(0));
+    } , []);
+
     if(!fontsLoaded){
         return <AppLoading/>
+    }
+
+    const clickSend = () => {
+        const getCurrentTime = () => {
+            let hours = new Date().getHours().toString();
+            let minutes = new Date().getMinutes().toString();
+            return hours + ":" + minutes;
+        }
+
+        sendMessage(message, state.token.token);
+        setMessages([...messages, {
+            id: messages.length + 1,
+            message: message,
+            time: getCurrentTime(),
+            sent: true
+        }]);
+        setMessage("");
     }
 
     return (
@@ -85,7 +77,7 @@ export default function MessagePage({navigation}){
                 <Text style={styles.chatName}>John Doe</Text>
             </View>
             <FlatList
-                data={DATA}
+                data={messages}
                 renderItem={(item)=>(
                     <View>
                         <View style={[styles.textBox,item.item.sent?styles.textSent:styles.textReceived]}>
@@ -100,9 +92,11 @@ export default function MessagePage({navigation}){
                 <TextInput 
                 style={styles.textInput}
                 placeholder='Your Text'
+                onChangeText={(text)=>setMessage(text)}
+                value={message}
                 multiline={true}
                 ></TextInput>
-                <Pressable style={styles.sendButton} onPress={()=>alert("Message Sent!")}>
+                <Pressable style={styles.sendButton} onPress={()=>clickSend()}>
                     <Icon 
                             name='paper-plane'
                             type='font-awesome-5'
@@ -197,3 +191,7 @@ const styles = StyleSheet.create({
         borderColor:"black",
     },
 })
+
+function getCurrentTime(): string {
+    throw new Error('Function not implemented.');
+}

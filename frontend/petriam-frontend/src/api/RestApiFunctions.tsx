@@ -1,10 +1,13 @@
 import axios from 'axios'
 import {
     BASE, 
+    LOCAL,
     USER_PATH,
     AUTH_SIGNUP_PATH,
     AUTH_LOGIN_PATH,
-    HOSTS_FILTER_PATH
+    HOSTS_FILTER_PATH,
+    MESSAGE_PATH,
+    CONVERSATION_PATH
 } from './ApiConstants'
 
 export async function getHostsFiltered(longitude: number, latitude: number, radius: number, token: string){
@@ -17,8 +20,8 @@ export async function getHostsFiltered(longitude: number, latitude: number, radi
         })
     } 
     console.log("bearer " + token);
-    await app(BASE, HOSTS_FILTER_PATH)
-        .get(BASE+HOSTS_FILTER_PATH, {
+    await app(LOCAL, HOSTS_FILTER_PATH)
+        .get(LOCAL+HOSTS_FILTER_PATH, {
             params: { 
                 longitude: longitude,
                 latitude: latitude,
@@ -39,7 +42,7 @@ export async function signUpNewUser(username: string, email: string, password: s
     let result: boolean = false;
 
     await axios
-        .post(BASE+AUTH_SIGNUP_PATH, {
+        .post(LOCAL+AUTH_SIGNUP_PATH, {
             username: username,
             email: email,
             password: password
@@ -59,7 +62,7 @@ export async function loginUser(email: string, password: string): Promise<string
     let token = "";
 
     await axios
-        .post(BASE+AUTH_LOGIN_PATH, {
+        .post(LOCAL+AUTH_LOGIN_PATH, {
             email: email,
             password: password
         })
@@ -72,4 +75,67 @@ export async function loginUser(email: string, password: string): Promise<string
         })
 
     return token;
+}
+
+export async function getConversations(token: string): Promise<any>{
+    let result = {};
+    console.log(LOCAL+USER_PATH+CONVERSATION_PATH);
+
+    await axios
+        .get(LOCAL+USER_PATH+CONVERSATION_PATH, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+            console.log(result);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+    return result;
+}
+
+export async function sendMessage(message: string, token: string): Promise<boolean>{
+    let result: boolean = false;
+    console.log(LOCAL+USER_PATH+MESSAGE_PATH);
+
+    let messageBody = {
+        "receiverId": "626dc689b023cc84e4f86936",
+        "content": message
+    }
+
+    await axios
+        .post(LOCAL+USER_PATH+MESSAGE_PATH, {
+            message: messageBody
+        }, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = true;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+    return result;
+}
+
+export async function getMessages(conversationId: string, token: string): Promise<any>{
+    let result = {};
+    console.log("Aekls: " + LOCAL+USER_PATH+MESSAGE_PATH+"/"+conversationId);
+
+    await axios
+        .get(LOCAL+USER_PATH+MESSAGE_PATH+"/"+conversationId, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+            console.log("Buradan" + result);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+    return result;
 }

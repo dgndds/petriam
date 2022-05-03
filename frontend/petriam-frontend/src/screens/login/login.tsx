@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import SubmitButton from '../../components/general/submitButton'
 import AppLoading from 'expo-app-loading';
@@ -25,10 +25,17 @@ export default function Login({ navigation }) {
   const state = useSelector(state => state);
   const dispatch = useDispatch();
   const {changeToken} = bindActionCreators(actionCreators, dispatch);
+  
+  useEffect(() => {
+    if (state.token.token) {
+      navigation.navigate('Inbox');
+    }
+  }, [])
 
   if (!fontsLoaded) {
     return <AppLoading />
   }
+
 
   const goToSignUp = () => {
     navigation.push("SignUp");
