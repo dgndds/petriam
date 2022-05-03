@@ -20,6 +20,12 @@ const model = mongoose.Schema({
     name: {
         type: String,
         default: '',
+        required: true
+    },
+    surname: {
+        type: String,
+        default: '',
+        required: true
     },
     email: {
         type: String,

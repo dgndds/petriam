@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 // Status type: 0 = pending, 1 = approved, 2 = rejected
 const model = mongoose.Schema({
     userId: {
-        type: mongoose.ObjectId
+        type: mongoose.ObjectId,
+        ref: 'User',
+        required: true
     },
     tc: {
         type: String,
@@ -11,7 +13,8 @@ const model = mongoose.Schema({
     },
     acceptedPets: {
         type: Array,
-        default: []
+        default: [],
+        required: true
     },
     criminalRecord: {
         type: String,
@@ -19,7 +22,8 @@ const model = mongoose.Schema({
     },
     address: {
         type: String,
-        default: ''
+        default: '',
+        required: true
     },
     status: {
         type: String,
