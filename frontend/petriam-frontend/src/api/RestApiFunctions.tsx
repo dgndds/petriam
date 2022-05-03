@@ -87,7 +87,7 @@ export async function getConversations(token: string): Promise<any>{
         })
         .then((response) => {
             result = response.data;
-            console.log(result);
+            console.log(response.data);
         })
         .catch(error => {
             console.log(error);

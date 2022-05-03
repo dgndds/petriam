@@ -83,7 +83,7 @@ export default function InboxScreen({navigation}){
 
     useEffect(async () => {
         setConversations(await getConversations(state.token.token));
-        console.log("Burası: " + conversations[0]._id);
+        console.log("Burası: " + conversations.at(0)._id);
     } , []);
 
     if(!fontsLoaded){

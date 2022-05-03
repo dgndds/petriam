@@ -1,14 +1,20 @@
-import React, { Profiler } from 'react';
+import React, { Profiler, useEffect, useState } from 'react';
 import { Text, Pressable, StyleSheet,Image,View } from 'react-native';
 import { Icon } from 'react-native-elements'
 import AppLoading from 'expo-app-loading';
 import {useFonts, Roboto_400Regular,Roboto_700Bold } from "@expo-google-fonts/roboto"
 
 export default function InputBoxItem(props){
+    const [lastMessage, setLastMessage] = useState("");
     let [fontsLoaded,err] = useFonts({
         Roboto_400Regular,
         Roboto_700Bold
     })
+
+    useEffect(() => {
+        setLastMessage(props.item.item.messages.at(props.item.item.messages.length - 1).content);
+        console.log("İçerdeiyiz: " + JSON.stringify(props.item));
+    }, [])
 
     if(!fontsLoaded){
         return <AppLoading/>
@@ -21,7 +27,7 @@ export default function InputBoxItem(props){
             source={props.item.item.profilePic ? props.item.item.profilePic : require("../../assets/profilepicd.png") }></Image>
             <View style={styles.textcontainer}>
                 <Text style={styles.nameSurname}> {props.item.item.name + " " + props.item.item.surname}</Text>
-                <Text style={styles.lastmsg}> {props.item.item.lastmsg}  </Text>
+                <Text style={styles.lastmsg}> {lastMessage}  </Text>
             </View>
             <View style={styles.pet}>
                 <Icon

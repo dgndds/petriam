@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { loginUser } from '../../api/RestApiFunctions';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import { changeToken } from '../../redux/actions/token';
+import { changeToken, changeId } from '../../redux/actions/token';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../../redux/actions/token'
 
@@ -25,11 +25,9 @@ export default function Login({ navigation }) {
   const state = useSelector(state => state);
   const dispatch = useDispatch();
   const {changeToken} = bindActionCreators(actionCreators, dispatch);
+  const {changeId} = bindActionCreators(actionCreators, dispatch);
   
   useEffect(() => {
-    if (state.token.token) {
-      navigation.navigate('Inbox');
-    }
   }, [])
 
   if (!fontsLoaded) {
@@ -50,7 +48,8 @@ export default function Login({ navigation }) {
 
     if(token){
       changeToken(token);
-      navigation.push("BecomeHost");
+      changeId("626ff1eaca29504f9c74f205");
+      navigation.push("Main");
     }
   }
 
