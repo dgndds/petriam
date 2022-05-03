@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView, Pressable } from 'react-native';
 import { Icon } from 'react-native-elements';
 import {useFonts,Roboto_700Bold } from "@expo-google-fonts/roboto"
@@ -7,6 +7,8 @@ import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 
 export default function ViewContractHost(){
+    const [isHost,setIsHost] = useState(true);
+
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
         PlayfairDisplay_400Regular,
@@ -169,6 +171,8 @@ export default function ViewContractHost(){
                             color='black'
                             solid
                         />
+                        {isHost&&(
+                        <>
                         <Icon
                             name='times'
                             type="font-awesome-5"
@@ -181,6 +185,7 @@ export default function ViewContractHost(){
                             size={20}
                             color='#00FF19'
                         />
+                        </>)}
                     </View>
                 </View>
             </ScrollView>
