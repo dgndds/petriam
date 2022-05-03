@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView, Pressable } from 'react-native';
+import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView, } from 'react-native';
 import { Icon } from 'react-native-elements';
 import {useFonts,Roboto_700Bold } from "@expo-google-fonts/roboto"
 import {PlayfairDisplay_700Bold, PlayfairDisplay_400Regular} from "@expo-google-fonts/playfair-display"
@@ -336,7 +336,6 @@ const styles = StyleSheet.create({
     },
     info:{
         alignSelf:"baseline",
-        // width:120,
     },
     infoText:{
         fontSize:15,
