@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 // Status type: 0 = pending, 1 = approved, 2 = rejected
 const model = mongoose.Schema({
     userId: {
-        type: mongoose.ObjectId,
-        ref
+        type: mongoose.ObjectId
     },
     tc: {
         type: String,
