@@ -50,7 +50,7 @@ export default function Login({ navigation }) {
 
     if(token){
       changeToken(token);
-      navigation.push("Main");
+      navigation.push("BecomeHost");
     }
   }
 
@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
     width: 369,
     height: 43,
     alignSelf: 'center',
-    marginTop: 10
+    marginTop: 10,
+    paddingLeft:15
   },
   forgot: {
     alignSelf: 'flex-end',

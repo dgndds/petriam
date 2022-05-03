@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Pressable, StyleSheet,View } from 'react-native';
+import {StyleSheet,View, Platform } from 'react-native';
 import { Icon } from 'react-native-elements'
 
 
@@ -23,15 +23,17 @@ export default function Navi(props){
                         onPress={() => {props.nextPage()} }
                 />
                 <View style={styles.circle}>
-                <Icon
-                        style={styles.home}
-                        name="home"
-                        type='font-awesome-5'
-                        size={60}
-                        color= 'white'
-                        solid={true}
-                        onPress={() => {props.nextPage()} }
-                />
+                    <View style={styles.home}>
+                    <Icon
+                            
+                            name="home"
+                            type='font-awesome-5'
+                            size={60}
+                            color= 'white'
+                            solid={true}
+                            onPress={() => {props.nextPage()} }
+                    />
+                    </View>
                 </View>
                 <Icon
                         name="hotel"
@@ -64,11 +66,12 @@ const styles = StyleSheet.create({
         height: 160,
         width:160,
         alignItems:"center",
-        justifyContent:"center",
+        justifyContent: Platform.OS === 'android' ? "flex-start" : "center",
         borderRadius:100,
         bottom: -30
     },
     home:{
-        marginBottom:80
+        marginTop: Platform.OS === 'android' ? 10 : 0,
+        marginBottom: Platform.OS === 'android' ? 0 : 80,
     }
 })
