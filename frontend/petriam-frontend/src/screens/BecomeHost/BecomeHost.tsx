@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 import Navi from '../../components/general/navi';
 
 
-export default function BecomeHost(){
+export default function BecomeHost({navigation}){
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
@@ -57,6 +57,7 @@ export default function BecomeHost(){
                         size={50}
                         color= '#707070'
                         style={{marginLeft:-15}}
+                        onPress={() => navigation.pop()}
                     />
                     <Text style={styles.pageTitle}>Become A Host!</Text>
                 </View>

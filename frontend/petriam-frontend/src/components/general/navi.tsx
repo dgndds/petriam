@@ -13,6 +13,7 @@ export default function Navi(props){
                         size={25}
                         color= 'white'
                         solid={true}
+                        onPress={() => {props.goToContract()} }
                 />
                 <Icon
                         name="envelope"
@@ -20,7 +21,7 @@ export default function Navi(props){
                         size={25}
                         color= 'white'
                         solid={true}
-                        onPress={() => {props.nextPage()} }
+                        onPress={() => {props.goToInbox()} }
                 />
                 <View style={styles.circle}>
                     <View style={styles.home}>
@@ -41,6 +42,7 @@ export default function Navi(props){
                         size={25}
                         color= 'white'
                         solid={true}
+                        onPress={() => {props.goToBecomeHost()} }
                 />
                 <Icon
                         name="user"

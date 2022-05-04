@@ -21,11 +21,13 @@ export default function Main({navigation}) {
 
 
         getHosts();
+        console.log("Hryyo", hosts);
 
     }, [])
 
 
     hosts.map(item => {
+        
         console.log(parseFloat(item.location.coordinates[1]));
         console.log(parseFloat(item.location.coordinates[0]));
         
@@ -46,27 +48,19 @@ export default function Main({navigation}) {
                     longitudeDelta: 0.04
                 }}
             >
-                {
-                    hosts.map(item => {
-                        return (
-                            <Marker
-                                key={item.email}
-                                description={item.name + " " + item.host.averageRating}
-                                coordinate={{
-                                    latitude: item.location.coordinates[1],
-                                    longitude: item.location.coordinates[0],
-                                }}
-                            >
-                                <Image
-                                    style={styles.hostMarker}
-                                    source={require('../../../assets/icons/pet.png')}
-                                />
-                            </Marker>
-                        )
-                    })
-                }
+    <Marker
+  coordinate={{ latitude : 39.925533 , longitude : 32.866287 }}
+  title={"Mark"}
+  description={"Mark description"}
+/>
+
             </MapView>
-            <Navi nextPage={() => navigation.navigate("InboxScreen")}/>
+            <Navi 
+                goToInbox={() => navigation.navigate("InboxScreen")}
+                goToBecomeHost={() => navigation.navigate("BecomeHost")}
+                goToProfile={() => navigation.navigate("ProfilePage")}
+                goToContract={() => navigation.navigate("ContractsPage")}
+            />
         </View>
     )
 };
