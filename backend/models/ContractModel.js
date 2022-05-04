@@ -13,11 +13,13 @@ const model = mongoose.Schema({
     },
     startDate: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
     },
     endDate: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
     },
     arrangementDate: {
         type: Date,

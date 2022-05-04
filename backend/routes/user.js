@@ -139,17 +139,31 @@ router.post("/contract", middlewares.verifyJWT, (req, res) => {
 
     User.findOne({ _id: req.user._id })
         .then(user => {
-            const contract = new Contract(req.body.contract);
-            contract.ownerId = user._id;
-            contract.save().then(contract => {
-                user.contracts.push(contract._id);
-                user.save().then(user => {
-                    res.status(200).json(contract);
+            Host.findOne({ _id: req.body.contract.hostId }).then(host => {
+                const contract = new Contract(req.body.contract);
+                contract.ownerId = user._id;
+                contract.price = host.price;
+                contract.save().then(contract => {
+                    user.contracts.push(contract._id);
+                    user.save().then(user => {
+                        User.findOne({ _id: host.userId }).then(host => {
+                            host.contracts.push(contract._id);
+                            host.save().then(host => {
+                                res.status(200).json(contract);
+                            }).catch(err => {
+                                res.status(500).json({ error: 'Failed to save host' });
+                            });
+                        }).catch(err => {
+                            res.status(500).json({ error: 'Failed to find host' });
+                        });
+                    }).catch(err => {
+                        res.status(500).json({ error: 'Failed to add contract to user' });
+                    });
                 }).catch(err => {
-                    res.status(500).json({ error: 'Failed to add contract to user' });
+                    res.status(500).json({ error: 'Failed to create contract' });
                 });
             }).catch(err => {
-                res.status(500).json({ error: 'Failed to create contract' });
+                res.status(500).json({ error: 'Failed to find host' });
             });
         });
 });
