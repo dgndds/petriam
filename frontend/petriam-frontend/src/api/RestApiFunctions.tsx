@@ -139,3 +139,23 @@ export async function getMessages(conversationId: string, token: string): Promis
 
     return result;
 }
+
+export async function becomeHost(): Promise<boolean>{
+    let result: boolean = false;
+
+    // await axios
+    //     .post(LOCAL+AUTH_SIGNUP_PATH, {
+    //         username: username,
+    //         email: email,
+    //         password: password
+    //     })
+    //     .then((response) => {
+    //         result = true;
+    //         console.log(response.data.token)
+    //     })
+    //     .catch(error => {
+    //         console.log(error);
+    //     })
+
+        return result;
+}

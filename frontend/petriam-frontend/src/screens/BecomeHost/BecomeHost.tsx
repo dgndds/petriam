@@ -6,9 +6,11 @@ import AppLoading from 'expo-app-loading';
 import { Icon } from 'react-native-elements';
 import Navi from '../../components/general/navi';
 import { useSelector } from 'react-redux';
+import { becomeHost } from '../../api/RestApiFunctions';
 
 
 export default function BecomeHost({navigation}){
+    const [userId,setUserId] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
@@ -29,7 +31,32 @@ export default function BecomeHost({navigation}){
 
     useEffect(() => {
         console.log(state.id.id);
+        setUserId(state.id.id);
     }, [])
+
+    const handleSubmit = () => {
+        console.log(becomeHost());
+
+        if(userId.length <= 0 || userId === null){
+            return false;
+        }
+        
+        if(tc.length <= 0 || tc === null){
+            return false;
+        }
+
+        if(pets.length <= 0){
+            return false;
+        }
+
+        if(address.length <= 0 || address === null){
+            return false
+        }
+
+        // console.log("submit")
+
+
+    }
 
     if (!fontsLoaded) {
         return <AppLoading />;
@@ -111,7 +138,7 @@ export default function BecomeHost({navigation}){
                     <Text style={styles.label}>About</Text>
                     <TextInput multiline style={styles.textBox} value={about} onChangeText={setAbout} placeholder='About Yourself'  autoCapitalize='none'/>
                 </View>
-                <Pressable style={styles.submitButton}><Text style={styles.submitButtonText}>Become A Host</Text></Pressable>
+                <Pressable style={styles.submitButton} onPress={handleSubmit}><Text style={styles.submitButtonText}>Become A Host</Text></Pressable>
             </ScrollView>
             <Navi></Navi>
         </SafeAreaView>
