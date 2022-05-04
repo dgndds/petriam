@@ -2,13 +2,17 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 import {useFonts, Roboto_700Bold,Roboto_700Bold_Italic  } from "@expo-google-fonts/roboto"
 import { Icon } from 'react-native-elements';
-
+import AppLoading from 'expo-app-loading';
 
 export default function NavigationBar() {
     let [fontsLoaded, err] = useFonts({
         Roboto_700Bold,
         Roboto_700Bold_Italic
-      })
+    })
+
+    if(!fontsLoaded){
+        return <AppLoading/>
+    }
 
     return (
         <View style={styles.container}>
