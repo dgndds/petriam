@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const model = mongoose.Schema({
     userId: {
         type: mongoose.ObjectId,
+        red: 'User',
         required: true
     },
     tc: {
