@@ -176,7 +176,7 @@ export async function becomeHost(token:string,userId:string,tc:string,aboutMe:st
         return result;
 }
 
-export async function getCurrentUserInfo(token:string):Promise<any>{
+export async function getCurrentUserInfo(token:string,id:string):Promise<any>{
     let result;
 
     await axios
@@ -185,7 +185,6 @@ export async function getCurrentUserInfo(token:string):Promise<any>{
     })
     .then((response) => {
         result = response.data;
-        console.log(JSON.stringify(result));
     })
     .catch(error => {
         console.log("current",error);

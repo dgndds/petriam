@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { useFonts,PlayfairDisplay_700Bold_Italic } from "@expo-google-fonts/playfair-display"
 
 
-export default function NavigationBar() {
+export default function NavigationBar(props) {
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold_Italic,
       })
@@ -14,10 +14,10 @@ export default function NavigationBar() {
             style={styles.petPic}
             source={require("../../../assets/profilepicw.jpg")}
             />
-            <Text style={styles.petName}>Pet Name</Text>
+            <Text style={styles.petName}>{props.pet.name}</Text>
             <View style={styles.info}>
                 <Text style={styles.infoText}>Age: 5</Text>
-                <Text style={styles.infoText}>Kind: Terrier</Text>
+                <Text style={styles.infoText}>Kind: {props.pet.type}</Text>
                 <Text style={styles.infoText}>About: Loves to play</Text>
             </View>
         </View>
