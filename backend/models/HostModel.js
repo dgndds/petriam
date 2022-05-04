@@ -11,10 +11,6 @@ const model = mongoose.Schema({
         type: String,
         required: true
     },
-    aboutMe: {
-        type: String,
-        required: true
-    },
     acceptedPets: {
         type: Array,
         default: []
@@ -29,10 +25,6 @@ const model = mongoose.Schema({
         default: []
     },
     criminalRecord: {
-        type: String,
-        default: ''
-    },
-    address: {
         type: String,
         default: ''
     },
