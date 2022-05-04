@@ -7,7 +7,8 @@ import {
     AUTH_LOGIN_PATH,
     HOSTS_FILTER_PATH,
     MESSAGE_PATH,
-    CONVERSATION_PATH
+    CONVERSATION_PATH,
+    BECOME_HOST_PATH
 } from './ApiConstants'
 
 export async function getHostsFiltered(longitude: number, latitude: number, radius: number, token: string){
@@ -142,22 +143,35 @@ export async function getMessages(conversationId: string, token: string): Promis
     return result;
 }
 
-export async function becomeHost(): Promise<boolean>{
+export async function becomeHost(token:string,userId:string,tc:string,aboutMe:string,acceptedPets:string[],criminalRecord:string,address:string): Promise<boolean>{
     let result: boolean = false;
+    console.log("to be sent",userId);
+    console.log("to be sent",tc);
+    console.log("to be sent",acceptedPets);
+    console.log("to be sent",address);
 
-    // await axios
-    //     .post(LOCAL+AUTH_SIGNUP_PATH, {
-    //         username: username,
-    //         email: email,
-    //         password: password
-    //     })
-    //     .then((response) => {
-    //         result = true;
-    //         console.log(response.data.token)
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //     })
+    let body = {
+        userId:userId,
+        tc:tc,
+        // aboutMe:aboutMe,
+        acceptedPets:acceptedPets,
+        criminalRecord:criminalRecord,
+        address:address
+    }
+    
+    await axios
+        .post(LOCAL+USER_PATH+BECOME_HOST_PATH, {
+            hostApplication:body
+        },{
+            headers: { Authorization: "bearer " + token },
+        })
+        .then((response) => {
+            result = true;
+            console.log(response.data)
+        })
+        .catch(error => {
+            console.log("hop",error);
+        })
 
         return result;
 }
