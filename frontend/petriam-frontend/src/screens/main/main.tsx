@@ -32,8 +32,9 @@ export default function Main({navigation}) {
         
     });
 
+    const pressedOnMarker = (marker: string) => {
 
-    //console.log("Bura", state.token.token);
+    }
 
     return (
         <View style={styles.container}>
@@ -51,6 +52,7 @@ export default function Main({navigation}) {
                     coordinate={{ latitude : 39.925533 , longitude : 32.866287 }}
                     title={"Mark"}
                     description={"I am desc"}
+                    onPress={() => pressedOnMarker("Mark")}
                 >
                     <Image 
                         style={styles.marker}

@@ -14,7 +14,7 @@ router.post('/login', (req, res) => {
         else {
             bcrypt.compare(req.body.password, user.passwordHash, (error, match) => {
                 if (error) res.status(500).json(error);
-                else if (match) res.status(200).json({token: generateToken({_id: user._id, activated: user.activated})});
+                else if (match) res.status(200).json({token: generateToken({_id: user._id, activated: user.activated}), userId: user._id});
                 else res.status(403).json({error: 'Invalid password'});
             });
         }

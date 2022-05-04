@@ -42,15 +42,15 @@ export default function Login({ navigation }) {
   }
 
   const submitFunction = async () => {
-    let token = "";
+    let info = {};
 
     if (email && password) {
-      token = await loginUser(email, password);
+      info = await loginUser(email, password);
     }
 
-    if(token){
-      changeToken(token);
-      changeId("626ff1eaca29504f9c74f205");
+    if(info){
+      changeToken(info.token);
+      changeId(info.userId);
       navigation.push("Main");
     }
   }
