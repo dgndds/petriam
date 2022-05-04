@@ -11,7 +11,7 @@ import { becomeHost } from '../../api/RestApiFunctions';
 
 export default function BecomeHost({navigation}){
     const [userId,setUserId] = useState('');
-    const [isSubmitted,setIsSubmitted] = useState('');
+    const [sendingStatus,setSendingStatus] = useState('Become A Host');
     const [token,setToken] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -68,14 +68,14 @@ export default function BecomeHost({navigation}){
             address: address
         }
 
-        setIsSubmitted("Sending...");
+        setSendingStatus("Sending...");
 
        
         await becomeHost(token,userId,tc,about,pets,"none",address).then( result => {
             if(result){
-                setIsSubmitted("Registered As a Host Successfully!");
+                setSendingStatus("Successfully Registered!");
             }else{
-                setIsSubmitted("Failed to Register As a Host. Please Try Again!");
+                setSendingStatus("Failed to Register!");
             }
         });
     }
@@ -160,10 +160,11 @@ export default function BecomeHost({navigation}){
                     <Text style={styles.label}>About</Text>
                     <TextInput multiline style={styles.textBox} value={about} onChangeText={setAbout} placeholder='About Yourself'  autoCapitalize='none'/>
                 </View>
-                <Pressable style={styles.submitButton} onPress={handleSubmit}><Text style={styles.submitButtonText}>Become A Host</Text></Pressable>
-                <View style={[styles.infoBox,{display: isSubmitted === "" ? "none":"flex"}]}>
-                    <Text>{isSubmitted}</Text>
-                </View>
+                <Pressable style={styles.submitButton} onPress={handleSubmit}>
+                    <Text style={styles.submitButtonText}>
+                        {sendingStatus}
+                    </Text>
+                </Pressable>
             </ScrollView>
             <Navi></Navi>
         </SafeAreaView>
