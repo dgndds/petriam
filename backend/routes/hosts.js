@@ -19,18 +19,9 @@ router.get("/", middlewares.verifyJWT, (req, res) => {
     });
 });
 
-router.get("/:hostId", middlewares.verifyJWT, (req, res) => {
-    Host.findOne({ _id: req.params.hostId }).then(host => {
-        res.status(200).json(host);
-    }).catch(err => {
-        res.status(500).json({ error: "Host not found" });
-    });
-});
-
 // TODO: Add other filters and return user with host
 router.get("/filter", middlewares.verifyJWT, (req, res) => {
     //latitude, longitude, radius, price, type,
-    console.log(req.query);
     
     req.query.latitude = parseFloat(req.query.latitude);
     req.query.longitude = parseFloat(req.query.longitude);
@@ -70,6 +61,14 @@ router.get("/filter", middlewares.verifyJWT, (req, res) => {
         res.status(200).json(users);
     }).catch(err => {
         res.status(500).json({ error: "Failed to find users" });
+    });
+});
+
+router.get("/:hostId", middlewares.verifyJWT, (req, res) => {
+    Host.findOne({ _id: req.params.hostId }).then(host => {
+        res.status(200).json(host);
+    }).catch(err => {
+        res.status(500).json({ error: "Host not found" });
     });
 });
 

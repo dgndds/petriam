@@ -20,7 +20,7 @@ export async function getHostsFiltered(longitude: number, latitude: number, radi
             headers: { Authorization: "bearer " + token }
         })
     } 
-    console.log("bearer " + token);
+
     await app(LOCAL, HOSTS_FILTER_PATH)
         .get(LOCAL+HOSTS_FILTER_PATH, {
             params: { 
