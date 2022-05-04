@@ -175,3 +175,22 @@ export async function becomeHost(token:string,userId:string,tc:string,aboutMe:st
 
         return result;
 }
+
+export async function getCurrentUserInfo(token:string):Promise<any>{
+    let result;
+
+    await axios
+    .get(LOCAL+USER_PATH, {
+        headers: { Authorization: "bearer " + token }
+    })
+    .then((response) => {
+        result = response.data;
+        console.log(JSON.stringify(result));
+    })
+    .catch(error => {
+        console.log("current",error);
+        result = false;
+    })
+    
+    return result;
+}

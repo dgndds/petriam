@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic} from "@expo-google-fonts/playfair-display"
 import {Roboto_700Bold } from "@expo-google-fonts/roboto"
@@ -6,34 +6,51 @@ import { Icon } from 'react-native-elements';
 import PetContainer from "../../components/PetContainer/PetContainer"
 import Navi from '../../components/general/navi';
 import AppLoading from 'expo-app-loading';
+import { getCurrentUserInfo } from '../../api/RestApiFunctions';
+import { useSelector } from 'react-redux';
 
 export default function ProfilePage({navigation}){
+    const state = useSelector(state => state);
+    const [userInfo,setUserInfo] = useState({})
+    
+    useEffect(() => {
+        console.log("profil",state.token.token);
+        getCurrentUserInfo(state.token.token).then(result=>{
+            if(result === false){
+                console.log("Failed to get user info!");
+            }else{
+                setUserInfo(result);
+            }
+        });
+    },[]);
+
+
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
         PlayfairDisplay_700Bold_Italic,
         Roboto_700Bold
-      })
+    })
 
-      if (!fontsLoaded) {
-        return <AppLoading />;
-      }
-
+    if (!fontsLoaded) {
+       return <AppLoading />;
+    }
+    
     return(
         <SafeAreaView style={styles.container}>
             <ScrollView nestedScrollEnabled contentContainerStyle={{paddingBottom:90, paddingTop:5}}>
             <Icon 
-                    name='chevron-left'
-                    size={50}
-                    color= '#707070'
-                    style={{alignSelf: "flex-start"}}
-                    onPress={() => navigation.pop()}
+                name='chevron-left'
+                size={50}
+                color= '#707070'
+                style={{alignSelf: "flex-start"}}
+                onPress={() => navigation.pop()}
             />
             <View style={styles.headerContainer}>
                 <Image
                 style={styles.profilePic}
                 source={require("../../../assets/icons/avatarWoman.png")}/>
                 <View style={styles.nameTag}>
-                    <Text style={styles.profileName}>John Doe</Text> 
+                    <Text style={styles.profileName}>{userInfo.name + " " + userInfo.surname}</Text> 
                     <Icon
                     name='check-circle'
                     type="font-awesome"
