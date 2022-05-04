@@ -26,14 +26,16 @@ export default function Main({navigation}) {
 
 
     hosts.map(item => {
-        
         console.log(parseFloat(item.location.coordinates[1]));
         console.log(parseFloat(item.location.coordinates[0]));
-        
     });
 
     const pressedOnMarker = (marker: string) => {
-
+        if(marker === selectedMarker){
+            navigation.navigate("HostPage"); //, {host: hosts[marker]}
+        }else{
+            setSelectedMarker(marker);
+        }
     }
 
     return (

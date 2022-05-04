@@ -48,7 +48,7 @@ const model = mongoose.Schema({
         type: pointSchema,
         default: {
             type: 'Point',
-            coordinates: [0, 0]
+            coordinates: [0.0, 0.0]
         },
         index: '2dsphere'
     },
