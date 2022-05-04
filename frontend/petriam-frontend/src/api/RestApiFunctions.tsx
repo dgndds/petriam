@@ -153,7 +153,7 @@ export async function becomeHost(token:string,userId:string,tc:string,aboutMe:st
     let body = {
         userId:userId,
         tc:tc,
-        // aboutMe:aboutMe,
+        aboutMe:aboutMe,
         acceptedPets:acceptedPets,
         criminalRecord:criminalRecord,
         address:address

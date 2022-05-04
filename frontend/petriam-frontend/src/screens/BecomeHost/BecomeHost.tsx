@@ -11,6 +11,7 @@ import { becomeHost } from '../../api/RestApiFunctions';
 
 export default function BecomeHost({navigation}){
     const [userId,setUserId] = useState('');
+    const [isSubmitted,setIsSubmitted] = useState('');
     const [token,setToken] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -37,9 +38,8 @@ export default function BecomeHost({navigation}){
         setToken(state.token.token);
     }, [])
 
-    const handleSubmit = () => {
-        // console.log(becomeHost());
-
+    const handleSubmit = async () => {
+        
         if(userId.length <= 0 || userId === null){
             return false;
         }
@@ -68,8 +68,16 @@ export default function BecomeHost({navigation}){
             address: address
         }
 
-        console.log(hostInfo)
-        becomeHost(token,userId,tc,about,pets,"none",address);
+        setIsSubmitted("Sending...");
+
+       
+        await becomeHost(token,userId,tc,about,pets,"none",address).then( result => {
+            if(result){
+                setIsSubmitted("Registered As a Host Successfully!");
+            }else{
+                setIsSubmitted("Failed to Register As a Host. Please Try Again!");
+            }
+        });
     }
 
     if (!fontsLoaded) {
@@ -110,23 +118,23 @@ export default function BecomeHost({navigation}){
                 </View>
                 <View style={{borderBottomColor:"black", borderBottomWidth:1}}></View>
                 <View>
-                    <Text style={styles.label}>Name</Text>
+                    {/* <Text style={styles.label}>Name</Text>
                     <TextInput style={styles.box} value={name} onChangeText={setName} placeholder='Type Your Name'  autoCapitalize='none'/>
                     
                     <Text style={styles.label}>Surname</Text>
                     <TextInput style={styles.box} value={surname} onChangeText={setSurname} placeholder='Type Your Surname'  autoCapitalize='none'/>
                     
                     <Text style={styles.label}>Email</Text>
-                    <TextInput style={styles.box} value={email} onChangeText={setEmail} placeholder='Type Your Email'  autoCapitalize='none'/>
+                    <TextInput style={styles.box} value={email} onChangeText={setEmail} placeholder='Type Your Email'  autoCapitalize='none'/> */}
                     
                     <Text style={styles.label}>Identification Number</Text>
                     <TextInput style={styles.box} value={tc} onChangeText={setTc} placeholder='Type Your Identification Number'  autoCapitalize='none'/>
                     
-                    <Text style={styles.label}>HES Code</Text>
-                    <TextInput style={styles.box} value={hes} onChangeText={setHes} placeholder='Type Your Hes Code'  autoCapitalize='none'/>
+                    {/* <Text style={styles.label}>HES Code</Text>
+                    <TextInput style={styles.box} value={hes} onChangeText={setHes} placeholder='Type Your Hes Code'  autoCapitalize='none'/> */}
                     
-                    <Text style={styles.label}>Criminal Record</Text>
-                    <Pressable><Text style={styles.upload}>Upload a File</Text></Pressable>
+                    {/* <Text style={styles.label}>Criminal Record</Text>
+                    <Pressable><Text style={styles.upload}>Upload a File</Text></Pressable> */}
                     
                     <Text style={styles.label}>Address</Text>
                     <TextInput style={styles.box} value={address} onChangeText={setAddress} placeholder='Type Your Address'  autoCapitalize='none'/>
@@ -153,6 +161,9 @@ export default function BecomeHost({navigation}){
                     <TextInput multiline style={styles.textBox} value={about} onChangeText={setAbout} placeholder='About Yourself'  autoCapitalize='none'/>
                 </View>
                 <Pressable style={styles.submitButton} onPress={handleSubmit}><Text style={styles.submitButtonText}>Become A Host</Text></Pressable>
+                <View style={[styles.infoBox,{display: isSubmitted === "" ? "none":"flex"}]}>
+                    <Text>{isSubmitted}</Text>
+                </View>
             </ScrollView>
             <Navi></Navi>
         </SafeAreaView>
@@ -248,5 +259,13 @@ const styles = StyleSheet.create({
         fontSize:30,
         color:"white",
         textAlign:"center"
+    },
+    infoBox:{
+        height:100,
+        backgroundColor:"#F2F2F2",
+        marginTop:20,
+        borderRadius:10,
+        borderColor:"black",
+        borderWidth:1
     }
 })
