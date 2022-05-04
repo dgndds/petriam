@@ -51,7 +51,6 @@ router.post("/host/application/accept", middlewares.verifyJWT, (req, res) => {
                 var host = new Host();
                 host.userId = application.userId;
                 host.tc = application.tc;
-                host.aboutMe = application.aboutMe;
                 host.acceptedPets = application.acceptedPets;
                 host.criminalRecord = application.criminalRecord;
                 host.address = application.address;
@@ -65,6 +64,8 @@ router.post("/host/application/accept", middlewares.verifyJWT, (req, res) => {
                         }
                         Host.create(host).then(host => {
                             user.hostId = host._id;
+                            user.aboutMe = application.aboutMe;
+                            user.address = application.address;
                             user.save().then(user => {
                                 res.status(200).json(host);
                             }).catch(err => {
