@@ -7,9 +7,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { loginUser } from '../../api/RestApiFunctions';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import { changeToken, changeId } from '../../redux/actions/token';
+import { changeToken } from '../../redux/actions/token';
+import { changeId } from '../../redux/actions/userId';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../../redux/actions/token'
+import * as tokenActionCreators from '../../redux/actions/token'
+import * as userActionCreators from '../../redux/actions/userId'
 
 export default function Login({ navigation }) {
   let [fontsLoaded, err] = useFonts({
@@ -24,8 +26,8 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState('');
   const state = useSelector(state => state);
   const dispatch = useDispatch();
-  const {changeToken} = bindActionCreators(actionCreators, dispatch);
-  const {changeId} = bindActionCreators(actionCreators, dispatch);
+  const {changeToken} = bindActionCreators(tokenActionCreators, dispatch);
+  const {changeId} = bindActionCreators(userActionCreators, dispatch);
   
   useEffect(() => {
   }, [])

@@ -1,12 +1,11 @@
 import { ID } from '../constants';
 import { initialState } from '../initialState';
 
-const idReducer = (state = initialState, action) => {
+const idReducer = (state = initialState.id, action) => {
     switch (action.type) {
         case ID:
             return {
-                ...state,
-                token: action.payload
+                id: action.payload,
             };
         default:
             return state;

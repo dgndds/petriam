@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView, TextInput, Pressable, } from 'react-native';
 import {useFonts, PlayfairDisplay_400Regular} from "@expo-google-fonts/playfair-display"
 import {Roboto_700Bold } from "@expo-google-fonts/roboto"
 import AppLoading from 'expo-app-loading';
 import { Icon } from 'react-native-elements';
 import Navi from '../../components/general/navi';
+import { useSelector } from 'react-redux';
 
 
 export default function BecomeHost({navigation}){
@@ -19,11 +20,16 @@ export default function BecomeHost({navigation}){
     const [languages, setLanguages]= useState('');
     const [pets, setPets]= useState<string[]>([]);
     const [about, setAbout]= useState('');
+    const state = useSelector(state => state);
 
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_400Regular,
         Roboto_700Bold
     })
+
+    useEffect(() => {
+        console.log(state.id.id);
+    }, [])
 
     if (!fontsLoaded) {
         return <AppLoading />;

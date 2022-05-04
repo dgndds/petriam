@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Image, Pressable, Text } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE, MAP_TYPES } from "react-native-maps";
 import { useSelector } from 'react-redux';
 import { getHostsFiltered } from '../../api/RestApiFunctions';
@@ -7,11 +7,10 @@ import Navi from '../../components/general/navi';
 import SearchBox from '../../components/searchBox/searchBox';
 import { StackNavigator } from 'react-navigation';
 
-
-
 export default function Main({navigation}) {
     const state = useSelector(state => state);
     const [hosts, setHosts] = useState([]);
+    const [selectedMarker, setSelectedMarker] = useState("");
 
     useEffect(() => {
         const getHosts = async () => {
@@ -48,11 +47,16 @@ export default function Main({navigation}) {
                     longitudeDelta: 0.04
                 }}
             >
-    <Marker
-  coordinate={{ latitude : 39.925533 , longitude : 32.866287 }}
-  title={"Mark"}
-  description={"Mark description"}
-/>
+                <Marker
+                    coordinate={{ latitude : 39.925533 , longitude : 32.866287 }}
+                    title={"Mark"}
+                    description={"I am desc"}
+                >
+                    <Image 
+                        style={styles.marker}
+                        source={require('../../../assets/icons/cat.png')} 
+                    />
+                </Marker>
 
             </MapView>
             <Navi 
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
         flex: 1,
         position:"relative"
     },
-    hostMarker: {
+    marker: {
         width: 35,
         height: 35
     }
