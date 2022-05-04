@@ -6,7 +6,7 @@ import { Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 
-export default function HostPage(){
+export default function HostPage({navigation}){
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
         PlayfairDisplay_700Bold_Italic,
@@ -22,6 +22,13 @@ export default function HostPage(){
     return(
         <SafeAreaView style={styles.container}>
             <ScrollView nestedScrollEnabled contentContainerStyle={{paddingBottom:100, paddingTop:5}}>
+                <Icon 
+                    name='chevron-left'
+                    size={50}
+                    color= '#707070'
+                    style={{alignSelf: "flex-start"}}
+                    onPress={() => navigation.pop()}
+                />
                 <View style={styles.headerContainer}>
                     <Image
                     style={styles.profilePic}
@@ -115,7 +122,11 @@ export default function HostPage(){
                     </Pressable>
                 </View>
             </ScrollView>
-            <View style={styles.navbar}><Navi></Navi></View>
+            <View style={styles.navbar}>
+                <Navi 
+                    
+                />
+            </View>
         </SafeAreaView>
     )
 }
