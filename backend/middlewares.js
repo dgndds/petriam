@@ -5,7 +5,10 @@ exports.JWT_SECRET = "my-32-character-ultra-secure-and";
 exports.verifyJWT = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
 
-    if (!token) res.status(401).json({error: "Please provide a token"});
+    if (!token){
+        res.status(401).json({error: "Please provide a token"});
+        return;
+    }
     else {
         jwt.verify(token, exports.JWT_SECRET, (err, value) => {
             if (err){
