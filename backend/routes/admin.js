@@ -51,6 +51,7 @@ router.post("/host/application/accept", middlewares.verifyJWT, (req, res) => {
                 var host = new Host();
                 host.userId = application.userId;
                 host.tc = application.tc;
+                host.aboutMe = application.aboutMe;
                 host.acceptedPets = application.acceptedPets;
                 host.criminalRecord = application.criminalRecord;
                 host.address = application.address;
