@@ -1,1 +1,3 @@
 frontend/petriam-frontend/node_modules
+backend/package-lock.json
+frontend/petriam-frontend/.expo/
