@@ -12,8 +12,10 @@ import { useSelector } from 'react-redux';
 export default function ProfilePage({navigation}){
     const state = useSelector(state => state);
     const [userInfo,setUserInfo] = useState({})
+    const [ownedPets,setOwnedPets] = useState<string[]>([]);
     
     useEffect(() => {
+        setOwnedPets([]);
         console.log("profil",state.token.token);
         getCurrentUserInfo(state.token.token, state.id.id).then(result=>{
             if(result === false){
@@ -59,17 +61,21 @@ export default function ProfilePage({navigation}){
                     />
                 </View>
                 <View style={styles.ownerPetsContainer}>
-                    {userInfo.pets && userInfo.pets.map(pet=>(
-                        <>
-                        <Icon
-                        name={pet.type}
-                        type="font-awesome-5"
-                        size={10}
-                        color='#707070'
-                        />
-                        <Text style={styles.petText}>{ pet.type[0].toUpperCase() + pet.type.slice(1)} Owner</Text>
-                        </>
-                    ))}
+                    {userInfo.pets && userInfo.pets.map(pet=>
+                    {
+                        return (
+                            <>
+                                <Icon
+                                name={pet.type}
+                                type="font-awesome-5"
+                                size={10}
+                                color='#707070'
+                                />
+                                <Text style={styles.petText}>{ pet.type[0].toUpperCase() + pet.type.slice(1)} Owner</Text>
+                            </>
+                         )}
+                    )
+                    }
                 </View>
                 <Text style={styles.verficText}>*Verified with TC and Address</Text>
             </View>
