@@ -35,6 +35,14 @@ const model = mongoose.Schema({
         type: String,
         required: true
     },
+    aboutMe: {
+        type: String,
+        default: ''
+    },
+    address: {
+        type: String,
+        default: ''
+    },
     pets: {
         type: Array,
         ref: 'Pet',

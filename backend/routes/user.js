@@ -16,7 +16,7 @@ const middlewares = require('../middlewares');
 //* ------------------------------------------------------------------------------------------
 
 router.get("/", middlewares.verifyJWT, (req, res) => {
-    User.findOne({ _id: req.user._id }).then(user => {
+    User.findOne({ _id: req.user._id }).populate("pets").then(user => {
         res.status(200).json(user);
     }).catch(err => {
         res.status(500).json({ error: "User not found" });
