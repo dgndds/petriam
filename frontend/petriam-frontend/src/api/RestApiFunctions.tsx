@@ -58,8 +58,9 @@ export async function signUpNewUser(username: string, email: string, password: s
         return result;
 }
 
-export async function loginUser(email: string, password: string): Promise<string>{
+export async function loginUser(email: string, password: string): Promise<Object>{
     let token = "";
+    let userId = "";
 
     await axios
         .post(LOCAL+AUTH_LOGIN_PATH, {
@@ -68,13 +69,14 @@ export async function loginUser(email: string, password: string): Promise<string
         })
         .then((response) => {
             token = response.data.token;
+            userId = response.data.userId;
         })
         .catch(error => {
             console.log(error);
-            token = "-1";
+            token, userId = "-1";
         })
 
-    return token;
+    return {token: token, userId: userId};
 }
 
 export async function getConversations(token: string): Promise<any>{

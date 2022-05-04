@@ -50,6 +50,7 @@ export default function Navi(props){
                         size={25}
                         color= 'white'
                         solid={true}
+                        onPress={() => {props.goToProfile()} }
                 />
             </View>
     )
