@@ -19,6 +19,25 @@ router.get("/", middlewares.verifyJWT, (req, res) => {
     });
 });
 
+// TODO: Change this to insertMany
+router.post("/", middlewares.verifyJWT, (req, res) => {
+    User.findOne({ _id: req.body.userId }).then(user => {
+        const host = new Host(req.body.host);
+        host.save().then(host => {
+            user.hostId = host._id;
+            user.save().then(user => {
+                res.status(200).json(host);
+            }).catch(err => {
+                res.status(500).json({ error: "Failed to add host to user" });
+            });
+        }).catch(err => {
+            res.status(500).json({ error: "Failed to save host" });
+        });
+    }).catch(err => {
+        res.status(500).json({ error: "User not found" });
+    });
+});
+
 // TODO: Add other filters and return user with host
 router.get("/filter", middlewares.verifyJWT, (req, res) => {
     //latitude, longitude, radius, price, type,
@@ -26,6 +45,7 @@ router.get("/filter", middlewares.verifyJWT, (req, res) => {
     req.query.latitude = parseFloat(req.query.latitude);
     req.query.longitude = parseFloat(req.query.longitude);
     req.query.radius = parseFloat(req.query.radius);
+    req.query.price = parseFloat(req.query.price);
     User.aggregate([
         {
             $geoNear: {
@@ -47,16 +67,17 @@ router.get("/filter", middlewares.verifyJWT, (req, res) => {
             }
         },
         {
-            $unwind: "$host"
+            $match: {
+                "host.price": {
+                    $lte: req.query.price
+                },
+                "host.acceptedPets": req.query.petType
+            }
         },
-        // {
-        //     $match: {
-        //         "host.price": {
-        //             $lte: req.query.price
-        //         },
-        //         "host.type": req.query.type
-        //     }
-        // }
+        {
+            $unwind: "$host"
+        }
+        
     ]).then(users => {
         res.status(200).json(users);
     }).catch(err => {
@@ -69,25 +90,6 @@ router.get("/:hostId", middlewares.verifyJWT, (req, res) => {
         res.status(200).json(host);
     }).catch(err => {
         res.status(500).json({ error: "Host not found" });
-    });
-});
-
-// TODO: Change this to insertMany
-router.post("/", middlewares.verifyJWT, (req, res) => {
-    User.findOne({ _id: req.body.userId }).then(user => {
-        const host = new Host(req.body.host);
-        host.save().then(host => {
-            user.hostId = host._id;
-            user.save().then(user => {
-                res.status(200).json(host);
-            }).catch(err => {
-                res.status(500).json({ error: "Failed to add host to user" });
-            });
-        }).catch(err => {
-            res.status(500).json({ error: "Failed to save host" });
-        });
-    }).catch(err => {
-        res.status(500).json({ error: "User not found" });
     });
 });
 
