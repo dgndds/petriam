@@ -30,7 +30,7 @@ router.post('/signup', (req, res) => {
         bcrypt.hash(req.body.password, rounds, (error, hash) => {
             if (error) res.status(500).json(error)
             else {
-                const newUser =  User({name: req.body.username, email: req.body.email, passwordHash: hash})
+                const newUser =  User({name: req.body.name, surname: req.body.surname, email: req.body.email, passwordHash: hash})
                 newUser.save()
                     .then(user => {
                         res.status(200).json({token: generateToken({_id: user._id, activated: user.activated})});
