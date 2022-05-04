@@ -14,28 +14,39 @@ export default function Main({navigation}) {
 
     useEffect(() => {
         const getHosts = async () => {
-            let result = await getHostsFiltered(32, 39, 100000, state.token.token);
-            setHosts(Array.from(result));
+            setHosts(
+                Array.from(
+                    await getHostsFiltered(39.925533, 32.866287, 100000000, state.token.token)
+                )
+            );
         }
 
-
         getHosts();
-        console.log("Hryyo", hosts);
 
     }, [])
-
-
-    hosts.map(item => {
-        console.log(parseFloat(item.location.coordinates[1]));
-        console.log(parseFloat(item.location.coordinates[0]));
-    });
-
+    
     const pressedOnMarker = (marker: string) => {
         if(marker === selectedMarker){
             navigation.navigate("HostPage"); //, {host: hosts[marker]}
         }else{
             setSelectedMarker(marker);
         }
+    }
+
+    const handleImage = (animal: string) => {
+        
+        switch (animal) {
+            case "cat":
+              return require('../../../assets/icons/cat.png')
+          case "dog":
+              return require('../../../assets/icons/dog.png')
+          case "dove":
+              return require('../../../assets/icons/dove.png')
+          case "turtle":
+              return require('../../../assets/icons/turtle.png')
+          default:
+              return require('../../../assets/icons/cat.png')
+          }
     }
 
     return (
@@ -50,18 +61,29 @@ export default function Main({navigation}) {
                     longitudeDelta: 0.04
                 }}
             >
-                <Marker
-                    coordinate={{ latitude : 39.925533 , longitude : 32.866287 }}
-                    title={"Mark"}
-                    description={"I am desc"}
-                    onPress={() => pressedOnMarker("Mark")}
-                >
-                    <Image 
-                        style={styles.marker}
-                        source={require('../../../assets/icons/cat.png')} 
-                    />
-                </Marker>
-
+                {
+                    hosts.map(item => {
+                        var icon = handleImage(item.host.acceptedPets[0].toLowerCase());
+                        return (
+                            <Marker
+                                key={item.email}
+                                title={item.name}
+                                description={"Average Rating " + item.host.averageRating}
+                                coordinate={{
+                                    latitude: item.location.coordinates[0],
+                                    longitude: item.location.coordinates[1],
+                                }}
+                            >
+                                <Pressable onPress={() => pressedOnMarker(item._id)}>
+                                    <Image 
+                                        source={icon} 
+                                        style={styles.marker} 
+                                    />
+                                </Pressable>
+                            </Marker>
+                        )
+                    })
+                }
             </MapView>
             <Navi 
                 goToInbox={() => navigation.navigate("InboxScreen")}

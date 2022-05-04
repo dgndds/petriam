@@ -7,7 +7,8 @@ const middlewares = require('./middlewares');
 
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
-const hostRoute = require('./routes/hosts');
+const usersRoute = require('./routes/users');
+const hostsRoute = require('./routes/hosts');
 const adminRoute = require('./routes/admin');
 
 const port = process.env.PORT || 3000;
@@ -17,8 +18,9 @@ app.set('socketio', io);// Export socketio to be used in global scope.
 
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
-app.use('/api/hosts', hostRoute);
+app.use('/api/hosts', hostsRoute);
 app.use('/api/admin', adminRoute);
+app.use('/api/users', usersRoute);
 
 // TODO: MONGODB_URI exists for heroku. String exists for running app locally. String should be removed at production.
 const dbURI = process.env.MONGODB_URI || "mongodb+srv://dbadmin:dbadmin124@awsfrankfurtcluster0.olqv2.mongodb.net/PetriamDB?retryWrites=true&w=majority";

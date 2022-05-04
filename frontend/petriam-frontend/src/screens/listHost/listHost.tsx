@@ -29,7 +29,7 @@ export default function ListHost({navigation}) {
         (
             <Image
                 style={{ width: 20, height: 20 }}
-                source={require('../../../assets/icons/pet.png')} />
+                source={require('../../../assets/icons/dog.png')} />
         ),
     ]
 
@@ -129,7 +129,7 @@ export default function ListHost({navigation}) {
     function updatePetImage(animal:string){
         switch(animal){
             case "dog":{
-                return require('../../../assets/icons/pet.png')
+                return require('../../../assets/icons/dog.png')
             }
             case "cat":{
                 return require('../../../assets/icons/cat.png')
