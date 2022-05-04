@@ -6,9 +6,12 @@ import AppLoading from 'expo-app-loading';
 import { Icon } from 'react-native-elements';
 import Navi from '../../components/general/navi';
 import { useSelector } from 'react-redux';
+import { becomeHost } from '../../api/RestApiFunctions';
 
 
 export default function BecomeHost({navigation}){
+    const [userId,setUserId] = useState('');
+    const [token,setToken] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
@@ -28,8 +31,46 @@ export default function BecomeHost({navigation}){
     })
 
     useEffect(() => {
-        console.log(state.id.id);
+        console.log("this",state.id.id);
+        console.log("token",state.token.token);
+        setUserId(state.id.id);
+        setToken(state.token.token);
     }, [])
+
+    const handleSubmit = () => {
+        // console.log(becomeHost());
+
+        if(userId.length <= 0 || userId === null){
+            return false;
+        }
+        
+        if(tc.length <= 0 || tc === null){
+            return false;
+        }
+
+        if(pets.length <= 0){
+            return false;
+        }
+
+        if(address.length <= 0 || address === null){
+            return false
+        }
+
+        if(about.length <= 0 || about === null){
+            return false
+        }
+
+        let hostInfo = {
+            userId: userId,
+            tc: tc,
+            acceptedPets: pets,
+            criminalRecord: "none",
+            address: address
+        }
+
+        console.log(hostInfo)
+        becomeHost(token,userId,tc,about,pets,"none",address);
+    }
 
     if (!fontsLoaded) {
         return <AppLoading />;
@@ -98,20 +139,20 @@ export default function BecomeHost({navigation}){
                     
                     <Text style={styles.label}>Pets</Text>
                     <View style={styles.buttonGrid}>
-                        <Pressable style={handleSelected("dog")} onPress={()=>handlePet("dog")}><Text>Dog</Text></Pressable>
-                        <Pressable style={handleSelected("cat")} onPress={()=>handlePet("cat")}><Text>Cat</Text></Pressable>
-                        <Pressable style={handleSelected("bird")} onPress={()=>handlePet("bird")}><Text>Bird</Text></Pressable>
-                        <Pressable style={handleSelected("fish")} onPress={()=>handlePet("fish")}><Text>Fish</Text></Pressable>
-                        <Pressable style={handleSelected("turtle")} onPress={()=>handlePet("turtle")}><Text>Turtle</Text></Pressable>
-                        <Pressable style={handleSelected("hamster")} onPress={()=>handlePet("hamster")}><Text>Hamster</Text></Pressable>
-                        <Pressable style={handleSelected("rabbit")} onPress={()=>handlePet("rabbit")}><Text>Rabbit</Text></Pressable>
-                        <Pressable style={handleSelected("other")} onPress={()=>handlePet("other")}><Text>Other</Text></Pressable>
+                        <Pressable style={handleSelected("Dog")} onPress={()=>handlePet("Dog")}><Text>Dog</Text></Pressable>
+                        <Pressable style={handleSelected("Cat")} onPress={()=>handlePet("Cat")}><Text>Cat</Text></Pressable>
+                        <Pressable style={handleSelected("Bird")} onPress={()=>handlePet("Bird")}><Text>Bird</Text></Pressable>
+                        <Pressable style={handleSelected("Fish")} onPress={()=>handlePet("Fish")}><Text>Fish</Text></Pressable>
+                        <Pressable style={handleSelected("Turtle")} onPress={()=>handlePet("Turtle")}><Text>Turtle</Text></Pressable>
+                        <Pressable style={handleSelected("Hamster")} onPress={()=>handlePet("Hamster")}><Text>Hamster</Text></Pressable>
+                        <Pressable style={handleSelected("Rabbit")} onPress={()=>handlePet("Rabbit")}><Text>Rabbit</Text></Pressable>
+                        <Pressable style={handleSelected("Other")} onPress={()=>handlePet("Other")}><Text>Other</Text></Pressable>
                     </View>
                     
                     <Text style={styles.label}>About</Text>
                     <TextInput multiline style={styles.textBox} value={about} onChangeText={setAbout} placeholder='About Yourself'  autoCapitalize='none'/>
                 </View>
-                <Pressable style={styles.submitButton}><Text style={styles.submitButtonText}>Become A Host</Text></Pressable>
+                <Pressable style={styles.submitButton} onPress={handleSubmit}><Text style={styles.submitButtonText}>Become A Host</Text></Pressable>
             </ScrollView>
             <Navi></Navi>
         </SafeAreaView>
