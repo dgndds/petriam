@@ -4,11 +4,17 @@ import {useFonts, Roboto_700Bold,Roboto_700Bold_Italic  } from "@expo-google-fon
 import { ScrollView } from 'react-native-gesture-handler';
 import ContractUnit from "../../components/ContractUnit/ContractUnit"
 import Navi from '../../components/general/navi';
+import AppLoading from 'expo-app-loading';
+
 
 export default function Contracts() {
     let [fontsLoaded, err] = useFonts({
         Roboto_700Bold,
       })
+
+    if(!fontsLoaded){
+        return <AppLoading/>
+    }
 
     return (
         <SafeAreaView style={styles.container}> 

@@ -61,7 +61,25 @@ export default function Main({navigation}) {
                         source={require('../../../assets/icons/cat.png')} 
                     />
                 </Marker>
-
+                {
+                    hosts.map(item => {
+                        return (
+                            <Marker
+                                key={item.email}
+                                description={item.name + " " + item.host.averageRating}
+                                coordinate={{
+                                    latitude: item.location.coordinates[1],
+                                    longitude: item.location.coordinates[0],
+                                }}
+                            >
+                                <Image 
+                                    style={styles.marker}
+                                    source={require('../../../assets/icons/cat.png')} 
+                                />
+                            </Marker>
+                        )
+                    })
+                }
             </MapView>
             <Navi 
                 goToInbox={() => navigation.navigate("InboxScreen")}
