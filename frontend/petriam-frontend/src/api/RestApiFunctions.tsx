@@ -9,10 +9,69 @@ import {
     MESSAGE_PATH,
     CONVERSATION_PATH,
     BECOME_HOST_PATH,
-    CONTRACTS_PATH
+    CONTRACTS_PATH,
+    USERS_PATH
 } from './ApiConstants'
 
-export async function getHostsFiltered(price:number,petType:string,longitude: number, latitude: number, radius: number, token: string){
+export async function updateContractStatus(token: string, contractId: string, status: string){
+    let result = {};
+
+    let update = {
+        "contract": {
+            "_id": contractId,
+            "status": status
+        }
+    }
+
+    await axios
+        .put(LOCAL+USER_PATH+CONTRACTS_PATH, update,
+        { headers: { Authorization: "Bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    return result;
+}
+
+export async function getUserName(token: string, userId: string) {
+    let result = {};
+    
+    await axios
+        .get(LOCAL+USERS_PATH+userId, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+    return result;
+}
+export async function getContracts(token: string) {
+    let result = [];
+
+    await axios
+        .get(LOCAL+USER_PATH+CONTRACTS_PATH, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+    return result;
+}
+
+export async function getHostsFiltered(longitude: number, latitude: number, radius: number, token: string){
+
     let result = {}
 
     const app = (baseUrl: string, extraUrl?: string) => {

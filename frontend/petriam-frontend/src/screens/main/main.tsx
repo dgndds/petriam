@@ -23,8 +23,6 @@ export default function Main({navigation}) {
         }
 
         getHosts();
-        console.log(hosts);
-
     }, [])
     
     const pressedOnMarker = (marker: string) => {
