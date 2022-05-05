@@ -87,6 +87,7 @@ export default function Main({navigation}) {
             <Navi 
                 goToInbox={() => navigation.navigate("InboxScreen")}
                 goToBecomeHost={() => navigation.navigate("BecomeHost")}
+                nextPage={() => alert("We Are Happy To See You Here!")}
                 goToProfile={() => navigation.navigate("ProfilePage")}
                 goToContract={() => navigation.navigate("ContractsPage")}
             />

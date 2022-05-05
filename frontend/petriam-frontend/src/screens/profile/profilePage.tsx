@@ -122,7 +122,11 @@ export default function ProfilePage({navigation}){
                 </View>
             </View>
             </ScrollView>
-            <View style={styles.navbar}><Navi></Navi></View>
+            <View style={styles.navbar}>
+                <Navi
+                    nextPage={() => navigation.pop()}
+                />
+            </View>
         </SafeAreaView>
     )
 }
