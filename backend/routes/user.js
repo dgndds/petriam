@@ -131,6 +131,32 @@ router.get("/contract", middlewares.verifyJWT, (req, res) => {
     });
 });
 
+router.put("/contract", middlewares.verifyJWT, (req, res) => {
+    // Not sure if this will go to catch if the host is not found
+    Host.findOne({ userId: req.user._id }).then(host => {
+        if (host) {
+            Contract.findOneAndUpdate({ _id: req.body.contract._id,  $or: [{ ownerId: req.user._id }, { hostId: host._id },] }, req.body.contract, { new: true }).then(contract => {
+                res.status(200).json(contract);
+            }).catch(err => {
+                res.status(500).json({ error: 'Failed to update contract' });
+            });
+        }
+        else {
+            Contract.findOneAndUpdate({ _id: req.body.contract._id,  ownerId: req.user._id }, req.body.contract, { new: true }).then(contract => {
+                res.status(200).json(contract);
+            }).catch(err => {
+                res.status(500).json({ error: 'Failed to update contract' });
+            });
+        }
+    }).catch(err => {
+        Contract.findOneAndUpdate({ _id: req.body.contract._id,  ownerId: req.user._id }, req.body.contract, { new: true }).then(contract => {
+            res.status(200).json(contract);
+        }).catch(err => {
+            res.status(500).json({ error: 'Failed to update contract' });
+        });
+    });
+});
+
 router.post("/contract", middlewares.verifyJWT, (req, res) => {
     if(req.body.contract.hostId === req.user._id) {
         res.status(400).json({ error: 'You cannot create a contract with yourself' });
