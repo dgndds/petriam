@@ -17,7 +17,7 @@ export default function Main({navigation}) {
         const getHosts = async () => {
             setHosts(
                 Array.from(
-                    await getHostsFiltered(100,'Cat',39.925533, 32.866287, 100000000, state.token.token)
+                    await getHostsFiltered(39.925533, 32.866287, 100000000, state.token.token)
                 )
             );
         }
@@ -26,6 +26,7 @@ export default function Main({navigation}) {
     }, [])
     
     const pressedOnMarker = (marker: string) => {
+        console.log("usman")
         if(marker === selectedMarker){
             navigation.navigate("HostPage"); //, {host: hosts[marker]}
         }else{
@@ -65,22 +66,25 @@ export default function Main({navigation}) {
                     hosts.map(item => {
                         var icon = handleImage(item.host.acceptedPets[0].toLowerCase());
                         return (
-                            <Marker
-                                key={item.email}
-                                title={item.name}
-                                description={"Average Rating " + item.host.averageRating}
-                                coordinate={{
-                                    latitude: item.location.coordinates[0],
-                                    longitude: item.location.coordinates[1],
-                                }}
-                            >
-                                <Pressable onPress={() => pressedOnMarker(item._id)}>
-                                    <Image 
-                                        source={icon} 
-                                        style={styles.marker} 
-                                    />
-                                </Pressable>
-                            </Marker>
+                            // <Pressable onPress={}>
+                                <Marker
+                                    onPress={() => pressedOnMarker(item._id)}
+                                    key={item.email}
+                                    title={item.name}
+                                    description={"Average Rating " + item.host.averageRating}
+                                    coordinate={{
+                                        latitude: item.location.coordinates[0],
+                                        longitude: item.location.coordinates[1],
+                                    }}
+                                >
+                                    
+                                        <Image 
+                                            source={icon} 
+                                            style={styles.marker} 
+                                        />
+                                    
+                                </Marker>
+                            // </Pressable>
                         )
                     })
                 }
