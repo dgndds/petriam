@@ -124,7 +124,7 @@ router.delete("/pet", middlewares.verifyJWT, (req, res) => {
 //* ------------------------------------------------------------------------------------------
 
 router.get("/contract", middlewares.verifyJWT, (req, res) => {
-    Contract.find({ $or: [{ ownerId: req.user._id }, { hostId: req.user._id },] }).then(contract => {
+    Contract.find({ $or: [{ ownerId: req.user._id }, { hostId: req.user._id },] }).populate("pets").populate("ownerId").populate("hostId").then(contract => {
         res.status(200).json(contract);
     }).catch(err => {
         res.status(500).json({ error: 'Contracts could not be found' });
