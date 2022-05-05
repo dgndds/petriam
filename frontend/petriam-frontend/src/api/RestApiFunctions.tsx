@@ -13,6 +13,30 @@ import {
     USERS_PATH
 } from './ApiConstants'
 
+export async function updateContractStatus(token: string, contractId: string, status: string){
+    let result = {};
+
+    let update = {
+        "contract": {
+            "_id": contractId,
+            "status": status
+        }
+    }
+
+    await axios
+        .put(LOCAL+USER_PATH+CONTRACTS_PATH, update,
+        { headers: { Authorization: "Bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    return result;
+}
+
 export async function getUserName(token: string, userId: string) {
     let result = {};
     
@@ -24,7 +48,7 @@ export async function getUserName(token: string, userId: string) {
             result = response.data;
         })
         .catch(error => {
-            console.log("Gata", error);
+            console.log(error);
         })
 
     return result;

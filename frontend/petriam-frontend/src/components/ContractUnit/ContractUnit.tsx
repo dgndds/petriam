@@ -4,7 +4,7 @@ import {useFonts, Roboto_700Bold,Roboto_700Bold_Italic  } from "@expo-google-fon
 import { Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
 import { useSelector } from 'react-redux';
-import { getUserName } from '../../api/RestApiFunctions';
+import { getUserName, updateContractStatus } from '../../api/RestApiFunctions';
 
 export default function NavigationBar(props, {navigation}) {
     const [dates, setDates] = useState("");
@@ -18,21 +18,32 @@ export default function NavigationBar(props, {navigation}) {
         Roboto_700Bold_Italic
     })
 
+    const calculateDateDifference =  (date1: Date, date2: Date) => {
+        let timeDiff = date2.getTime() - date1.getTime();
+        let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        return diffDays;
+    }
+
+    const handleStatus = () => {
+        console.log(status)
+        let endDateDifferenceFromToday = calculateDateDifference(new Date(), new Date(props.contract.endDate));
+        if(status === "Accepted" && endDateDifferenceFromToday > 0){
+            setStatus("On Going");
+        }else if(status === "Accepted" && endDateDifferenceFromToday < 0){
+            console.log("here")
+            setStatus("Completed");
+        }
+    }
+
     useEffect(async () => {
         
-        //console.log(props.contract.pets[0].name)
-        const calculateDateDifference =  () => {
-            let date1 = new Date(props.contract.arrangementDate);
-            let date2 = new Date(props.contract.endDate);
-            let timeDiff = Math.abs(date2.getTime() - date1.getTime());
-            let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            return diffDays;
-        }
+        console.log(props.contract._id)
+
         setDates(
-            props.contract.arrangementDate.substring(0, 10)
+            props.contract.startDate.substring(0, 10)
             + " - " + 
             props.contract.endDate.substring(0, 10)
-            + " (" + calculateDateDifference() + " days)"
+            + " (" + calculateDateDifference(new Date(props.contract.startDate), new Date(props.contract.endDate)) + " days)"
         )
 
         setPetName(props.contract.pets[0].name)
@@ -43,7 +54,9 @@ export default function NavigationBar(props, {navigation}) {
             user.name + " " + user.surname
         )
         
-
+        setStatus(props.contract.status);
+        handleStatus();
+        
     }, [])
 
     if(!fontsLoaded){
@@ -56,12 +69,21 @@ export default function NavigationBar(props, {navigation}) {
         })
     }
 
-    const handleReject = () => {
+    const handleReject = async () => {
         setStatus("Rejected");
+
+        await updateContractStatus(state.token.token, props.contract._id, "Rejected");
+
+        handleStatus();
+        
     }
 
-    const handleAccept = () => {
+    const handleAccept = async () => {
         setStatus("Accepted");
+
+        await updateContractStatus(state.token.token, props.contract._id, "Accepted");
+
+        handleStatus();
     }
 
     return (
@@ -95,7 +117,23 @@ export default function NavigationBar(props, {navigation}) {
                     />
                 </Pressable>
                 {
-                    status === "Rejected" ?
+                    status === "On Going" ?
+
+                        <View>
+                            <Text style={styles.onGoing}>On Going</Text>
+                        </View>
+
+                        :
+
+                        status === "Completed" ?
+
+                        <View>
+                            <Text style={styles.completed}>Completed</Text>
+                        </View>
+
+                        :
+
+                        status === "Rejected" ?
 
                         <View>
                             <Text style={styles.rejected}>Rejected</Text>
