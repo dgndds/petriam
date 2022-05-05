@@ -7,6 +7,7 @@ import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSelector } from 'react-redux';
+import { getCurrentUserInfo } from '../../api/RestApiFunctions';
 
 export default function HostPage({navigation}){
     const [openStartDate,setStartOpenDate] = useState(false);
@@ -20,6 +21,13 @@ export default function HostPage({navigation}){
         console.log("host token",state.token.token)
         console.log("host id ",state.id.id)
 
+        getCurrentUserInfo(state.token.token,state.id.id).then(result=>{
+            if(result === false){
+                console.log("Failed to retrieve user information!");
+            }else{
+                setUserInfo(result);
+            }
+        })
 
     }, [])
 
@@ -30,7 +38,7 @@ export default function HostPage({navigation}){
         Roboto_700Bold
       })
 
-      if (!fontsLoaded) {
+      if (!fontsLoaded || !userInfo) {
         return <AppLoading />;
       }
 
@@ -42,6 +50,10 @@ export default function HostPage({navigation}){
     const handleFinishDateChange = (event,date) => {
         setFinishOpenDate(false);
         setFinishDate(date);
+    }
+
+    const handlePetSelect = (pet:any) => {
+        console.log(pet);
     }
 
     return(
@@ -162,6 +174,16 @@ export default function HostPage({navigation}){
                                    }</Text>
                             {openFinishDate&&<DateTimePicker mode='date' value={new Date()} onChange={handleFinishDateChange}/>}
                         </View>
+                    </View>
+                    <View style={styles.petsContainer}>
+                        <Text style={styles.addressTitle}>Your Pets</Text>
+                        {userInfo.pets&&userInfo.pets.map(
+                            (pet,i)=>(
+                                <Pressable key={i} onPress={()=>handlePetSelect(pet)} style={styles.petChooseButton}>
+                                    <Text style={styles.petChooseButtonText}>{pet.name} ({pet.type})</Text>
+                                </Pressable>
+                            )
+                        )}
                     </View>
                     <Pressable style={styles.submitButton}>
                         <Text style={styles.submitButtonText}>Hire This Host</Text>
@@ -314,9 +336,21 @@ const styles = StyleSheet.create({
         color:"white",
         textAlign:"center"
     },
-    dateText:{
-
+    petsContainer:{
+        width:350,
+        justifyContent:"flex-start",
+        marginLeft:"2.5%",
+        flexWrap:"wrap",
+        borderWidth:1
     },
+    petChooseButton:{
+        width:100,
+        height:25,
+        backgroundColor:"#D99E6A",
+        alignItems:"center",
+        borderRadius:5
+    },
+    petChooseButtonText:{},
     submitButton:{
         width:350,
         height:50,
