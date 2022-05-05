@@ -15,6 +15,7 @@ export default function HostPage({navigation}){
     const [userInfo,setUserInfo] = useState({});
     const [startDate,setStartDate] = useState(new Date());
     const [finishDate,setFinishDate] = useState(new Date());
+    const [selectedPet,setSelectedPet] = useState(null);
     const state = useSelector(state => state);
 
     useEffect(() => {
@@ -53,7 +54,25 @@ export default function HostPage({navigation}){
     }
 
     const handlePetSelect = (pet:any) => {
-        console.log(pet);
+        setSelectedPet(pet);
+    }
+
+    const handleSubmit = () => {
+        if( selectedPet === null){
+            return false;
+        }else{
+            if(selectedPet.length <= 0){
+                return false;
+            }
+        }
+
+        let body = {
+            selectedPet:selectedPet,
+            startDate:startDate,
+            finishDate:finishDate
+        }
+
+        console.log(body);
     }
 
     return(
@@ -162,7 +181,7 @@ export default function HostPage({navigation}){
                             <Text>{startDate.getDate().toString().padStart(2, '0') + "/" +
                                    (startDate.getMonth()+1).toString().padStart(2, '0') + "/" +
                                    startDate.getFullYear().toString().padStart(2, '0')}</Text> 
-                            {openStartDate&&<DateTimePicker mode='date' value={new Date()} onChange={handleStartDateChange}/>}
+                            {openStartDate&&<DateTimePicker minimumDate={new Date()} mode='date' value={new Date()} onChange={handleStartDateChange}/>}
                         </View>
                         <View style={{alignItems:"center"}}>
                             <Pressable onPress={()=>setFinishOpenDate(true)} style={styles.openDateButton}>
@@ -172,20 +191,22 @@ export default function HostPage({navigation}){
                                    (finishDate.getMonth()+1).toString().padStart(2, '0') + "/" +
                                    finishDate.getFullYear().toString().padStart(2, '0')
                                    }</Text>
-                            {openFinishDate&&<DateTimePicker mode='date' value={new Date()} onChange={handleFinishDateChange}/>}
+                            {openFinishDate&&<DateTimePicker minimumDate={new Date()} mode='date' value={new Date()} onChange={handleFinishDateChange}/>}
                         </View>
                     </View>
                     <View style={styles.petsContainer}>
                         <Text style={styles.addressTitle}>Your Pets</Text>
-                        {userInfo.pets&&userInfo.pets.map(
-                            (pet,i)=>(
-                                <Pressable key={i} onPress={()=>handlePetSelect(pet)} style={styles.petChooseButton}>
-                                    <Text style={styles.petChooseButtonText}>{pet.name} ({pet.type})</Text>
-                                </Pressable>
-                            )
-                        )}
+                        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+                            {userInfo.pets&&userInfo.pets.map(
+                                (pet,i)=>(
+                                    <Pressable key={i} onPress={()=>handlePetSelect(pet)} style={[styles.petChooseButton,{backgroundColor:selectedPet===pet?"green":"#D99E6A"}]}>
+                                        <Text style={styles.petChooseButtonText}>{pet.name} ({pet.type})</Text>
+                                    </Pressable>
+                                )
+                            )}
+                        </View>
                     </View>
-                    <Pressable style={styles.submitButton}>
+                    <Pressable style={styles.submitButton} onPress={handleSubmit}>
                         <Text style={styles.submitButtonText}>Hire This Host</Text>
                     </Pressable>
                 </View>
@@ -340,17 +361,23 @@ const styles = StyleSheet.create({
         width:350,
         justifyContent:"flex-start",
         marginLeft:"2.5%",
-        flexWrap:"wrap",
-        borderWidth:1
+        marginBottom:20
     },
     petChooseButton:{
         width:100,
         height:25,
         backgroundColor:"#D99E6A",
-        alignItems:"center",
-        borderRadius:5
+        justifyContent:"center",
+        borderRadius:5,
+        marginLeft:10,
+        marginBottom:10
     },
-    petChooseButtonText:{},
+    petChooseButtonText:{
+        fontFamily:"PlayfairDisplay_700Bold",
+        fontSize:12,
+        color:"white",
+        textAlign:"center"
+    },
     submitButton:{
         width:350,
         height:50,
