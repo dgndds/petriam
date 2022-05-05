@@ -1,28 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {StyleSheet,View, Platform } from 'react-native';
 import { Icon } from 'react-native-elements'
 
 
 export default function Navi(props){
-    return (
-            
+
+    useEffect(() => {
+        if(props.goToContract){
+            console.log("ahhahahahah")
+        }
+    }, [])
+
+    return (        
             <View style={styles.container}>
-                <Icon
+                {
+                    props.goToContract ? 
+
+                    <Icon
                         name="file-signature"
                         type='font-awesome-5'
                         size={25}
                         color= 'white'
                         solid={true}
                         onPress={() => {props.goToContract()} }
-                />
-                <Icon
+                    />
+                        :
+                    <View></View>
+                }
+                {
+                    props.goToInbox ? 
+
+                    <Icon
                         name="envelope"
                         type='font-awesome-5'
                         size={25}
                         color= 'white'
                         solid={true}
                         onPress={() => {props.goToInbox()} }
-                />
+                    />
+                    :
+                    <View></View>
+                }
                 <View style={styles.circle}>
                     <View style={styles.home}>
                     <Icon
@@ -36,22 +54,34 @@ export default function Navi(props){
                     />
                     </View>
                 </View>
-                <Icon
+                {
+                    props.goToInbox ? 
+
+                    <Icon
                         name="hotel"
                         type='font-awesome-5'
                         size={25}
                         color= 'white'
                         solid={true}
                         onPress={() => {props.goToBecomeHost()} }
-                />
-                <Icon
+                    />
+                    :
+                    <View></View>
+                }
+                {
+                    props.goToInbox ? 
+
+                    <Icon
                         name="user"
                         type='font-awesome-5'
                         size={25}
                         color= 'white'
                         solid={true}
                         onPress={() => {props.goToProfile()} }
-                />
+                    />
+                    :
+                    <View></View>
+                }
             </View>
     )
 }

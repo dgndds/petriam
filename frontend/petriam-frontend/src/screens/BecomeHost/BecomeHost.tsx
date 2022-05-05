@@ -166,7 +166,6 @@ export default function BecomeHost({navigation}){
                     </Text>
                 </Pressable>
             </ScrollView>
-            <Navi></Navi>
         </SafeAreaView>
     )
 }
