@@ -6,6 +6,7 @@ const Pet = require('../models/PetModel');
 const Review = require('../models/ReviewModel');
 
 const middlewares = require('../middlewares');
+const { Int32 } = require('mongodb');
 
 //* ------------------------------------------------------------------------------------------
 //* General host endpoints ---------------------------------------------------------------------------
@@ -45,44 +46,94 @@ router.get("/filter", middlewares.verifyJWT, (req, res) => {
     req.query.latitude = parseFloat(req.query.latitude);
     req.query.longitude = parseFloat(req.query.longitude);
     req.query.radius = parseFloat(req.query.radius);
-    req.query.price = parseFloat(req.query.price);
-    User.aggregate([
-        {
-            $geoNear: {
-                near: {
-                    type: "Point",
-                    coordinates: [req.query.longitude, req.query.latitude] // Be careful, longitude first!
-                },
-                distanceField: "distance",
-                maxDistance: req.query.radius * 1000, // Convert km to meters
-                spherical: true
+
+    if(!req.query.price || req.query.price === "0"){
+        req.query.price = Number.MAX_VALUE; // If price is not given, then set it to max value to find all hosts
+    }
+    else{
+        req.query.price = parseFloat(req.query.price);
+    }
+    // Make pet type first letter capital and lowercase the rest
+    if(req.query.petType) req.query.petType = req.query.petType.charAt(0).toUpperCase() + req.query.petType.slice(1).toLowerCase();
+
+    if(req.query.petType){
+        User.aggregate([
+            {
+                $geoNear: {
+                    near: {
+                        type: "Point",
+                        coordinates: [req.query.longitude, req.query.latitude] // Be careful, longitude first!
+                    },
+                    distanceField: "distance",
+                    maxDistance: req.query.radius * 1000, // Convert km to meters
+                    spherical: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "hosts",
+                    localField: "_id",
+                    foreignField: "userId",
+                    as: "host"
+                }
+            },
+            {
+                $match: {
+                    "host.price": {
+                        $lte: req.query.price
+                    },
+                    "host.acceptedPets": req.query.petType
+                }
+            },
+            {
+                $unwind: "$host"
             }
-        },
-        {
-            $lookup: {
-                from: "hosts",
-                localField: "_id",
-                foreignField: "userId",
-                as: "host"
+            
+        ]).then(users => {
+            res.status(200).json(users);
+        }).catch(err => {
+            res.status(500).json({ error: "Failed to find users" });
+        });
+    }
+    else{
+        User.aggregate([
+            {
+                $geoNear: {
+                    near: {
+                        type: "Point",
+                        coordinates: [req.query.longitude, req.query.latitude] // Be careful, longitude first!
+                    },
+                    distanceField: "distance",
+                    maxDistance: req.query.radius * 1000, // Convert km to meters
+                    spherical: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "hosts",
+                    localField: "_id",
+                    foreignField: "userId",
+                    as: "host"
+                }
+            },
+            {
+                $match: {
+                    "host.price": {
+                        $lte: req.query.price
+                    }
+                }
+            },
+            {
+                $unwind: "$host"
             }
-        },
-        {
-            $match: {
-                "host.price": {
-                    $lte: req.query.price
-                },
-                "host.acceptedPets": req.query.petType
-            }
-        },
-        {
-            $unwind: "$host"
-        }
-        
-    ]).then(users => {
-        res.status(200).json(users);
-    }).catch(err => {
-        res.status(500).json({ error: "Failed to find users" });
-    });
+            
+        ]).then(users => {
+            res.status(200).json(users);
+        }).catch(err => {
+            res.status(500).json({ error: "Failed to find users" });
+        });
+    }
+    
 });
 
 router.get("/:hostId", middlewares.verifyJWT, (req, res) => {
