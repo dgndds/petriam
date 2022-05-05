@@ -87,8 +87,6 @@ export async function getHostsFiltered(longitude: number, latitude: number, radi
                 longitude: longitude,
                 latitude: latitude,
                 radius: radius,
-                price:price,
-                petType:petType
             }
         })
         .then((response) => {
