@@ -11,7 +11,7 @@ import {
     BECOME_HOST_PATH
 } from './ApiConstants'
 
-export async function getHostsFiltered(longitude: number, latitude: number, radius: number, token: string){
+export async function getHostsFiltered(price:number,petType:string,longitude: number, latitude: number, radius: number, token: string){
     let result = {}
 
     const app = (baseUrl: string, extraUrl?: string) => {
@@ -26,7 +26,9 @@ export async function getHostsFiltered(longitude: number, latitude: number, radi
             params: { 
                 longitude: longitude,
                 latitude: latitude,
-                radius: radius
+                radius: radius,
+                price:price,
+                petType:petType
             }
         })
         .then((response) => {

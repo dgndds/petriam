@@ -13,15 +13,17 @@ export default function Main({navigation}) {
     const [selectedMarker, setSelectedMarker] = useState("");
 
     useEffect(() => {
+        console.log(state.token.token)
         const getHosts = async () => {
             setHosts(
                 Array.from(
-                    await getHostsFiltered(39.925533, 32.866287, 100000000, state.token.token)
+                    await getHostsFiltered(100,'Cat',39.925533, 32.866287, 100000000, state.token.token)
                 )
             );
         }
 
         getHosts();
+        console.log(hosts);
 
     }, [])
     
