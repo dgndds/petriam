@@ -13,7 +13,7 @@ export default function InputBoxItem(props){
 
     useEffect(() => {
         setLastMessage(props.item.item.messages.at(props.item.item.messages.length - 1).content);
-        console.log("İçerdeiyiz: " + JSON.stringify(props.item));
+        console.log("İçerdeiyiz: " + props.item.item.ownerId.name);
     }, [])
 
     if(!fontsLoaded){
@@ -26,7 +26,7 @@ export default function InputBoxItem(props){
             style={styles.profilePic}
             source={props.item.item.profilePic ? props.item.item.profilePic : require("../../assets/profilepicd.png") }></Image>
             <View style={styles.textcontainer}>
-                <Text style={styles.nameSurname}> {props.item.item.name + " " + props.item.item.surname}</Text>
+                <Text style={styles.nameSurname}> {props.item.item.ownerId.name + " " + props.item.item.ownerId.surname}</Text>
                 <Text style={styles.lastmsg}> {lastMessage}  </Text>
             </View>
             <View style={styles.pet}>
