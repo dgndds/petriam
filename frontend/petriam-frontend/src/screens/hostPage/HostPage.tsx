@@ -9,7 +9,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSelector } from 'react-redux';
 import { getCurrentUserInfo } from '../../api/RestApiFunctions';
 
-export default function HostPage({navigation}){
+export default function HostPage({route, navigation}){
     const [openStartDate,setStartOpenDate] = useState(false);
     const [openFinishDate,setFinishOpenDate] = useState(false);
     const [userInfo,setUserInfo] = useState({});
@@ -17,10 +17,12 @@ export default function HostPage({navigation}){
     const [finishDate,setFinishDate] = useState(new Date());
     const [selectedPet,setSelectedPet] = useState(null);
     const state = useSelector(state => state);
+    const { hostId } = route.params;
 
     useEffect(() => {
-        console.log("host token",state.token.token)
-        console.log("host id ",state.id.id)
+        console.log("Host:" + hostId)
+        console.log("user token",state.token.token)
+        console.log("user id ",state.id.id)
 
         getCurrentUserInfo(state.token.token,state.id.id).then(result=>{
             if(result === false){

@@ -26,9 +26,8 @@ export default function Main({navigation}) {
     }, [])
     
     const pressedOnMarker = (marker: string) => {
-        console.log("usman")
         if(marker === selectedMarker){
-            navigation.navigate("HostPage"); //, {host: hosts[marker]}
+            navigation.navigate("HostPage", {hostId: marker});
         }else{
             setSelectedMarker(marker);
         }
@@ -66,7 +65,6 @@ export default function Main({navigation}) {
                     hosts.map(item => {
                         var icon = handleImage(item.host.acceptedPets[0].toLowerCase());
                         return (
-                            // <Pressable onPress={}>
                                 <Marker
                                     onPress={() => pressedOnMarker(item._id)}
                                     key={item.email}
@@ -84,7 +82,6 @@ export default function Main({navigation}) {
                                         />
                                     
                                 </Marker>
-                            // </Pressable>
                         )
                     })
                 }
