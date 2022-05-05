@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 import {useFonts, Roboto_700Bold,Roboto_700Bold_Italic  } from "@expo-google-fonts/roboto"
 import { Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
 
-export default function NavigationBar() {
+export default function NavigationBar(props) {
+    const [dates, setDates] = useState("");
     let [fontsLoaded, err] = useFonts({
         Roboto_700Bold,
         Roboto_700Bold_Italic
     })
+
+    useEffect(() => {
+        console.log(props.contract)
+        const calculateDateDifference =  () => {
+            let date1 = new Date(props.contract.arrangementDate);
+            let date2 = new Date(props.contract.endDate);
+            let timeDiff = Math.abs(date2.getTime() - date1.getTime());
+            let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            return diffDays;
+        }
+        setDates(
+            props.contract.arrangementDate.substring(0, 10)
+            + " - " + 
+            props.contract.endDate.substring(0, 10)
+            + " (" + calculateDateDifference() + " days)"
+        )
+
+    }, [])
 
     if(!fontsLoaded){
         return <AppLoading/>
@@ -31,7 +50,7 @@ export default function NavigationBar() {
                     />
                     <Text style={styles.petName}>Pet Name</Text>
                 </View>
-                <Text style={styles.contractInfo}>01/01/2021 - 08/01/2021 (7 days)</Text>
+                <Text style={styles.contractInfo}>{dates}</Text>
             </View>
             <View style={styles.buttonsContainer}>
                 <Icon

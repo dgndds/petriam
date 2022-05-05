@@ -10,3 +10,4 @@ export const HOSTS_FILTER_PATH = "hosts/filter";
 export const MESSAGE_PATH = "message";
 export const CONVERSATION_PATH = "conversation";
 export const BECOME_HOST_PATH = "host/apply";
+export const CONTRACTS_PATH = "contract";
