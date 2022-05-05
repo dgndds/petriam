@@ -22,6 +22,7 @@ export default function Main({navigation}) {
         }
 
         getHosts();
+        console.log(hosts);
 
     }, [])
     

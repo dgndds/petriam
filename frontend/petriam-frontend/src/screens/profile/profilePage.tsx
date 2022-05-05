@@ -71,7 +71,7 @@ export default function ProfilePage({navigation}){
                                 size={10}
                                 color='#707070'
                                 />
-                                <Text style={styles.petText}>{ pet.type[0].toUpperCase() + pet.type.slice(1)} Owner</Text>
+                                <Text style={styles.petText}>{console.log(pet.type)/* pet.type.toUpperCase() + pet.type.slice(1)*/} Owner</Text>
                             </>
                          )}
                     )

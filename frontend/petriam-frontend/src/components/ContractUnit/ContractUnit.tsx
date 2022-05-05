@@ -4,7 +4,7 @@ import {useFonts, Roboto_700Bold,Roboto_700Bold_Italic  } from "@expo-google-fon
 import { Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
 
-export default function NavigationBar() {
+export default function NavigationBar(props) {
     let [fontsLoaded, err] = useFonts({
         Roboto_700Bold,
         Roboto_700Bold_Italic
