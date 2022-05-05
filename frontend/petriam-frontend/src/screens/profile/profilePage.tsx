@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic} from "@expo-google-fonts/playfair-display"
 import {Roboto_700Bold } from "@expo-google-fonts/roboto"
@@ -6,34 +6,53 @@ import { Icon } from 'react-native-elements';
 import PetContainer from "../../components/PetContainer/PetContainer"
 import Navi from '../../components/general/navi';
 import AppLoading from 'expo-app-loading';
+import { getCurrentUserInfo } from '../../api/RestApiFunctions';
+import { useSelector } from 'react-redux';
 
 export default function ProfilePage({navigation}){
+    const state = useSelector(state => state);
+    const [userInfo,setUserInfo] = useState({})
+    const [ownedPets,setOwnedPets] = useState<string[]>([]);
+    
+    useEffect(() => {
+        setOwnedPets([]);
+        console.log("profil",state.token.token);
+        getCurrentUserInfo(state.token.token, state.id.id).then(result=>{
+            if(result === false){
+                console.log("Failed to get user info!");
+            }else{
+                setUserInfo(result);
+            }
+        });
+    },[]);
+
+
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
         PlayfairDisplay_700Bold_Italic,
         Roboto_700Bold
-      })
+    })
 
-      if (!fontsLoaded) {
-        return <AppLoading />;
-      }
-
+    if (!fontsLoaded || !userInfo) {
+       return <AppLoading />;
+    }
+    
     return(
         <SafeAreaView style={styles.container}>
             <ScrollView nestedScrollEnabled contentContainerStyle={{paddingBottom:90, paddingTop:5}}>
             <Icon 
-                    name='chevron-left'
-                    size={50}
-                    color= '#707070'
-                    style={{alignSelf: "flex-start"}}
-                    onPress={() => navigation.pop()}
+                name='chevron-left'
+                size={50}
+                color= '#707070'
+                style={{alignSelf: "flex-start"}}
+                onPress={() => navigation.pop()}
             />
             <View style={styles.headerContainer}>
                 <Image
                 style={styles.profilePic}
-                source={require("../../../assets/icons/avatarWoman.png")}/>
+                source={{uri:"http://192.168.0.14:3000/default-avatar.png"}}/>
                 <View style={styles.nameTag}>
-                    <Text style={styles.profileName}>John Doe</Text> 
+                    <Text style={styles.profileName}>{userInfo.name + " " + userInfo.surname}</Text> 
                     <Icon
                     name='check-circle'
                     type="font-awesome"
@@ -42,20 +61,21 @@ export default function ProfilePage({navigation}){
                     />
                 </View>
                 <View style={styles.ownerPetsContainer}>
-                    <Icon
-                    name='dog'
-                    type="font-awesome-5"
-                    size={10}
-                    color='#707070'
-                    />
-                    <Text style={styles.petText}>Dog Owner</Text>
-                    <Icon
-                    name='cat'
-                    type="font-awesome-5"
-                    size={10}
-                    color='#707070'
-                    />
-                    <Text style={styles.petText}>Cat Owner</Text>
+                    {userInfo.pets && userInfo.pets.map(pet=>
+                    {
+                        return (
+                            <>
+                                <Icon
+                                name={pet.type}
+                                type="font-awesome-5"
+                                size={10}
+                                color='#707070'
+                                />
+                                <Text style={styles.petText}>{console.log(pet.type)/* pet.type.toUpperCase() + pet.type.slice(1)*/} Owner</Text>
+                            </>
+                         )}
+                    )
+                    }
                 </View>
                 <Text style={styles.verficText}>*Verified with TC and Address</Text>
             </View>
@@ -71,11 +91,7 @@ export default function ProfilePage({navigation}){
                     }}
                     >
                         <Text style={{textAlign:"justify"}}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id 
-                        fringilla metus, ut suscipit felis. Mauris mollis enim a orci sollicitudin,
-                        et dapibus ipsum mat-tis. Maecenas faucibus et tortor vel laoreet. Nunc mattis 
-                        lorem ex, nec interd-um justo vehicula at. Mauris sollicitudin metus mauris, ac 
-                        egestas tellus dapibus non. Suspendisse potenti. Cras vitae libero lacus.
+                        {userInfo.aboutMe}
                         </Text>
                     </ScrollView>
                 </View>
@@ -91,23 +107,17 @@ export default function ProfilePage({navigation}){
                     }}
                     >
                         <Text> 
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
+                            {userInfo.address}
                         </Text>
                     </ScrollView>
                 </View>
                 <View style={styles.petsContainer}>
                     <Text style={styles.petTitle}>Pets</Text>
                     <ScrollView horizontal>
-                        <PetContainer></PetContainer>
-                        <PetContainer></PetContainer>
-                        <PetContainer></PetContainer>
-                        <PetContainer></PetContainer>
-                        <PetContainer></PetContainer>
-                        <PetContainer></PetContainer>
-                        <PetContainer></PetContainer>
-                        <PetContainer></PetContainer>
+                    {userInfo.pets && userInfo.pets.map(pet=>(
+
+                        <PetContainer pet={pet}/>
+                    ))}
                     </ScrollView>
                 </View>
             </View>

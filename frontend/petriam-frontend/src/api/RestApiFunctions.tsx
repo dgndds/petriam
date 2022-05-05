@@ -8,8 +8,27 @@ import {
     HOSTS_FILTER_PATH,
     MESSAGE_PATH,
     CONVERSATION_PATH,
-    BECOME_HOST_PATH
+    BECOME_HOST_PATH,
+    CONTRACTS_PATH
 } from './ApiConstants'
+
+export async function getContracts(token: string) {
+    let result = [];
+
+    await axios
+        .get(LOCAL+USER_PATH+CONTRACTS_PATH, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+
+    return result;
+}
 
 export async function getHostsFiltered(longitude: number, latitude: number, radius: number, token: string){
     let result = {}
@@ -27,6 +46,36 @@ export async function getHostsFiltered(longitude: number, latitude: number, radi
                 longitude: longitude,
                 latitude: latitude,
                 radius: radius
+            }
+        })
+        .then((response) => {
+            result = response.data;
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+
+    return result;
+}
+
+export async function getHostsWithFilters(price: number, petType: string, longitude: number, latitude: number, radius: number, token: string){
+    let result = {}
+
+    const app = (baseUrl: string, extraUrl?: string) => {
+        return axios.create({
+            baseURL: baseUrl + extraUrl,
+            headers: { Authorization: "bearer " + token }
+        })
+    } 
+
+    await app(LOCAL, HOSTS_FILTER_PATH)
+        .get(LOCAL+HOSTS_FILTER_PATH, {
+            params: { 
+                longitude: longitude,
+                latitude: latitude,
+                radius: radius,
+                price: price,
+                petType: petType
             }
         })
         .then((response) => {
@@ -174,4 +223,22 @@ export async function becomeHost(token:string,userId:string,tc:string,aboutMe:st
         })
 
         return result;
+}
+
+export async function getCurrentUserInfo(token:string,id:string):Promise<any>{
+    let result;
+
+    await axios
+    .get(LOCAL+USER_PATH, {
+        headers: { Authorization: "bearer " + token }
+    })
+    .then((response) => {
+        result = response.data;
+    })
+    .catch(error => {
+        console.log("current",error);
+        result = false;
+    })
+    
+    return result;
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Platform, SafeAreaView,Text, View, Image} from 'react-native';
 import {useFonts, Roboto_700Bold, Roboto_700Bold_Italic  } from "@expo-google-fonts/roboto"
 import { ScrollView } from 'react-native-gesture-handler';
@@ -6,11 +6,21 @@ import ContractUnit from "../../components/ContractUnit/ContractUnit"
 import Navi from '../../components/general/navi';
 import AppLoading from 'expo-app-loading';
 import { Icon } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import { getContracts } from '../../api/RestApiFunctions';
 
 export default function Contracts({navigation}) {
+    const [contracts, setContracts] = useState([]);
+    const state = useSelector(state => state);
     let [fontsLoaded, err] = useFonts({
         Roboto_700Bold,
-      })
+    })
+
+    useEffect(async () => {
+        setContracts(
+            await getContracts(state.token.token)
+        );
+    }, [])
 
     if(!fontsLoaded){
         return <AppLoading/>
@@ -44,11 +54,16 @@ export default function Contracts({navigation}) {
                     />
                 </View>
                 <View>
-                    <ContractUnit></ContractUnit>
-                    <ContractUnit></ContractUnit>
-                    <ContractUnit></ContractUnit>
-                    <ContractUnit></ContractUnit>
-                    <ContractUnit></ContractUnit>
+                    {
+                        contracts.map(contract => {
+                            return (
+                                <ContractUnit 
+                                key={contract._id} 
+                                contract={contract}/>
+                                )
+                            }
+                        )
+                    }
                 </View>
             </ScrollView>
             <View style={styles.navbar}><Navi></Navi></View>
