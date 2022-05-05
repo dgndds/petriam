@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet,SafeAreaView,Text,Platform, View, Image,ScrollView, Pressable } from 'react-native';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic,PlayfairDisplay_800ExtraBold} from "@expo-google-fonts/playfair-display"
 import {Roboto_700Bold } from "@expo-google-fonts/roboto"
 import { Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useSelector } from 'react-redux';
+import { getCurrentUserInfo } from '../../api/RestApiFunctions';
 
 export default function HostPage({navigation}){
+    const [openStartDate,setStartOpenDate] = useState(false);
+    const [openFinishDate,setFinishOpenDate] = useState(false);
+    const [userInfo,setUserInfo] = useState({});
+    const [startDate,setStartDate] = useState(new Date());
+    const [finishDate,setFinishDate] = useState(new Date());
+    const [selectedPet,setSelectedPet] = useState(null);
+    const state = useSelector(state => state);
+
+    useEffect(() => {
+        console.log("host token",state.token.token)
+        console.log("host id ",state.id.id)
+
+        getCurrentUserInfo(state.token.token,state.id.id).then(result=>{
+            if(result === false){
+                console.log("Failed to retrieve user information!");
+            }else{
+                setUserInfo(result);
+            }
+        })
+
+    }, [])
+
     let [fontsLoaded, err] = useFonts({
         PlayfairDisplay_700Bold,
         PlayfairDisplay_700Bold_Italic,
@@ -14,13 +39,44 @@ export default function HostPage({navigation}){
         Roboto_700Bold
       })
 
-      if (!fontsLoaded) {
+      if (!fontsLoaded || !userInfo) {
         return <AppLoading />;
       }
 
+    const handleStartDateChange = (event,date) => {
+        setStartOpenDate(false);
+        setStartDate(date);
+    }
+
+    const handleFinishDateChange = (event,date) => {
+        setFinishOpenDate(false);
+        setFinishDate(date);
+    }
+
+    const handlePetSelect = (pet:any) => {
+        setSelectedPet(pet);
+    }
+
+    const handleSubmit = () => {
+        if( selectedPet === null){
+            return false;
+        }else{
+            if(selectedPet.length <= 0){
+                return false;
+            }
+        }
+
+        let body = {
+            selectedPet:selectedPet,
+            startDate:startDate,
+            finishDate:finishDate
+        }
+
+        console.log(body);
+    }
 
     return(
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container}>       
             <ScrollView nestedScrollEnabled contentContainerStyle={{paddingBottom:100, paddingTop:5}}>
                 <Icon 
                     name='chevron-left'
@@ -117,15 +173,46 @@ export default function HostPage({navigation}){
                             </View>
                         </View>
                     </View>
-                    <Pressable style={styles.submitButton}>
+                    <View style={styles.datePickerContainer}>
+                        <View style={{alignItems:"center"}}>
+                            <Pressable onPress={()=>setStartOpenDate(true)} style={styles.openDateButton}>
+                                <Text style={styles.openDateButtonText}>Choose a Start Date</Text>
+                            </Pressable>
+                            <Text>{startDate.getDate().toString().padStart(2, '0') + "/" +
+                                   (startDate.getMonth()+1).toString().padStart(2, '0') + "/" +
+                                   startDate.getFullYear().toString().padStart(2, '0')}</Text> 
+                            {openStartDate&&<DateTimePicker minimumDate={new Date()} mode='date' value={new Date()} onChange={handleStartDateChange}/>}
+                        </View>
+                        <View style={{alignItems:"center"}}>
+                            <Pressable onPress={()=>setFinishOpenDate(true)} style={styles.openDateButton}>
+                                <Text style={styles.openDateButtonText}>Choose a Finish Date</Text>
+                            </Pressable>
+                            <Text>{finishDate.getDate().toString().padStart(2, '0') + "/" +
+                                   (finishDate.getMonth()+1).toString().padStart(2, '0') + "/" +
+                                   finishDate.getFullYear().toString().padStart(2, '0')
+                                   }</Text>
+                            {openFinishDate&&<DateTimePicker minimumDate={new Date()} mode='date' value={new Date()} onChange={handleFinishDateChange}/>}
+                        </View>
+                    </View>
+                    <View style={styles.petsContainer}>
+                        <Text style={styles.addressTitle}>Your Pets</Text>
+                        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+                            {userInfo.pets&&userInfo.pets.map(
+                                (pet,i)=>(
+                                    <Pressable key={i} onPress={()=>handlePetSelect(pet)} style={[styles.petChooseButton,{backgroundColor:selectedPet===pet?"green":"#D99E6A"}]}>
+                                        <Text style={styles.petChooseButtonText}>{pet.name} ({pet.type})</Text>
+                                    </Pressable>
+                                )
+                            )}
+                        </View>
+                    </View>
+                    <Pressable style={styles.submitButton} onPress={handleSubmit}>
                         <Text style={styles.submitButtonText}>Hire This Host</Text>
                     </Pressable>
                 </View>
             </ScrollView>
             <View style={styles.navbar}>
-                <Navi 
-                    
-                />
+                <Navi />
             </View>
         </SafeAreaView>
     )
@@ -249,6 +336,47 @@ const styles = StyleSheet.create({
     ratingSubtitle:{
         fontFamily:"Roboto_700Bold",
         fontSize:10
+    },
+    datePickerContainer:{
+        flexDirection:"row",
+        justifyContent:"space-between",
+        marginBottom:15, 
+        width:"95%"
+    },
+    openDateButton:{
+        width:170,
+        height:30,
+        alignItems:"center",
+        justifyContent:"center",
+        borderRadius:10,
+        backgroundColor:"#D99E6A",
+    },
+    openDateButtonText:{
+        fontFamily:"PlayfairDisplay_700Bold",
+        fontSize:15,
+        color:"white",
+        textAlign:"center"
+    },
+    petsContainer:{
+        width:350,
+        justifyContent:"flex-start",
+        marginLeft:"2.5%",
+        marginBottom:20
+    },
+    petChooseButton:{
+        width:100,
+        height:25,
+        backgroundColor:"#D99E6A",
+        justifyContent:"center",
+        borderRadius:5,
+        marginLeft:10,
+        marginBottom:10
+    },
+    petChooseButtonText:{
+        fontFamily:"PlayfairDisplay_700Bold",
+        fontSize:12,
+        color:"white",
+        textAlign:"center"
     },
     submitButton:{
         width:350,

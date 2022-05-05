@@ -51,7 +51,7 @@ export default function Login({ navigation }) {
     if(info){
       changeToken(info.token);
       changeId(info.userId);
-      navigation.push("Main");
+      navigation.push("HostPage");
     }
   }
 
