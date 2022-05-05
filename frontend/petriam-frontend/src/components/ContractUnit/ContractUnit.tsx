@@ -20,24 +20,33 @@ export default function NavigationBar(props, {navigation}) {
 
     const calculateDateDifference =  (date1: Date, date2: Date) => {
         let timeDiff = date2.getTime() - date1.getTime();
-        let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        let diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
         return diffDays;
     }
 
-    const handleStatus = () => {
-        console.log(status)
+    const handleStatus = async (status: string) => {
         let endDateDifferenceFromToday = calculateDateDifference(new Date(), new Date(props.contract.endDate));
-        if(status === "Accepted" && endDateDifferenceFromToday > 0){
-            setStatus("On Going");
-        }else if(status === "Accepted" && endDateDifferenceFromToday < 0){
-            console.log("here")
-            setStatus("Completed");
+        
+        if(status !== "sent"){
+
+            if(endDateDifferenceFromToday > 0){
+                setStatus("On Going");
+                await updateContractStatus(state.token.token, props.contract._id, "On Going");
+            }else if(endDateDifferenceFromToday < 0){
+                setStatus("Completed");
+                await updateContractStatus(state.token.token, props.contract._id, "Completed");
+            }
+        }else{
+            setStatus("sent");
         }
+
     }
 
     useEffect(async () => {
         
-        console.log(props.contract._id)
+        console.log("Burası", props.contract.status)
+        handleStatus(props.contract.status);
+        console.log("Orası", status)
 
         setDates(
             props.contract.startDate.substring(0, 10)
@@ -53,9 +62,6 @@ export default function NavigationBar(props, {navigation}) {
         setHostName(
             user.name + " " + user.surname
         )
-        
-        setStatus(props.contract.status);
-        handleStatus();
         
     }, [])
 
@@ -73,17 +79,12 @@ export default function NavigationBar(props, {navigation}) {
         setStatus("Rejected");
 
         await updateContractStatus(state.token.token, props.contract._id, "Rejected");
-
-        handleStatus();
-        
     }
 
     const handleAccept = async () => {
         setStatus("Accepted");
 
         await updateContractStatus(state.token.token, props.contract._id, "Accepted");
-
-        handleStatus();
     }
 
     return (
