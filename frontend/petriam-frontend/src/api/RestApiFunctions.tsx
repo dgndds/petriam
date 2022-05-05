@@ -9,9 +9,26 @@ import {
     MESSAGE_PATH,
     CONVERSATION_PATH,
     BECOME_HOST_PATH,
-    CONTRACTS_PATH
+    CONTRACTS_PATH,
+    USERS_PATH
 } from './ApiConstants'
 
+export async function getUserName(token: string, userId: string) {
+    let result = {};
+    
+    await axios
+        .get(LOCAL+USERS_PATH+userId, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+        })
+        .catch(error => {
+            console.log("Gata", error);
+        })
+
+    return result;
+}
 export async function getContracts(token: string) {
     let result = [];
 
@@ -21,7 +38,6 @@ export async function getContracts(token: string) {
         })
         .then((response) => {
             result = response.data;
-            console.log(response.data);
         })
         .catch(error => {
             console.log(error);
