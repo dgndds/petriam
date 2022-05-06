@@ -15,7 +15,7 @@ export default function NavigationBar(props) {
               return require('../../../assets/icons/cat.png')
           case "dog":
               return require('../../../assets/icons/dog.png')
-          case "dove":
+          case "bird":
               return require('../../../assets/icons/dove.png')
           case "turtle":
               return require('../../../assets/icons/turtle.png')
