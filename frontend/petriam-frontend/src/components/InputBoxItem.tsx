@@ -3,9 +3,12 @@ import { Text, Pressable, StyleSheet,Image,View } from 'react-native';
 import { Icon } from 'react-native-elements'
 import AppLoading from 'expo-app-loading';
 import {useFonts, Roboto_400Regular,Roboto_700Bold } from "@expo-google-fonts/roboto"
+import { useSelector } from 'react-redux';
 
 export default function InputBoxItem(props){
     const [lastMessage, setLastMessage] = useState("");
+    const [oppositeSender, setOppositeSender] = useState({});
+    const state = useSelector(state => state);
     let [fontsLoaded,err] = useFonts({
         Roboto_400Regular,
         Roboto_700Bold
@@ -14,7 +17,13 @@ export default function InputBoxItem(props){
     useEffect(() => {
         if(props.item.item.messages.length > 0)
             setLastMessage(props.item.item.messages.at(props.item.item.messages.length - 1).content);
-        console.log("İçerdeiyiz: " + props.item.item.ownerId.name);
+        
+        if(state.id.id !== props.item.item.ownerId._id){
+            setOppositeSender(props.item.item.ownerId);
+        }else{
+            setOppositeSender(props.item.item.hostUserId);
+        }
+        console.log("İçerdeiyiz: " + JSON.stringify(props.item.item.ownerId));
     }, [])
 
     if(!fontsLoaded){
@@ -25,19 +34,19 @@ export default function InputBoxItem(props){
         <Pressable style={styles.container} onPress={() => props.nextPage()}>
             <Image
             style={styles.profilePic}
-            source={props.item.item.profilePic ? props.item.item.profilePic : require("../../assets/profilepicd.png") }></Image>
+            source={oppositeSender.profilePic ? oppositeSender.profilePic : require("../../assets/profilepicd.png") }></Image>
             <View style={styles.textcontainer}>
-                <Text style={styles.nameSurname}> {props.item.item.ownerId.name + " " + props.item.item.ownerId.surname}</Text>
+                <Text style={styles.nameSurname}> {oppositeSender.name + " " + oppositeSender.surname}</Text>
                 <Text style={styles.lastmsg}> {lastMessage}  </Text>
             </View>
             <View style={styles.pet}>
                 <Icon
-                    name={props.item.item.petType === "dog" ? "dog" : "cat"}
+                    name={oppositeSender.petType === "dog" ? "dog" : "cat"}
                     type='font-awesome-5'
                     size={25}
                     color= 'black'
                 />
-                <Text>{props.item.item.petname}</Text>
+                <Text>{oppositeSender.petname}</Text>
             </View>
         </Pressable>
     )
