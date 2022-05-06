@@ -12,6 +12,7 @@ import { changeId } from '../../redux/actions/userId';
 import { bindActionCreators } from 'redux';
 import * as tokenActionCreators from '../../redux/actions/token'
 import * as userActionCreators from '../../redux/actions/userId'
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function Login({ navigation }) {
   let [fontsLoaded, err] = useFonts({
@@ -57,15 +58,18 @@ export default function Login({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{
+        paddingTop:80
+      }}>
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
-          source={require('../../../assets/favicon.png')}
+          source={require('../../../assets/logo.png')}
         />
       </View>
       <View style={styles.welcome}>
         <Text style={styles.mainTitle}>
-          HELLO
+          PETRIAM
         </Text>
         <Text style={styles.subTitle}>
           welcome back!
@@ -102,6 +106,7 @@ export default function Login({ navigation }) {
           Petriam 2021 All Rights Reserved
         </Text>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -109,6 +114,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: Platform.OS === 'android' ? 25 : 0,
     backgroundColor: '#F2F2F2',
   },
   logoContainer: {
@@ -116,9 +122,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   logo: {
-    width: 50,
-    height: 50,
-    alignSelf: 'center'
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    marginBottom:15
   },
   welcome: {
     flex: 2,
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     fontFamily: "PlayfairDisplay_800ExtraBold",
-    fontSize: 75,
+    fontSize: 50,
     color: "#707070"
   },
   subTitle: {
