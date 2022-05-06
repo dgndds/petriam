@@ -1,37 +1,35 @@
-## Welcome to GitHub Pages
+![](https://raw.githubusercontent.com/dgndds/petriam/gh-pages/logo.png)
 
-You can use the [editor on GitHub](https://github.com/dgndds/petriam/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Petriam
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Petriam is a mobile application to serve the people with pets while they are unable to take care of their pets during their time outside their homes. The project aims to favor both sides of its target group which are hosts and clients. Using Petriam, clients who are pet owners could list the possible temporary homes for their pets while hosts who may or may not be pet owners can earn money by taking care of the pets of their clients. Users can enter their information regarding themselves and their pets. The hosts could view their offers on the application and message with the users if they require more information about the pets before accepting or rejecting offers.
 
-### Markdown
+### Project Members
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Ertuğrul Aktaş
 
-```markdown
-Syntax highlighted code block
+Oğuzhan Angın
 
-# Header 1
-## Header 2
-### Header 3
+Osman Buğra Aydın
 
-- Bulleted
-- List
+Mehmet Alperen Yalçın
 
-1. Numbered
-2. List
+Muhammed Doğancan Yılmazoğlu
 
-**Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](src)
-```
+### Supervisor
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+Prof. Özcan Öztürk
 
-### Jekyll Themes
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/dgndds/petriam/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Reports
 
-### Support or Contact
+[Project Specification Report](https://github.com/dgndds/petriam/blob/main/reports/Project%20Specification%20Report.pdf)
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+[Analysis Report](https://github.com/dgndds/petriam/blob/main/reports/Petriam_Analysis_report.pdf)
+
+[High Level Design Report](https://github.com/dgndds/petriam/blob/main/reports/Petriam%20High%20Level%20Design%20Report.pdf)
+
+[Low Level Design Report](https://github.com/dgndds/petriam/blob/main/reports/Petriam%20Low-Level%20Design%20Report.pdf)
+
+[Final Report](https://github.com/dgndds/petriam/blob/main/reports/Petriam_Final_Report.pdf)
