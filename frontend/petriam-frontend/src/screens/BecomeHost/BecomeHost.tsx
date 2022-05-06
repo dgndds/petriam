@@ -72,10 +72,14 @@ export default function BecomeHost({navigation}){
 
        
         await becomeHost(token,userId,tc,about,pets,"none",address).then( result => {
-            if(result){
+            console.log("err",result);
+            if(result === true){
                 setSendingStatus("Successfully Registered!");
+            }else if(result === "User already is a host"){
+                console.log("err",result);
+                setSendingStatus("Already a Host");
             }else{
-                setSendingStatus("Failed to Register!");
+                 setSendingStatus("Failed to Register!");
             }
         });
     }

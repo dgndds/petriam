@@ -285,8 +285,8 @@ export async function getMessages(conversationId: string, token: string): Promis
     return result;
 }
 
-export async function becomeHost(token:string,userId:string,tc:string,aboutMe:string,acceptedPets:string[],criminalRecord:string,address:string): Promise<boolean>{
-    let result: boolean = false;
+export async function becomeHost(token:string,userId:string,tc:string,aboutMe:string,acceptedPets:string[],criminalRecord:string,address:string): Promise<any>{
+    let result: any = false;
     console.log("to be sent",userId);
     console.log("to be sent",tc);
     console.log("to be sent",acceptedPets);
@@ -312,7 +312,11 @@ export async function becomeHost(token:string,userId:string,tc:string,aboutMe:st
             console.log(response.data)
         })
         .catch(error => {
-            console.log("hop",error);
+            console.log(error.response.data.error);
+
+            if(error.response.data.error === "User already is a host"){
+                result = error.response.data.error.toString();
+            }
         })
 
         return result;
