@@ -13,6 +13,7 @@ export default function ContractUnit(props) {
     const [petType, setPetType] = useState("");
     const [status, setStatus] = useState("");
     const state = useSelector(state => state);
+    const [oppositeSender, setOppositeSender] = useState({});
     let [fontsLoaded, err] = useFonts({
         Roboto_700Bold,
         Roboto_700Bold_Italic
@@ -58,6 +59,9 @@ export default function ContractUnit(props) {
 
     useEffect(async () => {
 
+        console.log("GELLLLLL: " + props.contract.hostId.userId)
+        console.log("GELLLLLL: " + props.contract.ownerId._id)
+
         handleStatus(props.contract.status);
 
         setDates(
@@ -74,6 +78,19 @@ export default function ContractUnit(props) {
 
         setPetName(props.contract.pets[0].name)
         setPetType(props.contract.pets[0].type)
+
+        //console.log("GELLAAAA"+ JSON.stringify(props.contract))
+        let hostUser = await getUserName(state.token.token, props.contract.hostId.userId)
+        //console.log("GELLAAAA"+ JSON.stringify(hostUser))
+        if(state.id.id !== props.contract.hostId.userId){
+            console.log("host");
+            setOppositeSender(hostUser);
+        }else{
+            console.log("suer");
+            //setOppositeSender(props.contract.ownerId);
+        }
+
+        //console.log("oppositeSender: " + JSON.stringify(oppositeSender))
         
     }, [])
 
@@ -84,7 +101,8 @@ export default function ContractUnit(props) {
     const handleMessaging = async () => {
         console.log("Bak: " + props.contract.hostId.userId)
         let conversation = await createConversation(state.token.token, props.contract.hostId.userId);
-        props.navigation.navigate("MessagePage", {conversationId: conversation._id, ownerId: props.contract.hostId})
+        console.log("CCCCCCCCCCConversation: " + conversation)
+        props.navigation.navigate("MessagePage", {conversationId: conversation._id, ownerId: oppositeSender})
     }
 
     const handleReject = async () => {

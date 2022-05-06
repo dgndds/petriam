@@ -23,7 +23,6 @@ export default function InputBoxItem(props){
         }else{
             setOppositeSender(props.item.item.hostUserId);
         }
-        console.log("İçerdeiyiz: " + JSON.stringify(props.item.item.ownerId));
     }, [])
 
     if(!fontsLoaded){
