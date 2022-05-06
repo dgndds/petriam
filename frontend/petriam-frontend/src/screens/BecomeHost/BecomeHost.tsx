@@ -182,11 +182,12 @@ const styles = StyleSheet.create({
     },
     pageTitleContainer:{
         flexDirection:"row",
-        alignItems:"center"
+        alignItems: "flex-start"
     },
     pageTitle:{
         fontFamily:"Roboto_700Bold",
         fontSize:25,
+        marginTop: 10
     },
     label:{
         fontFamily:"PlayfairDisplay_400Regular",
