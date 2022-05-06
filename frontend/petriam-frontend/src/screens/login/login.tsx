@@ -101,12 +101,13 @@ export default function Login({ navigation }) {
           Sign up to Petriam
         </Text>
       </View>
+      
+      </ScrollView>
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           Petriam 2021 All Rights Reserved
         </Text>
       </View>
-      </ScrollView>
     </SafeAreaView>
   );
 }
