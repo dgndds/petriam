@@ -64,7 +64,7 @@ export default function Login({ navigation }) {
       <View style={styles.logoContainer}>
         <Image
           style={styles.logo}
-          source={require('../../../assets/favicon.png')}
+          source={require('../../../assets/logo.png')}
         />
       </View>
       <View style={styles.welcome}>
@@ -122,9 +122,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   logo: {
-    width: 50,
-    height: 50,
-    alignSelf: 'center'
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    marginBottom:15
   },
   welcome: {
     flex: 2,
