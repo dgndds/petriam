@@ -7,7 +7,7 @@ import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSelector } from 'react-redux';
-import { getCurrentUserInfo, getUserName } from '../../api/RestApiFunctions';
+import { createContract, getCurrentUserInfo, getUserName } from '../../api/RestApiFunctions';
 
 export default function HostPage({route, navigation}){
     const [openStartDate,setStartOpenDate] = useState(false);
@@ -82,7 +82,7 @@ export default function HostPage({route, navigation}){
             finishDate:finishDate
         }
 
-        console.log(body);
+        createContract(state.token.token,hostId,[selectedPet._id],startDate.toJSON(),finishDate.toJSON());
     }
 
     return(

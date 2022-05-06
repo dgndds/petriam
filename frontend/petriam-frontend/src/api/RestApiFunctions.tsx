@@ -24,6 +24,7 @@ export async function createContract(token: string, hostId: string, pets: Array<
             "endDate": endDate
         }
     }
+    console.log(contract);
 
     await axios
         .post(LOCAL+USER_PATH+CONTRACTS_PATH,
