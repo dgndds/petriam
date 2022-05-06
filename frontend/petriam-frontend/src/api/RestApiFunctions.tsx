@@ -288,10 +288,6 @@ export async function getMessages(conversationId: string, token: string): Promis
 
 export async function becomeHost(token:string,userId:string,tc:string,aboutMe:string,acceptedPets:string[],criminalRecord:string,address:string): Promise<any>{
     let result: any = false;
-    console.log("to be sent",userId);
-    console.log("to be sent",tc);
-    console.log("to be sent",acceptedPets);
-    console.log("to be sent",address);
 
     let body = {
         userId:userId,
@@ -334,9 +330,33 @@ export async function getCurrentUserInfo(token:string):Promise<any>{
         result = response.data;
     })
     .catch(error => {
-        console.log("current",error);
-        result = false;
+        console.log(error.response.data.error);
+
+        if(error.response.data.error === "User already is a host"){
+            result = error.response.data.error.toString();
+        }
     })
     
     return result;
+}
+
+export async function getHostApplicationInfo(token:string):Promise<any>{
+    let result:any = false;
+
+    await axios
+        .get(LOCAL+USER_PATH+BECOME_HOST_PATH, {
+            headers: { Authorization: "bearer " + token }
+        })
+        .then((response) => {
+            result = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+        
+        if(result === "No Active host Application"){
+            return false;
+        }else{
+            return true;
+        }
 }
