@@ -50,9 +50,19 @@ export default function Main({navigation}) {
           }
     }
 
+    const logout = () => {
+        state.token.token = "";
+        state.id.id = "";
+        navigation.navigate("Login");
+    }
+
     return (
         <View style={styles.container}>
-            <View style={styles.searchContainer}><SearchBox style={styles.searchBar} nextPage={() => navigation.navigate("ListHost")}></SearchBox></View>
+            <View style={styles.logout}>
+                <Pressable onPress={() => {logout()}}>
+                    <Text style={styles.logoutFont}>Log Out!</Text>
+                </Pressable>
+            </View>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -103,12 +113,21 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F2F2F2',
     },
-    searchContainer:{
+    logout:{
+        width: 250,
         height:45,
         position:"absolute",
         zIndex:10,
         alignSelf:"center",
-        marginTop:50
+        marginTop:50,
+        backgroundColor: 'rgba(247, 152, 98, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        borderWidth: 1,
+    },
+    logoutFont: {
+        fontSize: 20
     },
     searchBar:{
         // alignItems:"flex-start",

@@ -48,11 +48,13 @@ export default function Login({ navigation }) {
     if (email && password) {
       info = await loginUser(email, password);
     }
-
-    if(info){
+    
+    if(info.token.length > 0 && info.userId !==  "-1"){
       changeToken(info.token);
       changeId(info.userId);
       navigation.push("Main");
+    }else{
+      alert("Invalid email or password");
     }
   }
 
