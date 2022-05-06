@@ -60,7 +60,7 @@ export default function Main({navigation}) {
         <View style={styles.container}>
             <View style={styles.logout}>
                 <Pressable onPress={() => {logout()}}>
-                    <Text style={styles.logoutFont}>Log Out!</Text>
+                    <Text style={styles.logoutFont}>Log Out</Text>
                 </Pressable>
             </View>
             <MapView

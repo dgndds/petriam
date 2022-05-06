@@ -61,8 +61,8 @@ export default function SignUp({ navigation }) {
                         onPress={() => navigation.goBack()}
                     />
                     <Image
-                        style={styles.logo}
-                        source={require('../../../assets/favicon.png')}
+                    style={styles.logo}
+                    source={require('../../../assets/logo.png')}
                     />
                 </View>
                 <View style={styles.register}>

@@ -41,6 +41,8 @@ export default function HostPage({route, navigation}){
             }
         })
 
+        console.log("userInfo", hostInfo)
+
     }, [])
 
     let [fontsLoaded, err] = useFonts({
