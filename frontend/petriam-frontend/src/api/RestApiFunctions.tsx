@@ -247,14 +247,16 @@ export async function sendMessage(message: string, token: string, receiverId: st
     console.log(BASE+USER_PATH+MESSAGE_PATH);
 
     let messageBody = {
-        "receiverId": receiverId,
-        "content": message
+        "message": {
+            "receiverId": receiverId,
+            "content": message
+        }
     }
 
+    console.log(messageBody);
+
     await axios
-        .post(BASE+USER_PATH+MESSAGE_PATH, {
-            message: messageBody
-        }, {
+        .post(LOCAL+USER_PATH+MESSAGE_PATH, messageBody, {
             headers: { Authorization: "bearer " + token }
         })
         .then((response) => {

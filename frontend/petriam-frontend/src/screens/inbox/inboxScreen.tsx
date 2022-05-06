@@ -17,7 +17,7 @@ export default function InboxScreen({navigation}){
 
     useEffect(async () => {
         setConversations(await getConversations(state.token.token));
-        console.log("Burası: " + conversations.at(0)._id);
+        //console.log("Burası: " + JSON.stringify(conversations));
     } , []);
 
     if(!fontsLoaded){
@@ -41,7 +41,7 @@ export default function InboxScreen({navigation}){
                     ?
                     <FlatList 
                         data={conversations} 
-                        renderItem={(item)=>(<InputBoxItem item={item} nextPage={() => {navigation.navigate("MessagePage", {conversationId: item.item._id, ownerId: item.item.ownerId})}}></InputBoxItem>)} 
+                        renderItem={(item)=>(<InputBoxItem item={item} nextPage={() => {navigation.navigate("MessagePage", {conversationId: item.item._id, ownerId: item.item.ownerId}); console.log("Geldim:" + item.item._id, item.item.ownerId)}}></InputBoxItem>)} 
                         keyExtractor={item => item._id}
                     ></FlatList>
                     :

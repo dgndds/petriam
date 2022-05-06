@@ -36,22 +36,22 @@ export default function MessagePage({route, navigation}){
         setMessages(
             filterResponse(await getMessages(conversationId, state.token.token))
         );
-        console.log("Burası: " + ownerId.userId);
-        console.log("Gel Baba: " + messages.at(0));
+        console.log("AAAAAAAAAA: " + JSON.stringify(ownerId));
+        console.log("Gel Baba: " + conversationId);
     } , []);
 
     if(!fontsLoaded){
         return <AppLoading/>
     }
 
-    const clickSend = () => {
+    const clickSend = async () => {
         const getCurrentTime = () => {
             let hours = new Date().getHours().toString();
             let minutes = new Date().getMinutes().toString();
             return hours + ":" + minutes;
         }
-
-        sendMessage(message, state.token.token, ownerId.userId);
+        console.log("AAAAAAAAAA: " + JSON.stringify(ownerId));
+        await sendMessage(message, state.token.token, ownerId._id);
         setMessages([...messages, {
             id: messages.length + 1,
             message: message,
