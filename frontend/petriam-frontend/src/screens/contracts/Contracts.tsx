@@ -32,17 +32,15 @@ export default function Contracts({navigation}) {
                 paddingBottom:80
             }}>
                 <View>
-                    <View>
+                    <View style={styles.pageTitleContainer}>
                         <Icon 
                             name='chevron-left'
                             size={50}
                             color= '#707070'
-                            style={{alignSelf: "flex-start"}}
+                            style={{marginLeft:-15}}
                             onPress={() => navigation.pop()}
                         />
-                        <Text style={styles.contractTitle}>
-                        Contracts
-                        </Text>
+                        <Text style={styles.pageTitle}>Contracts</Text>
                     </View>
 
                     <View
@@ -53,7 +51,7 @@ export default function Contracts({navigation}) {
                     }}
                     />
                 </View>
-                <View>
+                <View style={styles.contractList}>
                     {
                         contracts.map(contract => {
                             return (
@@ -82,8 +80,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor:"#F2F2F2",
         marginTop: Platform.OS === 'android' ? 25 : 0,
-        paddingLeft:10,
-        paddingRight:10
     },
     contractTitle:{
         fontFamily:"Roboto_700Bold",
@@ -93,5 +89,18 @@ const styles = StyleSheet.create({
         position:"absolute",
         bottom:0,
         width:"100%"
+    },
+    pageTitleContainer:{
+        flexDirection:"row",
+        alignItems: "flex-start",
+        padding: 10
+    },
+    pageTitle:{
+        fontFamily:"Roboto_700Bold",
+        fontSize:25,
+        marginTop: 10
+    },
+    contractList: {
+        padding: 5
     }
 })
