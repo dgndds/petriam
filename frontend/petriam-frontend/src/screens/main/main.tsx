@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View, Image, Pressable, Text } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE, MAP_TYPES } from "react-native-maps";
 import { useSelector } from 'react-redux';
-import { getHostsFiltered } from '../../api/RestApiFunctions';
+import { createContract, getHostsFiltered } from '../../api/RestApiFunctions';
 import Navi from '../../components/general/navi';
 import SearchBox from '../../components/searchBox/searchBox';
 import { StackNavigator } from 'react-navigation';
@@ -25,7 +25,7 @@ export default function Main({navigation}) {
         getHosts();
     }, [])
     
-    const pressedOnMarker = (marker: string) => {
+    const pressedOnMarker = async (marker: string) => {
         if(marker === selectedMarker){
             navigation.navigate("HostPage", {hostId: marker});
         }else{
@@ -66,7 +66,7 @@ export default function Main({navigation}) {
                         var icon = handleImage(item.host.acceptedPets[0].toLowerCase());
                         return (
                                 <Marker
-                                    onPress={() => pressedOnMarker(item._id)}
+                                    onPress={() => pressedOnMarker(item.hostId)}
                                     key={item.email}
                                     title={item.name}
                                     description={"Average Rating " + item.host.averageRating}

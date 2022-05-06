@@ -23,7 +23,8 @@ export async function createContract(token: string, hostId: string, pets: Array<
             "startDate": startDate,
             "endDate": endDate
         }
-    }
+    } 
+    console.log(contract)
 
     await axios
         .post(LOCAL+USER_PATH+CONTRACTS_PATH,
@@ -31,8 +32,8 @@ export async function createContract(token: string, hostId: string, pets: Array<
             { headers: { Authorization: "Bearer " + token }
         })
         .then((response) => {
-            result = true;
-            console.log(response.data.token)
+            result = response.data;
+            console.log(response.data)
         })
         .catch(error => {
             console.log(error);

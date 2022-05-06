@@ -7,7 +7,7 @@ import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSelector } from 'react-redux';
-import { getCurrentUserInfo } from '../../api/RestApiFunctions';
+import { createContract, getCurrentUserInfo } from '../../api/RestApiFunctions';
 
 export default function HostPage({route, navigation}){
     const [openStartDate,setStartOpenDate] = useState(false);
@@ -16,6 +16,7 @@ export default function HostPage({route, navigation}){
     const [startDate,setStartDate] = useState(new Date());
     const [finishDate,setFinishDate] = useState(new Date());
     const [selectedPet,setSelectedPet] = useState(null);
+    const [status, setStatus] = useState('Hire This Host');
     const state = useSelector(state => state);
     const { hostId } = route.params;
 
@@ -59,7 +60,7 @@ export default function HostPage({route, navigation}){
         setSelectedPet(pet);
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if( selectedPet === null){
             return false;
         }else{
@@ -74,7 +75,11 @@ export default function HostPage({route, navigation}){
             finishDate:finishDate
         }
 
-        console.log(body);
+        let contract = await createContract(state.token.token, hostId, [selectedPet], new Date(startDate).toISOString(), new Date(finishDate).toISOString())
+
+        if(contract){
+            setStatus("Successfully Hired!");
+        }
     }
 
     return(
@@ -208,8 +213,8 @@ export default function HostPage({route, navigation}){
                             )}
                         </View>
                     </View>
-                    <Pressable style={styles.submitButton} onPress={handleSubmit}>
-                        <Text style={styles.submitButtonText}>Hire This Host</Text>
+                    <Pressable style={styles.submitButton} onPress={() => handleSubmit()}>
+                        <Text style={styles.submitButtonText}>{status}</Text>
                     </Pressable>
                 </View>
             </ScrollView>
