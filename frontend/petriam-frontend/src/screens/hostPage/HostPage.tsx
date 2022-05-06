@@ -7,12 +7,13 @@ import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSelector } from 'react-redux';
-import { getCurrentUserInfo } from '../../api/RestApiFunctions';
+import { getCurrentUserInfo, getUserName } from '../../api/RestApiFunctions';
 
 export default function HostPage({route, navigation}){
     const [openStartDate,setStartOpenDate] = useState(false);
     const [openFinishDate,setFinishOpenDate] = useState(false);
     const [userInfo,setUserInfo] = useState({});
+    const [hostInfo,setHostInfo] = useState({});
     const [startDate,setStartDate] = useState(new Date());
     const [finishDate,setFinishDate] = useState(new Date());
     const [selectedPet,setSelectedPet] = useState(null);
@@ -23,6 +24,13 @@ export default function HostPage({route, navigation}){
         console.log("Host:" + hostId)
         console.log("user token",state.token.token)
         console.log("user id ",state.id.id)
+
+        getUserName(state.token.token,hostId).then(
+            result => {
+                console.log("Host",result);
+                setHostInfo(result);
+            }
+        )
 
         getCurrentUserInfo(state.token.token,state.id.id).then(result=>{
             if(result === false){
@@ -41,7 +49,7 @@ export default function HostPage({route, navigation}){
         Roboto_700Bold
       })
 
-      if (!fontsLoaded || !userInfo) {
+      if (!fontsLoaded || !userInfo || !hostInfo) {
         return <AppLoading />;
       }
 
@@ -92,7 +100,7 @@ export default function HostPage({route, navigation}){
                     style={styles.profilePic}
                     source={require("../../../assets/icons/avatarWoman.png")}/>
                     <View style={styles.nameTag}>
-                        <Text style={styles.profileName}>John Doe</Text> 
+                        <Text style={styles.profileName}>{hostInfo.name} {hostInfo.surname}</Text> 
                         <Icon
                         name='check-circle'
                         type="font-awesome"
@@ -130,11 +138,7 @@ export default function HostPage({route, navigation}){
                         }}
                         >
                             <Text style={{textAlign:"justify"}}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id 
-                            fringilla metus, ut suscipit felis. Mauris mollis enim a orci sollicitudin,
-                            et dapibus ipsum mat-tis. Maecenas faucibus et tortor vel laoreet. Nunc mattis 
-                            lorem ex, nec interd-um justo vehicula at. Mauris sollicitudin metus mauris, ac 
-                            egestas tellus dapibus non. Suspendisse potenti. Cras vitae libero lacus.
+                            {hostInfo.aboutMe}
                             </Text>
                         </ScrollView>
                     </View>
@@ -150,9 +154,7 @@ export default function HostPage({route, navigation}){
                         }}
                         >
                             <Text> 
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
+                                {hostInfo.address}
                             </Text>
                         </ScrollView>
                     </View>
