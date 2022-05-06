@@ -369,7 +369,7 @@ router.get("/conversation/:hostUserId", middlewares.verifyJWT, (req, res) => {
 // TODO: Conversation validity should be checked.
 router.post("/conversation", middlewares.verifyJWT, (req, res) => {
     req.body.conversation.ownerId = req.user._id;
-    Conversation.findOne({ ownerId: req.user._id, hostUserId: req.body.conversation.hostUserId }).then(conversation => {
+    Conversation.findOne({ ownerId: {$in: [req.user._id, req.body.conversation.hostUserId]}, hostUserId: {$in: [req.user._id, req.body.conversation.hostUserId]} }).then(conversation => {
         // I do not know why but conversation is returned as null here even if it is not found.(It should go to catch block)
         // Check whether conversation is null and if it is, create a new conversation else return the existing one.
         if(conversation) {
