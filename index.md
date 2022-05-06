@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/alperenya/petriam-website/gh-pages/logo.png)
+![](https://raw.githubusercontent.com/dgndds/petriam/main/logo.png)
 
 ## Petriam
 
