@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{
-        paddingTop:80
+        paddingTop:50
       }}>
       <View style={styles.logoContainer}>
         <Image
@@ -71,15 +71,15 @@ export default function Login({ navigation }) {
         <Text style={styles.mainTitle}>
           PETRIAM
         </Text>
-        <Text style={styles.subTitle}>
+        {/* <Text style={styles.subTitle}>
           welcome back!
         </Text>
         <View
           style={styles.line}
-        />
-        <Text style={styles.loginTitle}>
+        /> */}
+        {/* <Text style={styles.loginTitle}>
           LOGIN
-        </Text>
+        </Text> */}
       </View>
       <View style={styles.form}>
         <TextInput style={styles.box} value={email} onChangeText={setEmail} placeholder='Type Your Email'  autoCapitalize='none'>
@@ -122,10 +122,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 130,
+    height: 130,
     alignSelf: 'center',
-    marginBottom:15
+    marginBottom:5
   },
   welcome: {
     flex: 2,
@@ -134,8 +134,10 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     fontFamily: "PlayfairDisplay_800ExtraBold",
+    alignSelf:"center",
     fontSize: 50,
-    color: "#707070"
+    color: "#707070",
+    marginBottom:10
   },
   subTitle: {
     fontFamily: "PlayfairDisplay_700Bold_Italic",
