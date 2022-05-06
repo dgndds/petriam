@@ -35,7 +35,7 @@ export default function ContractUnit(props) {
         console.log(props.contract.hostId.userId)
         console.log(state.id.id)
 
-        if(props.contract.status === "sent" && props.contract.hostId.userId !== state.id.id){
+        if(props.contract.status.toLowerCase() === "sent" && props.contract.hostId.userId !== state.id.id){
             setStatus("sent");
         }else{
             if(props.contract.status === "Accepted"){
@@ -84,7 +84,7 @@ export default function ContractUnit(props) {
     const handleMessaging = async () => {
         console.log("Bak: " + props.contract.hostId.userId)
         let conversation = await createConversation(state.token.token, props.contract.hostId.userId);
-        props.navigation.navigate("MessagePage", {conversationId: conversation._id, ownerId: props.contract.hostId.userId})
+        props.navigation.navigate("MessagePage", {conversationId: conversation._id, ownerId: props.contract.hostId})
     }
 
     const handleReject = async () => {
@@ -174,7 +174,7 @@ export default function ContractUnit(props) {
                         status === "sent" ?
 
                         <View>
-                            <Text style={styles.canceled}>sent</Text>
+                            <Text style={styles.canceled}>Sent</Text>
                         </View>
 
                         :

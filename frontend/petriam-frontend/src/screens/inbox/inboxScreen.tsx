@@ -36,12 +36,22 @@ export default function InboxScreen({navigation}){
                 />
                 <Text style={styles.inboxText}>Inbox ({conversations.length})</Text>
             </View>
+            {
+                conversations.length > 0 
+                    ?
+                    <FlatList 
+                        data={conversations} 
+                        renderItem={(item)=>(<InputBoxItem item={item} nextPage={() => {navigation.navigate("MessagePage", {conversationId: item.item._id, ownerId: item.item.ownerId})}}></InputBoxItem>)} 
+                        keyExtractor={item => item._id}
+                    ></FlatList>
+                    :
+                    <View style={styles.warningContainer}>
+                        <Text style={styles.warning}>
+                            You have no conversations yet.
+                        </Text>
+                    </View>
+            }
 
-            <FlatList 
-            data={conversations} 
-            renderItem={(item)=>(<InputBoxItem item={item} nextPage={() => {navigation.navigate("MessagePage", {conversationId: item.item._id, ownerId: item.item.ownerId})}}></InputBoxItem>)} 
-            keyExtractor={item => item._id}
-            ></FlatList>
             <Navi nextPage={() => navigation.pop()}></Navi>
         </View>
     )
@@ -68,4 +78,14 @@ const styles = StyleSheet.create({
     back: {
         alignSelf: 'flex-start',
     },
+    warningContainer:{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    warning:{
+        fontFamily:"Roboto_700Bold",
+        fontSize:20,
+        color:"#707070"
+    }
   });

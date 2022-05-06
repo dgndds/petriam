@@ -27,7 +27,7 @@ export default function MessagePage({route, navigation}){
                     id: index,
                     message: message.content,
                     time: message.createdAt.substr(11, 5),
-                    sent: ownerId === message.senderId
+                    sent: state.id.id === message.senderId
                 }
             });
             return formattedMessages;
@@ -36,7 +36,8 @@ export default function MessagePage({route, navigation}){
         setMessages(
             filterResponse(await getMessages(conversationId, state.token.token))
         );
-        console.log(messages.at(0));
+        console.log("Burası: " + ownerId.userId);
+        console.log("Gel Baba: " + messages.at(0));
     } , []);
 
     if(!fontsLoaded){
@@ -50,7 +51,7 @@ export default function MessagePage({route, navigation}){
             return hours + ":" + minutes;
         }
 
-        sendMessage(message, state.token.token);
+        sendMessage(message, state.token.token, ownerId.userId);
         setMessages([...messages, {
             id: messages.length + 1,
             message: message,
@@ -74,7 +75,7 @@ export default function MessagePage({route, navigation}){
                 <Image 
                 style={styles.profilePic}
                 source={require("../../../assets/profilepicm.jpeg")}></Image>
-                <Text style={styles.chatName}>John Doe</Text>
+                <Text style={styles.chatName}>{ownerId.name + " " + ownerId.surname}</Text>
             </View>
             <FlatList
                 data={messages}

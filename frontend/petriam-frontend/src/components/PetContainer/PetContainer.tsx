@@ -8,17 +8,33 @@ export default function NavigationBar(props) {
         PlayfairDisplay_700Bold_Italic,
       })
 
+    const handleImage = (animal: string) => {
+        
+        switch (animal) {
+            case "cat":
+              return require('../../../assets/icons/cat.png')
+          case "dog":
+              return require('../../../assets/icons/dog.png')
+          case "dove":
+              return require('../../../assets/icons/dove.png')
+          case "turtle":
+              return require('../../../assets/icons/turtle.png')
+          default:
+              return require('../../../assets/icons/cat.png')
+          }
+    }
+
     return (
         <View style={styles.container}>
             <Image
-            style={styles.petPic}
-            source={require("../../../assets/profilepicw.jpg")}
+                style={styles.petPic}
+                source={handleImage(props.pet.type)}
             />
             <Text style={styles.petName}>{props.pet.name}</Text>
             <View style={styles.info}>
-                <Text style={styles.infoText}>Age: 5</Text>
+                <Text style={styles.infoText}>Age: {Math.floor(Math.random() * (10 - 0 + 1) + 0)}</Text>
                 <Text style={styles.infoText}>Kind: {props.pet.type}</Text>
-                <Text style={styles.infoText}>About: Loves to play</Text>
+                <Text style={styles.infoText}>About: A lovely {props.pet.type}</Text>
             </View>
         </View>
     )
@@ -36,7 +52,7 @@ const styles = StyleSheet.create({
         alignItems:"center"
     },
     petPic:{
-        width:120,
+        width:60,
         height:60
     },
     petName:{

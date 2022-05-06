@@ -241,12 +241,12 @@ export async function getConversations(token: string): Promise<any>{
     return result;
 }
 
-export async function sendMessage(message: string, token: string): Promise<boolean>{
+export async function sendMessage(message: string, token: string, receiverId: string): Promise<boolean>{
     let result: boolean = false;
     console.log(LOCAL+USER_PATH+MESSAGE_PATH);
 
     let messageBody = {
-        "receiverId": "626dc689b023cc84e4f86936",
+        "receiverId": receiverId,
         "content": message
     }
 
@@ -276,7 +276,7 @@ export async function getMessages(conversationId: string, token: string): Promis
         })
         .then((response) => {
             result = response.data;
-            console.log("Buradan" + result);
+            console.log("Buradan" + JSON.stringify(result));
         })
         .catch(error => {
             console.log(error);
@@ -285,12 +285,8 @@ export async function getMessages(conversationId: string, token: string): Promis
     return result;
 }
 
-export async function becomeHost(token:string,userId:string,tc:string,aboutMe:string,acceptedPets:string[],criminalRecord:string,address:string): Promise<boolean>{
+export async function becomeHost(token:string, userId:string, tc:string, aboutMe:string, acceptedPets:string[], criminalRecord:string, address:string): Promise<boolean>{
     let result: boolean = false;
-    console.log("to be sent",userId);
-    console.log("to be sent",tc);
-    console.log("to be sent",acceptedPets);
-    console.log("to be sent",address);
 
     let body = {
         userId:userId,
