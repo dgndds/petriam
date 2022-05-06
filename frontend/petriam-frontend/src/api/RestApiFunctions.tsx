@@ -181,12 +181,13 @@ export async function getHostsWithFilters(price: number, petType: string, longit
     return result;
 }
 
-export async function signUpNewUser(username: string, email: string, password: string): Promise<boolean>{
+export async function signUpNewUser(username: string,userSurname:string, email: string, password: string): Promise<boolean>{
     let result: boolean = false;
 
     await axios
         .post(LOCAL+AUTH_SIGNUP_PATH, {
-            username: username,
+            name: username,
+            surname:userSurname,
             email: email,
             password: password
         })

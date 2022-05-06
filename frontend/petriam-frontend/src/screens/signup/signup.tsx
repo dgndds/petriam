@@ -6,6 +6,7 @@ import LabelInput from '../../components/labelInput/labelInput';
 import AppLoading from 'expo-app-loading';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_400Regular, PlayfairDisplay_800ExtraBold } from "@expo-google-fonts/playfair-display"
 import { signUpNewUser } from '../../api/RestApiFunctions';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function SignUp({ navigation }) {
     //For Fonts
@@ -17,6 +18,7 @@ export default function SignUp({ navigation }) {
 
     //Variables For Signing Up
     const [username, setUsername] = useState('');
+    const [userSurname, setuserSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
@@ -29,9 +31,9 @@ export default function SignUp({ navigation }) {
     const submitFunction = async () => {
         let result: boolean = false;
 
-        if (username && email && (password == passwordAgain)) {
+        if (username && userSurname && email && (password == passwordAgain)) {
             console.log(username, email, password);
-            result = await signUpNewUser(username, email, password);
+            result = await signUpNewUser(username,userSurname, email, password);
         }
         
         if(result){
@@ -47,66 +49,76 @@ export default function SignUp({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.logoContainer}>
-                <Icon
-                    name='chevron-left'
-                    style={styles.back}
-                    size={50}
-                    color='#707070'
-                    onPress={() => navigation.goBack()}
-                />
-                <Image
-                    style={styles.logo}
-                    source={require('../../../assets/favicon.png')}
-                />
-            </View>
-            <View style={styles.register}>
-                <Text style={styles.registerText}>Register</Text>
-            </View>
-            <View style={styles.form}>
-                <View>
-                    <Text style={styles.formText}>Your Name</Text>
-                    <TextInput style={styles.box} value={username} onChangeText={setUsername}>
-
-                    </TextInput>
+            <ScrollView contentContainerStyle={{
+                paddingBottom:30
+            }}>
+                <View style={styles.logoContainer}>
+                    <Icon
+                        name='chevron-left'
+                        style={styles.back}
+                        size={50}
+                        color='#707070'
+                        onPress={() => navigation.goBack()}
+                    />
+                    <Image
+                        style={styles.logo}
+                        source={require('../../../assets/favicon.png')}
+                    />
                 </View>
-                <View>
-                    <Text style={styles.formText}>Email</Text>
-                    <TextInput style={styles.box} value={email} onChangeText={setEmail} autoCapitalize='none'>
-
-                    </TextInput>
+                <View style={styles.register}>
+                    <Text style={styles.registerText}>Register</Text>
                 </View>
-                <View>
-                    <Text style={styles.formText}>Password</Text>
-                    <TextInput style={styles.box} value={password} onChangeText={setPassword} secureTextEntry={true}>
+                <View style={styles.form}>
+                    <View>
+                        <Text style={styles.formText}>Your Name</Text>
+                        <TextInput style={styles.box} value={username} onChangeText={setUsername}>
 
-                    </TextInput>
+                        </TextInput>
+                    </View>
+                    <View>
+                        <Text style={styles.formText}>Your Surname</Text>
+                        <TextInput style={styles.box} value={userSurname} onChangeText={setuserSurname}>
+
+                        </TextInput>
+                    </View>
+                    <View>
+                        <Text style={styles.formText}>Email</Text>
+                        <TextInput style={styles.box} value={email} onChangeText={setEmail} autoCapitalize='none'>
+
+                        </TextInput>
+                    </View>
+                    <View>
+                        <Text style={styles.formText}>Password</Text>
+                        <TextInput style={styles.box} value={password} onChangeText={setPassword} secureTextEntry={true}>
+
+                        </TextInput>
+                    </View>
+                    <View>
+                        <Text style={styles.formText}>Password Again</Text>
+                        <TextInput style={styles.box} value={passwordAgain} onChangeText={setPasswordAgain} secureTextEntry={true}>
+
+                        </TextInput>
+                    </View>
+                    <Text style={styles.incorrectPass}>
+                        {(password != passwordAgain) && (passwordAgain != "") ? "*Passwords do not match!" : ""}
+                    </Text>
                 </View>
-                <View>
-                    <Text style={styles.formText}>Password Again</Text>
-                    <TextInput style={styles.box} value={passwordAgain} onChangeText={setPasswordAgain} secureTextEntry={true}>
+                <View style={styles.submit}>
+                    {
+                        canBeReturned ?
+                            (
+                                <Pressable style={styles.submitButton} onPress={returnLogin}>
+                                    <Text style={styles.submitText}>Saved, Let's Login!</Text>
+                                </Pressable>
+                            )
+                                :
+                            (
+                                <SubmitButton text="SIGN UP" submitFunction={submitFunction}></SubmitButton>
+                            )
 
-                    </TextInput>
+                    }
                 </View>
-                <Text style={styles.incorrectPass}>
-                    {(password != passwordAgain) && (passwordAgain != "") ? "*Passwords do not match!" : ""}
-                </Text>
-            </View>
-            <View style={styles.submit}>
-                {
-                    canBeReturned ?
-                        (
-                            <Pressable style={styles.submitButton} onPress={returnLogin}>
-                                <Text style={styles.submitText}>Saved, Let's Login!</Text>
-                            </Pressable>
-                        )
-                            :
-                        (
-                            <SubmitButton text="SIGN UP" submitFunction={submitFunction}></SubmitButton>
-                        )
-
-                }
-            </View>
+            </ScrollView>
         </SafeAreaView>
     )
 };
@@ -149,6 +161,7 @@ const styles = StyleSheet.create({
     },
     box: {
         backgroundColor: 'white',
+        paddingLeft:15,
         borderRadius: 18,
         width: 369,
         height: 43,
