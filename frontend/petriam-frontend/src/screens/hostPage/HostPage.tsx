@@ -224,7 +224,9 @@ export default function HostPage({route, navigation}){
                 </View>
             </ScrollView>
             <View style={styles.navbar}>
-                <Navi />
+                <Navi 
+                    nextPage={()=>navigation.pop()}
+                />
             </View>
         </SafeAreaView>
     )

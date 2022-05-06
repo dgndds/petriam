@@ -22,7 +22,7 @@ export async function createConversation(token: string, userId: string) {
     let result = {};
 
     await axios
-    .post(LOCAL+USER_PATH+CONVERSATION_PATH,
+    .post(BASE+USER_PATH+CONVERSATION_PATH,
         body, 
         { headers: { Authorization: "Bearer " + token }
     })
@@ -50,7 +50,7 @@ export async function createContract(token: string, hostId: string, pets: Array<
     } 
 
     await axios
-        .post(LOCAL+USER_PATH+CONTRACTS_PATH,
+        .post(BASE+USER_PATH+CONTRACTS_PATH,
             contract, 
             { headers: { Authorization: "Bearer " + token }
         })
@@ -75,7 +75,7 @@ export async function updateContractStatus(token: string, contractId: string, st
     }
 
     await axios
-        .put(LOCAL+USER_PATH+CONTRACTS_PATH, update,
+        .put(BASE+USER_PATH+CONTRACTS_PATH, update,
         { headers: { Authorization: "Bearer " + token }
         })
         .then((response) => {
@@ -92,7 +92,7 @@ export async function getUserName(token: string, userId: string) {
     let result = {};
 
     await axios
-        .get(LOCAL+USERS_PATH+userId, {
+        .get(BASE+USERS_PATH+userId, {
             headers: { Authorization: "bearer " + token }
         })
         .then((response) => {
@@ -109,7 +109,7 @@ export async function getContracts(token: string) {
     let result = [];
 
     await axios
-        .get(LOCAL+USER_PATH+CONTRACTS_PATH, {
+        .get(BASE+USER_PATH+CONTRACTS_PATH, {
             headers: { Authorization: "bearer " + token }
         })
         .then((response) => {
@@ -133,8 +133,8 @@ export async function getHostsFiltered(longitude: number, latitude: number, radi
         })
     } 
 
-    await app(LOCAL, HOSTS_FILTER_PATH)
-        .get(LOCAL+HOSTS_FILTER_PATH, {
+    await app(BASE, HOSTS_FILTER_PATH)
+        .get(BASE+HOSTS_FILTER_PATH, {
             params: { 
                 longitude: longitude,
                 latitude: latitude,
@@ -161,8 +161,8 @@ export async function getHostsWithFilters(price: number, petType: string, longit
         })
     } 
 
-    await app(LOCAL, HOSTS_FILTER_PATH)
-        .get(LOCAL+HOSTS_FILTER_PATH, {
+    await app(BASE, HOSTS_FILTER_PATH)
+        .get(BASE+HOSTS_FILTER_PATH, {
             params: { 
                 longitude: longitude,
                 latitude: latitude,
@@ -185,7 +185,7 @@ export async function signUpNewUser(username: string,userSurname:string, email: 
     let result: boolean = false;
 
     await axios
-        .post(LOCAL+AUTH_SIGNUP_PATH, {
+        .post(BASE+AUTH_SIGNUP_PATH, {
             name: username,
             surname:userSurname,
             email: email,
@@ -207,7 +207,7 @@ export async function loginUser(email: string, password: string): Promise<Object
     let userId = "";
 
     await axios
-        .post(LOCAL+AUTH_LOGIN_PATH, {
+        .post(BASE+AUTH_LOGIN_PATH, {
             email: email,
             password: password
         })
@@ -225,10 +225,10 @@ export async function loginUser(email: string, password: string): Promise<Object
 
 export async function getConversations(token: string): Promise<any>{
     let result = {};
-    console.log(LOCAL+USER_PATH+CONVERSATION_PATH);
+    console.log(BASE+USER_PATH+CONVERSATION_PATH);
 
     await axios
-        .get(LOCAL+USER_PATH+CONVERSATION_PATH, {
+        .get(BASE+USER_PATH+CONVERSATION_PATH, {
             headers: { Authorization: "bearer " + token }
         })
         .then((response) => {
@@ -244,7 +244,7 @@ export async function getConversations(token: string): Promise<any>{
 
 export async function sendMessage(message: string, token: string, receiverId: string): Promise<boolean>{
     let result: boolean = false;
-    console.log(LOCAL+USER_PATH+MESSAGE_PATH);
+    console.log(BASE+USER_PATH+MESSAGE_PATH);
 
     let messageBody = {
         "receiverId": receiverId,
@@ -252,7 +252,7 @@ export async function sendMessage(message: string, token: string, receiverId: st
     }
 
     await axios
-        .post(LOCAL+USER_PATH+MESSAGE_PATH, {
+        .post(BASE+USER_PATH+MESSAGE_PATH, {
             message: messageBody
         }, {
             headers: { Authorization: "bearer " + token }
@@ -269,10 +269,10 @@ export async function sendMessage(message: string, token: string, receiverId: st
 
 export async function getMessages(conversationId: string, token: string): Promise<any>{
     let result = {};
-    console.log("Aekls: " + LOCAL+USER_PATH+MESSAGE_PATH+"/"+conversationId);
+    console.log("Aekls: " + BASE+USER_PATH+MESSAGE_PATH+"/"+conversationId);
 
     await axios
-        .get(LOCAL+USER_PATH+MESSAGE_PATH+"/"+conversationId, {
+        .get(BASE+USER_PATH+MESSAGE_PATH+"/"+conversationId, {
             headers: { Authorization: "bearer " + token }
         })
         .then((response) => {
@@ -299,7 +299,7 @@ export async function becomeHost(token:string, userId:string, tc:string, aboutMe
     }
     
     await axios
-        .post(LOCAL+USER_PATH+BECOME_HOST_PATH, {
+        .post(BASE+USER_PATH+BECOME_HOST_PATH, {
             hostApplication:body
         },{
             headers: { Authorization: "bearer " + token },
@@ -323,7 +323,7 @@ export async function getCurrentUserInfo(token:string):Promise<any>{
     let result;
 
     await axios
-    .get(LOCAL+USER_PATH, {
+    .get(BASE+USER_PATH, {
         headers: { Authorization: "bearer " + token }
     })
     .then((response) => {
