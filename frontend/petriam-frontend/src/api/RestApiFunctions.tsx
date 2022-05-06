@@ -13,6 +13,30 @@ import {
     USERS_PATH
 } from './ApiConstants'
 
+export async function createConversation(token: string, userId: string) {
+    let body = {
+        "conversation": {
+            "hostUserId": userId
+        }
+    }
+    let result = {};
+
+    await axios
+    .post(LOCAL+USER_PATH+CONVERSATION_PATH,
+        body, 
+        { headers: { Authorization: "Bearer " + token }
+    })
+    .then((response) => {
+        result = response.data;
+        console.log("createConversation", result);
+    })
+    .catch(error => {
+        console.log(error);
+    })
+
+    return result;
+}
+
 export async function createContract(token: string, hostId: string, pets: Array<string>, startDate: string, endDate: string) {
     let result = {};
 
@@ -24,7 +48,6 @@ export async function createContract(token: string, hostId: string, pets: Array<
             "endDate": endDate
         }
     } 
-    console.log(contract)
 
     await axios
         .post(LOCAL+USER_PATH+CONTRACTS_PATH,
@@ -33,7 +56,6 @@ export async function createContract(token: string, hostId: string, pets: Array<
         })
         .then((response) => {
             result = response.data;
-            console.log(response.data)
         })
         .catch(error => {
             console.log(error);
@@ -68,7 +90,7 @@ export async function updateContractStatus(token: string, contractId: string, st
 
 export async function getUserName(token: string, userId: string) {
     let result = {};
-    
+
     await axios
         .get(LOCAL+USERS_PATH+userId, {
             headers: { Authorization: "bearer " + token }
@@ -296,7 +318,7 @@ export async function becomeHost(token:string,userId:string,tc:string,aboutMe:st
         return result;
 }
 
-export async function getCurrentUserInfo(token:string,id:string):Promise<any>{
+export async function getCurrentUserInfo(token:string):Promise<any>{
     let result;
 
     await axios

@@ -19,7 +19,7 @@ export default function Contracts({navigation}) {
     useEffect(async () => {
         setContracts(
             await getContracts(state.token.token)
-        );
+        )
     }, [])
 
     if(!fontsLoaded){
@@ -58,8 +58,10 @@ export default function Contracts({navigation}) {
                         contracts.map(contract => {
                             return (
                                 <ContractUnit 
-                                key={contract._id} 
-                                contract={contract}/>
+                                    key={contract._id} 
+                                    contract={contract}
+                                    navigation={navigation}
+                                />
                                 )
                             }
                         )

@@ -7,25 +7,33 @@ import AppLoading from 'expo-app-loading';
 import Navi from '../../components/general/navi';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSelector } from 'react-redux';
-import { createContract, getCurrentUserInfo } from '../../api/RestApiFunctions';
+import { createContract, getCurrentUserInfo, getUserName } from '../../api/RestApiFunctions';
 
 export default function HostPage({route, navigation}){
     const [openStartDate,setStartOpenDate] = useState(false);
     const [openFinishDate,setFinishOpenDate] = useState(false);
     const [userInfo,setUserInfo] = useState({});
+    const [hostInfo,setHostInfo] = useState({});
     const [startDate,setStartDate] = useState(new Date());
     const [finishDate,setFinishDate] = useState(new Date());
     const [selectedPet,setSelectedPet] = useState(null);
     const [status, setStatus] = useState('Hire This Host');
     const state = useSelector(state => state);
-    const { hostId } = route.params;
+    const { hostId, userId } = route.params;
 
     useEffect(() => {
         console.log("Host:" + hostId)
         console.log("user token",state.token.token)
-        console.log("user id ",state.id.id)
+        console.log("user id ", state.id.id)
 
-        getCurrentUserInfo(state.token.token,state.id.id).then(result=>{
+        getUserName(state.token.token, userId).then(
+            result => {
+                console.log("Host", result);
+                setHostInfo(result);
+            }
+        )
+
+        getCurrentUserInfo(state.token.token).then(result=>{
             if(result === false){
                 console.log("Failed to retrieve user information!");
             }else{
@@ -42,7 +50,7 @@ export default function HostPage({route, navigation}){
         Roboto_700Bold
       })
 
-      if (!fontsLoaded || !userInfo) {
+      if (!fontsLoaded || !userInfo || !hostInfo) {
         return <AppLoading />;
       }
 
@@ -61,6 +69,7 @@ export default function HostPage({route, navigation}){
     }
 
     const handleSubmit = async () => {
+        console.log("Seç:" ,selectedPet)
         if( selectedPet === null){
             return false;
         }else{
@@ -75,7 +84,7 @@ export default function HostPage({route, navigation}){
             finishDate:finishDate
         }
 
-        let contract = await createContract(state.token.token, hostId, [selectedPet], new Date(startDate).toISOString(), new Date(finishDate).toISOString())
+        let contract = await createContract(state.token.token, hostId, [selectedPet._id], new Date(startDate).toISOString(), new Date(finishDate).toISOString())
 
         if(contract){
             setStatus("Successfully Hired!");
@@ -97,7 +106,7 @@ export default function HostPage({route, navigation}){
                     style={styles.profilePic}
                     source={require("../../../assets/icons/avatarWoman.png")}/>
                     <View style={styles.nameTag}>
-                        <Text style={styles.profileName}>John Doe</Text> 
+                        <Text style={styles.profileName}>{hostInfo.name} {hostInfo.surname}</Text> 
                         <Icon
                         name='check-circle'
                         type="font-awesome"
@@ -135,11 +144,7 @@ export default function HostPage({route, navigation}){
                         }}
                         >
                             <Text style={{textAlign:"justify"}}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id 
-                            fringilla metus, ut suscipit felis. Mauris mollis enim a orci sollicitudin,
-                            et dapibus ipsum mat-tis. Maecenas faucibus et tortor vel laoreet. Nunc mattis 
-                            lorem ex, nec interd-um justo vehicula at. Mauris sollicitudin metus mauris, ac 
-                            egestas tellus dapibus non. Suspendisse potenti. Cras vitae libero lacus.
+                            {hostInfo.aboutMe}
                             </Text>
                         </ScrollView>
                     </View>
@@ -155,9 +160,7 @@ export default function HostPage({route, navigation}){
                         }}
                         >
                             <Text> 
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In id fringilla metus.
+                                {hostInfo.address}
                             </Text>
                         </ScrollView>
                     </View>
@@ -198,7 +201,9 @@ export default function HostPage({route, navigation}){
                                    (finishDate.getMonth()+1).toString().padStart(2, '0') + "/" +
                                    finishDate.getFullYear().toString().padStart(2, '0')
                                    }</Text>
-                            {openFinishDate&&<DateTimePicker minimumDate={new Date()} mode='date' value={new Date()} onChange={handleFinishDateChange}/>}
+                            {openFinishDate&&<DateTimePicker style={{width: 320, alignSelf: "flex-start"}} minimumDate={new Date()} mode='date' value={new Date()} onChange={handleFinishDateChange} display={
+                                  Platform.OS === "ios" ? "inline" : "default"
+                                }/>}
                         </View>
                     </View>
                     <View style={styles.petsContainer}>

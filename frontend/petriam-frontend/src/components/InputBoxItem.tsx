@@ -12,7 +12,8 @@ export default function InputBoxItem(props){
     })
 
     useEffect(() => {
-        setLastMessage(props.item.item.messages.at(props.item.item.messages.length - 1).content);
+        if(props.item.item.messages.length > 0)
+            setLastMessage(props.item.item.messages.at(props.item.item.messages.length - 1).content);
         console.log("İçerdeiyiz: " + props.item.item.ownerId.name);
     }, [])
 

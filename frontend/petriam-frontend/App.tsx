@@ -16,6 +16,7 @@ import ListHost from './src/screens/listHost/listHost';
 import { Provider } from 'react-redux';
 import store from './src/redux/store/configureStore';
 import MessagePage from './src/screens/MessagePage/messagePage';
+import ContractUnit from './src/components/ContractUnit/ContractUnit';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ export default function App() {
           <Stack.Screen name="HostPage" component={HostPage} options={{ headerShown: false }} />
           <Stack.Screen name="ViewContractHost" component={ViewContractHost} options={{ headerShown: false }} />
           <Stack.Screen name="BecomeHost" component={BecomeHost} options={{ headerShown: false }} />
+          <Stack.Screen name="ContractUnit" component={ContractUnit} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

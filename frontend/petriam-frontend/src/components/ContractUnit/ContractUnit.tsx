@@ -4,9 +4,9 @@ import {useFonts, Roboto_700Bold,Roboto_700Bold_Italic  } from "@expo-google-fon
 import { Icon } from 'react-native-elements';
 import AppLoading from 'expo-app-loading';
 import { useSelector } from 'react-redux';
-import { getUserName, updateContractStatus } from '../../api/RestApiFunctions';
+import { createConversation, getUserName, updateContractStatus } from '../../api/RestApiFunctions';
 
-export default function NavigationBar(props, {navigation}) {
+export default function ContractUnit(props) {
     const [dates, setDates] = useState("");
     const [petName, setPetName] = useState("");
     const [hostName, setHostName] = useState("");
@@ -20,33 +20,45 @@ export default function NavigationBar(props, {navigation}) {
 
     const calculateDateDifference =  (date1: Date, date2: Date) => {
         let timeDiff = date2.getTime() - date1.getTime();
-        let diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+        let diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
         return diffDays;
     }
 
     const handleStatus = async (status: string) => {
         let endDateDifferenceFromToday = calculateDateDifference(new Date(), new Date(props.contract.endDate));
+        let startDateDifferenceFromToday = calculateDateDifference(new Date(), new Date(props.contract.startDate));
         
-        if(status !== "sent"){
+        console.log("endDateDifferenceFromToday", endDateDifferenceFromToday)
+        console.log("startDateDifferenceFromToday", startDateDifferenceFromToday)
+        console.log(props.contract.status)
 
-            if(endDateDifferenceFromToday > 0){
-                setStatus("On Going");
-                await updateContractStatus(state.token.token, props.contract._id, "On Going");
-            }else if(endDateDifferenceFromToday < 0){
-                setStatus("Completed");
-                await updateContractStatus(state.token.token, props.contract._id, "Completed");
-            }
-        }else{
+        console.log(props.contract.hostId.userId)
+        console.log(state.id.id)
+
+        if(props.contract.status === "sent" && props.contract.hostId.userId !== state.id.id){
             setStatus("sent");
+        }else{
+            if(props.contract.status === "Accepted"){
+                if(endDateDifferenceFromToday > 0 && startDateDifferenceFromToday < 0){
+                    setStatus("On Going");
+                    await updateContractStatus(state.token.token, props.contract._id, "On Going");
+                }
+                else if(endDateDifferenceFromToday < 0 && startDateDifferenceFromToday < 0){
+                    setStatus("Completed");
+                    await updateContractStatus(state.token.token, props.contract._id, "Completed");
+                }
+            }else{
+                if(endDateDifferenceFromToday < 0 && startDateDifferenceFromToday < 0){
+                    setStatus("Passed");
+                    await updateContractStatus(state.token.token, props.contract._id, "Passed");
+                }
+            }
         }
-
     }
 
     useEffect(async () => {
-        
-        console.log("Burası", props.contract.status)
+
         handleStatus(props.contract.status);
-        console.log("Orası", status)
 
         setDates(
             props.contract.startDate.substring(0, 10)
@@ -55,13 +67,13 @@ export default function NavigationBar(props, {navigation}) {
             + " (" + calculateDateDifference(new Date(props.contract.startDate), new Date(props.contract.endDate)) + " days)"
         )
 
-        setPetName(props.contract.pets[0].name)
-        setPetType(props.contract.pets[0].type)
-
         let user = await getUserName(state.token.token, props.contract.hostId.userId)
         setHostName(
             user.name + " " + user.surname
         )
+
+        setPetName(props.contract.pets[0].name)
+        setPetType(props.contract.pets[0].type)
         
     }, [])
 
@@ -69,10 +81,10 @@ export default function NavigationBar(props, {navigation}) {
         return <AppLoading/>
     }
 
-    const handleMessaging = () => {
-        props.navigation.navigate("Messaging", {
-            contract: props.contract
-        })
+    const handleMessaging = async () => {
+        console.log("Bak: " + props.contract.hostId.userId)
+        let conversation = await createConversation(state.token.token, props.contract.hostId.userId);
+        props.navigation.navigate("MessagePage", {conversationId: conversation._id, ownerId: props.contract.hostId.userId})
     }
 
     const handleReject = async () => {
@@ -96,7 +108,7 @@ export default function NavigationBar(props, {navigation}) {
                 <Text style={styles.userName}>{hostName}</Text>
                 <View style={styles.petInfo}>
                     <Icon
-                        name={petType}
+                        name={petType === "turtle" ? "grin-alt" : petType}
                         type="font-awesome-5"
                         size={10}
                         color='black'
@@ -146,6 +158,23 @@ export default function NavigationBar(props, {navigation}) {
 
                         <View>
                             <Text style={styles.accepted}>Accepted</Text>
+                        </View>
+
+                        :
+
+                        status === "Passed" ?
+
+                        <View>
+                            <Text style={styles.canceled}>Passed</Text>
+                        </View>
+
+                        :
+
+
+                        status === "sent" ?
+
+                        <View>
+                            <Text style={styles.canceled}>sent</Text>
                         </View>
 
                         :

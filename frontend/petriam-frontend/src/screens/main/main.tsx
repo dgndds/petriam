@@ -25,9 +25,10 @@ export default function Main({navigation}) {
         getHosts();
     }, [])
     
-    const pressedOnMarker = async (marker: string) => {
+    const pressedOnMarker = async (userId: string, marker: string) => {
+        console.log(marker)
         if(marker === selectedMarker){
-            navigation.navigate("HostPage", {hostId: marker});
+            navigation.navigate("HostPage", {hostId: marker, userId: userId});
         }else{
             setSelectedMarker(marker);
         }
@@ -66,7 +67,7 @@ export default function Main({navigation}) {
                         var icon = handleImage(item.host.acceptedPets[0].toLowerCase());
                         return (
                                 <Marker
-                                    onPress={() => pressedOnMarker(item.hostId)}
+                                    onPress={() => pressedOnMarker(item._id, item.hostId)}
                                     key={item.email}
                                     title={item.name}
                                     description={"Average Rating " + item.host.averageRating}
