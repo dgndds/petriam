@@ -174,11 +174,6 @@ router.put("/contract", middlewares.verifyJWT, (req, res) => {
 });
 
 router.post("/contract", middlewares.verifyJWT, (req, res) => {
-    if(req.body.contract.hostId === req.user._id) {
-        res.status(400).json({ error: 'You cannot create a contract with yourself' });
-        return;
-    }
-
     User.findOne({ _id: req.user._id })
         .then(user => {
             Host.findOne({ _id: req.body.contract.hostId }).then(host => {
@@ -374,21 +369,37 @@ router.get("/conversation/:hostUserId", middlewares.verifyJWT, (req, res) => {
 // TODO: Conversation validity should be checked.
 router.post("/conversation", middlewares.verifyJWT, (req, res) => {
     req.body.conversation.ownerId = req.user._id;
-    Conversation.findOne({ ownerId: req.user._id, hostUserId: req.body.conversation.hostUserId }).then(conversation => {
+    Conversation.findOne({ $or: [{ ownerId: req.user._id }, { hostUserId: req.user._id },] }).then(conversation => {
         // I do not know why but conversation is returned as null here even if it is not found.(It should go to catch block)
         // Check whether conversation is null and if it is, create a new conversation else return the existing one.
         if(conversation) {
             res.status(200).json(conversation);
         } else {
             Conversation.create(req.body.conversation).then(conversation => {
-                res.status(200).json(conversation);
+                User.findOneAndUpdate({ _id: req.user._id }, { $push: { conversations: conversation._id } }).then(user => {
+                    User.findOneAndUpdate({ _id: req.body.conversation.hostUserId }, { $push: { conversations: conversation._id } }).then(user => {
+                        res.status(200).json(conversation);
+                    }).catch(err => {
+                        res.status(500).json({ error: 'Failed to add conversation to host' });
+                    });
+                }).catch(err => {
+                    res.status(500).json({ error: "Failed to add conversation to owner" });
+                });
             }).catch(err => {
                 res.status(500).json({ error: 'Conversation could not be created' });
             });
         }
     }).catch(err => {
         Conversation.create(req.body.conversation).then(conversation => {
-            res.status(200).json(conversation);
+            User.findOneAndUpdate({ _id: req.user._id }, { $push: { conversations: conversation._id } }).then(user => {
+                User.findOneAndUpdate({ _id: req.body.conversation.hostUserId }, { $push: { conversations: conversation._id } }).then(user => {
+                    res.status(200).json(conversation);
+                }).catch(err => {
+                    res.status(500).json({ error: 'Failed to add conversation to host' });
+                });
+            }).catch(err => {
+                res.status(500).json({ error: "Failed to add conversation to owner" });
+            });
         }).catch(err => {
             res.status(500).json({ error: 'Conversation could not be created' });
         });
