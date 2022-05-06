@@ -31,16 +31,13 @@ export default function ProfilePage({navigation}){
 
     useEffect(() => {
         setOwnedPets([]);
-        console.log("profil",state.token.token);
         getCurrentUserInfo(state.token.token, state.id.id).then(result=>{
             if(result === false){
                 console.log("Failed to get user info!");
             }else{
-                console.log("user",result);
                 setUserInfo(result);
                 handlePetIcons(result.pets)
                 setUserPicPath(BASE_URL + result.profileImageURL);
-                console.log("pic",userPicPath);
             }
         });
     },[]);
