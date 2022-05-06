@@ -8,12 +8,27 @@ import Navi from '../../components/general/navi';
 import AppLoading from 'expo-app-loading';
 import { getCurrentUserInfo } from '../../api/RestApiFunctions';
 import { useSelector } from 'react-redux';
+import { BASE, BASE_URL } from '../../api/ApiConstants';
 
 export default function ProfilePage({navigation}){
     const state = useSelector(state => state);
     const [userInfo,setUserInfo] = useState({})
+    const [userPicPath,setUserPicPath] = useState("")
     const [ownedPets,setOwnedPets] = useState<string[]>([]);
-    
+
+    const handlePetIcons = (pets:any) => {
+        let owned:string[] = []
+
+        pets.map(pet => {
+            
+            if(!owned.includes(pet.type)){
+                owned.push(pet.type)
+            }
+        })
+
+        setOwnedPets(owned);
+    }
+
     useEffect(() => {
         setOwnedPets([]);
         console.log("profil",state.token.token);
@@ -21,7 +36,11 @@ export default function ProfilePage({navigation}){
             if(result === false){
                 console.log("Failed to get user info!");
             }else{
+                console.log("user",result);
                 setUserInfo(result);
+                handlePetIcons(result.pets)
+                setUserPicPath(BASE_URL + result.profileImageURL);
+                console.log("pic",userPicPath);
             }
         });
     },[]);
@@ -36,6 +55,20 @@ export default function ProfilePage({navigation}){
     if (!fontsLoaded || !userInfo) {
        return <AppLoading />;
     }
+
+    const handlePetIconName = (pet:any) => {
+        if(pet === "cat"){
+            return "cat"
+        }else if(pet === "dog"){
+            return "dog"
+        }else if(pet === "bird"){
+            return "dove"
+        }else if(pet === "turtle"){
+            return "turtle"
+        }
+    }
+
+
     
     return(
         <SafeAreaView style={styles.container}>
@@ -50,7 +83,7 @@ export default function ProfilePage({navigation}){
             <View style={styles.headerContainer}>
                 <Image
                 style={styles.profilePic}
-                source={{uri:"http://192.168.0.14:3000/default-avatar.png"}}/>
+                source={{uri:userPicPath.toString()}}/>
                 <View style={styles.nameTag}>
                     <Text style={styles.profileName}>{userInfo.name + " " + userInfo.surname}</Text> 
                     <Icon
@@ -61,21 +94,20 @@ export default function ProfilePage({navigation}){
                     />
                 </View>
                 <View style={styles.ownerPetsContainer}>
-                    {userInfo.pets && userInfo.pets.map(pet=>
-                    {
-                        return (
+                    {ownedPets && ownedPets.map(
+                        pet=>(
                             <>
                                 <Icon
-                                name={pet.type}
+                                name={handlePetIconName(pet)}
                                 type="font-awesome-5"
                                 size={10}
                                 color='#707070'
                                 />
-                                <Text style={styles.petText}>{console.log(pet.type)/* pet.type.toUpperCase() + pet.type.slice(1)*/} Owner</Text>
+                                <Text style={styles.petText}>{pet.charAt(0).toUpperCase() + pet.slice(1)} Owner</Text>
                             </>
-                         )}
-                    )
-                    }
+                        ))}
+
+
                 </View>
                 <Text style={styles.verficText}>*Verified with TC and Address</Text>
             </View>
