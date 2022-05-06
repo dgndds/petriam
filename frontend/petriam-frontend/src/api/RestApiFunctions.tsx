@@ -308,7 +308,11 @@ export async function becomeHost(token:string, userId:string, tc:string, aboutMe
             console.log(response.data)
         })
         .catch(error => {
-            console.log("hop",error);
+            console.log(error.response.data.error);
+
+            if(error.response.data.error === "User already is a host"){
+                result = error.response.data.error.toString();
+            }
         })
 
         return result;
