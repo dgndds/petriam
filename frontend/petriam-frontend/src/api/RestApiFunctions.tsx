@@ -184,13 +184,17 @@ export async function getHostsWithFilters(price: number, petType: string, longit
 export async function signUpNewUser(username: string,userSurname:string, email: string, password: string): Promise<boolean>{
     let result: boolean = false;
 
+    let body = {
+        name: username,
+        surname: userSurname,
+        email: email,
+        password: password
+    }
+
+    console.log(body)
+
     await axios
-        .post(BASE+AUTH_SIGNUP_PATH, {
-            name: username,
-            surname:userSurname,
-            email: email,
-            password: password
-        })
+        .post(BASE+AUTH_SIGNUP_PATH, body)
         .then((response) => {
             result = true;
             console.log(response.data.token)
@@ -217,7 +221,7 @@ export async function loginUser(email: string, password: string): Promise<Object
         })
         .catch(error => {
             console.log(error);
-            token, userId = "-1";
+            userId = "-1";
         })
 
     return {token: token, userId: userId};
@@ -256,7 +260,7 @@ export async function sendMessage(message: string, token: string, receiverId: st
     console.log(messageBody);
 
     await axios
-        .post(LOCAL+USER_PATH+MESSAGE_PATH, messageBody, {
+        .post(BASE+USER_PATH+MESSAGE_PATH, messageBody, {
             headers: { Authorization: "bearer " + token }
         })
         .then((response) => {
@@ -346,7 +350,7 @@ export async function getHostApplicationInfo(token:string):Promise<any>{
     let result:any = false;
 
     await axios
-        .get(LOCAL+USER_PATH+BECOME_HOST_PATH, {
+        .get(BASE+USER_PATH+BECOME_HOST_PATH, {
             headers: { Authorization: "bearer " + token }
         })
         .then((response) => {

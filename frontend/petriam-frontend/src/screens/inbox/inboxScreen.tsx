@@ -16,12 +16,15 @@ export default function InboxScreen({navigation}){
     const [conversations, setConversations] = useState([]);
 
     useEffect(async () => {
-        setConversations(await getConversations(state.token.token));
-        //console.log("Burası: " + JSON.stringify(conversations));
+        setConversations(await getConversations(state.token.token))
     } , []);
 
     if(!fontsLoaded){
         return <AppLoading/>
+    }
+
+    const goToMessagePage = (item: Object, name: string) => {
+        navigation.navigate("MessagePage", {conversationId: item.item._id, ownerId: item.item.ownerId, name: name});
     }
     
     return (
@@ -41,7 +44,7 @@ export default function InboxScreen({navigation}){
                     ?
                     <FlatList 
                         data={conversations} 
-                        renderItem={(item)=>(<InputBoxItem item={item} nextPage={() => {navigation.navigate("MessagePage", {conversationId: item.item._id, ownerId: item.item.ownerId});}}></InputBoxItem>)} 
+                        renderItem={(item)=>(<InputBoxItem item={item} nextPage={goToMessagePage}></InputBoxItem>)} 
                         keyExtractor={item => item._id}
                     ></FlatList>
                     :

@@ -10,6 +10,7 @@ export default function ContractUnit(props) {
     const [dates, setDates] = useState("");
     const [petName, setPetName] = useState("");
     const [hostName, setHostName] = useState("");
+    const [name, setName] = useState("");
     const [petType, setPetType] = useState("");
     const [status, setStatus] = useState("");
     const state = useSelector(state => state);
@@ -60,9 +61,31 @@ export default function ContractUnit(props) {
     useEffect(async () => {
 
         console.log("GELLLLLL: " + props.contract.hostId.userId)
-        console.log("GELLLLLL: " + props.contract.ownerId._id)
+        console.log("GELLLLLL: " + JSON.stringify(props.contract))
 
-        handleStatus(props.contract.status);
+        let endDateDifferenceFromToday = calculateDateDifference(new Date(), new Date(props.contract.endDate));
+        let startDateDifferenceFromToday = calculateDateDifference(new Date(), new Date(props.contract.startDate));
+        if(props.contract.status.toLowerCase() === "sent" && props.contract.hostId.userId !== state.id.id){
+            setStatus("sent");
+        }else{
+            setStatus(props.contract.status);
+        }
+        if(props.contract.status === "Accepted"){
+            if(endDateDifferenceFromToday > 0 && startDateDifferenceFromToday < 0){
+                setStatus("On Going");
+                await updateContractStatus(state.token.token, props.contract._id, "On Going");
+            }
+            else if(endDateDifferenceFromToday < 0 && startDateDifferenceFromToday < 0){
+                setStatus("Completed");
+                await updateContractStatus(state.token.token, props.contract._id, "Completed");
+            }
+        }else if(props.contract.status !== "Completed"){
+            if(endDateDifferenceFromToday < 0 && startDateDifferenceFromToday < 0){
+                setStatus("Passed");
+                await updateContractStatus(state.token.token, props.contract._id, "Passed");
+            }
+        }
+        
 
         setDates(
             props.contract.startDate.substring(0, 10)
@@ -81,14 +104,20 @@ export default function ContractUnit(props) {
 
         //console.log("GELLAAAA"+ JSON.stringify(props.contract))
         let hostUser = await getUserName(state.token.token, props.contract.hostId.userId)
+        let ownerUser = await getUserName(state.token.token, props.contract.ownerId._id)
+        
         //console.log("GELLAAAA"+ JSON.stringify(hostUser))
-        if(state.id.id !== props.contract.hostId.userId){
-            console.log("host");
+        if(state.id.id !== hostUser._id){
+            console.log("host", hostUser);
             setOppositeSender(hostUser);
         }else{
-            console.log("suer");
-            //setOppositeSender(props.contract.ownerId);
+            console.log("suer", ownerUser);
+            setOppositeSender(ownerUser);
         }
+        console.log(hostUser._id)
+        console.log(ownerUser._id)
+        console.log(state.id.id)
+        console.log("BURRR:", props.contract.ownerId._id)
 
         //console.log("oppositeSender: " + JSON.stringify(oppositeSender))
         
@@ -101,8 +130,8 @@ export default function ContractUnit(props) {
     const handleMessaging = async () => {
         console.log("Bak: " + props.contract.hostId.userId)
         let conversation = await createConversation(state.token.token, props.contract.hostId.userId);
-        console.log("CCCCCCCCCCConversation: " + conversation)
-        props.navigation.navigate("MessagePage", {conversationId: conversation._id, ownerId: oppositeSender})
+        console.log("CCCCCCCCCCConversation: " + JSON.stringify(conversation))
+        props.navigation.navigate("MessagePage", {conversationId: conversation._id, ownerId: oppositeSender, name: hostName})
     }
 
     const handleReject = async () => {
@@ -123,7 +152,7 @@ export default function ContractUnit(props) {
             style={styles.profilePic}
             source={require("../../../assets/icons/avatarWoman.png")}/>
             <View style={styles.infoContainer}>
-                <Text style={styles.userName}>{hostName}</Text>
+                <Text style={styles.userName}>{oppositeSender.name + " " + oppositeSender.surname}</Text>
                 <View style={styles.petInfo}>
                     <Icon
                         name={petType === "turtle" ? "grin-alt" : petType}

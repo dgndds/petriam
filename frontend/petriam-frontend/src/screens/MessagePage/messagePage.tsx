@@ -9,7 +9,7 @@ import { getMessages, sendMessage } from '../../api/RestApiFunctions';
 import { useSelector } from 'react-redux';
 
 export default function MessagePage({route, navigation}){
-    const { conversationId, ownerId } = route.params;
+    const { conversationId, ownerId, name } = route.params;
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const state = useSelector(state => state);
@@ -75,7 +75,7 @@ export default function MessagePage({route, navigation}){
                 <Image 
                 style={styles.profilePic}
                 source={require("../../../assets/profilepicm.jpeg")}></Image>
-                <Text style={styles.chatName}>{ownerId.name + " " + ownerId.surname}</Text>
+                <Text style={styles.chatName}>{name}</Text>
             </View>
             <FlatList
                 data={messages}

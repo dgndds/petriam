@@ -32,15 +32,16 @@ export default function BecomeHost({navigation}){
         Roboto_700Bold
     })
 
-    useEffect(() => {
+    useEffect(async () => {
         console.log("this",state.id.id);
         console.log("token",state.token.token);
         setUserId(state.id.id);
         setToken(state.token.token);
 
-        getHostApplicationInfo(state.token.token).then(
+        await getHostApplicationInfo(state.token.token).then(
             result => {
                 setHasApplication(result);
+                console.log("AAA:", hasApplication)
             }
         );
     }, [])

@@ -53,6 +53,12 @@ export default function Contracts({navigation}) {
                 </View>
                 <View style={styles.contractList}>
                     {
+                        contracts.map((contract, index) => {
+                            console.log(index, ": ", contract)
+                            }
+                        )
+                    }
+                    {
                         contracts.map(contract => {
                             return (
                                 <ContractUnit 

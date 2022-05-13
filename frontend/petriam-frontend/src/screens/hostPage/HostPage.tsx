@@ -193,7 +193,9 @@ export default function HostPage({route, navigation}){
                             <Text>{startDate.getDate().toString().padStart(2, '0') + "/" +
                                    (startDate.getMonth()+1).toString().padStart(2, '0') + "/" +
                                    startDate.getFullYear().toString().padStart(2, '0')}</Text> 
-                            {openStartDate&&<DateTimePicker minimumDate={new Date()} mode='date' value={new Date()} onChange={handleStartDateChange}/>}
+                            {openStartDate&&<DateTimePicker style={{width: 320, alignSelf: "flex-start"}}  minimumDate={new Date()} mode='date' value={new Date()} onChange={handleStartDateChange} display={
+                                  Platform.OS === "ios" ? "inline" : "default"
+                                }/>}
                         </View>
                         <View style={{alignItems:"center"}}>
                             <Pressable onPress={()=>setFinishOpenDate(true)} style={styles.openDateButton}>

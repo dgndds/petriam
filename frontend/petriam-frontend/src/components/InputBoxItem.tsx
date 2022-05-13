@@ -15,12 +15,15 @@ export default function InputBoxItem(props){
     })
 
     useEffect(() => {
+        console.log("Burası: " + JSON.stringify(props.item));
         if(props.item.item.messages.length > 0)
             setLastMessage(props.item.item.messages.at(props.item.item.messages.length - 1).content);
         
         if(state.id.id !== props.item.item.ownerId._id){
+            console.log("Osman yılmaz")
             setOppositeSender(props.item.item.ownerId);
         }else{
+            console.log("Diğer kişi")
             setOppositeSender(props.item.item.hostUserId);
         }
     }, [])
@@ -30,7 +33,7 @@ export default function InputBoxItem(props){
     }
 
     return (
-        <Pressable style={styles.container} onPress={() => props.nextPage()}>
+        <Pressable style={styles.container} onPress={() => props.nextPage(props.item, oppositeSender.name + " " + oppositeSender.surname)}>
             <Image
             style={styles.profilePic}
             source={oppositeSender.profilePic ? oppositeSender.profilePic : require("../../assets/profilepicd.png") }></Image>
